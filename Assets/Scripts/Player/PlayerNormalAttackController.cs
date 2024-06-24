@@ -3,8 +3,9 @@ using UnityEngine;
 
 public class PlayerNormalAttackController : MonoBehaviour
 {
-    [SerializeField] private PlayerData _data;
+    [SerializeField] private PlayerManager _manager;
     [SerializeField] private PlayerAnimationController _animationController;
+    [SerializeField] private PlayerHitBox _hitBox;
 
     private float _attackSpeed;
     private WaitForSeconds _coolTime = null;
@@ -12,19 +13,24 @@ public class PlayerNormalAttackController : MonoBehaviour
 
     private void Awake()
     {
-        if (_data == null)
-            _data = Resources.FindObjectsOfTypeAll(typeof(PlayerData))[0] as PlayerData;
+        if(_manager == null)
+            _manager = gameObject.GetComponentInParent<PlayerManager>();
         if (_animationController == null)
             _animationController = FindObjectOfType<PlayerAnimationController>();
+        if (_hitBox == null)
+            _hitBox = GameObject.Find("HitBox").GetComponent<PlayerHitBox>();
+    }
 
-        _attackSpeed = _data.NormalAttackSpeed;
+    private void Start()
+    {
+        _attackSpeed = _manager.Data.NormalAttackSpeed;
         _coolTime = new WaitForSeconds(_attackSpeed);
     }
 
-    private void OnDataUpdate() // TODO
+    private void OnDataUpdate()
     {
-        if (_attackSpeed != _data.NormalAttackSpeed)
-            _coolTime = new WaitForSeconds(_data.NormalAttackSpeed);
+        if (_attackSpeed != _manager.Data.NormalAttackSpeed)
+            _coolTime = new WaitForSeconds(_manager.Data.NormalAttackSpeed);
     }
 
     private IEnumerator NormalAttack()
@@ -33,6 +39,7 @@ public class PlayerNormalAttackController : MonoBehaviour
 
         while (true)
         {
+            _hitBox.SetHitBoxOffset();
             _animationController.NormalAttack();
             yield return _coolTime;
         }
@@ -46,5 +53,5 @@ public class PlayerNormalAttackController : MonoBehaviour
     public void PauseNormalAttack()
     {
         StopCoroutine(NormalAttack());
-    }
+    }   
 }

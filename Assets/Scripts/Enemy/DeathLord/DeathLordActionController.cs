@@ -6,10 +6,6 @@ public class DeathLordActionController : Base_EnemyActionController
     {
         base.Start();
         _animationController = transform.Find("Model").GetComponent<DeathLordAnimationController>();
-        if(_animationController == null)
-        {
-            Debug.Log("Sss?");
-        }
     }
 
     public override void Walk(float moveSpeed)

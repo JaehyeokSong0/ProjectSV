@@ -3,26 +3,31 @@ using UnityEngine.InputSystem;
 
 public class PlayerInputController : MonoBehaviour
 {
-    [SerializeField] private GameObject _player;
-    [SerializeField] private PlayerData _data;
+    [SerializeField] private PlayerManager _manager;
+    [SerializeField] private GameObject _playerGO;
     [SerializeField] private PlayerAnimationController _animationController;
     [SerializeField] private PlayerStateManager _stateManager;
+    [SerializeField] private PlayerNormalAttackController _normalAttackController;
 
     private Vector2 _arrowInput;
     private Vector2 _playerDirection;
-
     private bool _isLeftShiftPressed = false;
+
+    public Vector2 PlayerDirection
+    { get { return _playerDirection; } }
 
     private void Awake()
     {
-        if (_player == null)
-            _player = GameObject.FindGameObjectWithTag("Player");
-        if (_data == null)
-            _data = Resources.FindObjectsOfTypeAll(typeof(PlayerData))[0] as PlayerData;
+        if(_manager == null)
+            _manager = GetComponentInParent<PlayerManager>();
+        if (_playerGO == null)
+            _playerGO = GameObject.FindGameObjectWithTag("Player");
         if (_animationController == null)
             _animationController = FindObjectOfType<PlayerAnimationController>();
         if (_stateManager == null)
             _stateManager = FindObjectOfType<PlayerStateManager>();
+        if(_normalAttackController == null)
+            _normalAttackController = FindObjectOfType<PlayerNormalAttackController>(); 
     }
 
     private void FixedUpdate()
@@ -31,9 +36,9 @@ public class PlayerInputController : MonoBehaviour
         if (_arrowInput != Vector2.zero)
         {
             if (_isLeftShiftPressed == false) // Player Walk
-                _player.transform.position += new Vector3(_arrowInput.x, _arrowInput.y, 0f) * _data.WalkSpeed;
+                _playerGO.transform.position += new Vector3(_arrowInput.x, _arrowInput.y, 0f) * _manager.Data.WalkSpeed;
             else // Player Run
-                _player.transform.position += new Vector3(_arrowInput.x, _arrowInput.y, 0f) * _data.RunSpeed;
+                _playerGO.transform.position += new Vector3(_arrowInput.x, _arrowInput.y, 0f) * _manager.Data.RunSpeed;
         }
         else
         {
@@ -68,6 +73,8 @@ public class PlayerInputController : MonoBehaviour
         _arrowInput = context.ReadValue<Vector2>();
         if (_arrowInput != Vector2.zero)
             _playerDirection = _arrowInput;
+
+        _manager.SetPlayerDirection(_playerDirection);
 
         if (_isLeftShiftPressed == false)
             Walk();

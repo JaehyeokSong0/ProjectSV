@@ -9,12 +9,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4399067219307610265}
+  - component: {fileID: 2420865019579620876}
+  - component: {fileID: 1199603433414236016}
   - component: {fileID: 4345296431834202498}
   - component: {fileID: 5734785738671160797}
-  - component: {fileID: 1199603433414236016}
+  - component: {fileID: 2719839352838828563}
   m_Layer: 0
   m_Name: Enemy_DeathLord
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -35,6 +37,32 @@ Transform:
   - {fileID: 4987601215144713760}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2420865019579620876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5015749245414901926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ef14db764f245d4292872a23afbd4de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _data: {fileID: 11400000, guid: 40353be93c5a11842a89c74b01a9ced5, type: 2}
+--- !u!114 &1199603433414236016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5015749245414901926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8f5c4bbb1185cb42874b27cc1835b69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemyMoveState: 1
 --- !u!114 &4345296431834202498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,19 +92,41 @@ MonoBehaviour:
   _stateManager: {fileID: 1199603433414236016}
   _enemyData: {fileID: 11400000, guid: 40353be93c5a11842a89c74b01a9ced5, type: 2}
   _animationController: {fileID: 3251062995762313782}
---- !u!114 &1199603433414236016
-MonoBehaviour:
+--- !u!70 &2719839352838828563
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5015749245414901926}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8f5c4bbb1185cb42874b27cc1835b69, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _enemyMoveState: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 0.8, y: 1.2}
+  m_Direction: 0
 --- !u!1 &8682523697307425035
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,7 +207,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.92, y: 1.92}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
