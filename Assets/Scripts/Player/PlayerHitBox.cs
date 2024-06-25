@@ -1,13 +1,13 @@
 using System.Collections;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Events;
 
 [RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent (typeof(Rigidbody2D))]
 public class PlayerHitBox : MonoBehaviour
 {
     [SerializeField] private PlayerManager _manager;
     [SerializeField] private BoxCollider2D _hitBox;
+    [SerializeField] private GameObject _effectGO;
 
     private bool _isDirectionLocked = false; // Same as isAttacking
     private float _coolTime = 0f;
@@ -18,6 +18,8 @@ public class PlayerHitBox : MonoBehaviour
             _manager = FindObjectOfType<PlayerManager>();
         if (_hitBox == null )
             _hitBox = GetComponent<BoxCollider2D>();
+        if (_effectGO == null)
+            _effectGO = transform.Find("Effect").gameObject;
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -34,6 +36,10 @@ public class PlayerHitBox : MonoBehaviour
     public void SetHitBoxOffset(Vector2 direction, float coolTime)
     {
         _coolTime = coolTime;
+
+        // Show normalAttack effect
+        _effectGO.transform.localPosition = direction.normalized;
+        
         StartCoroutine(C_SetHitBoxOffset(direction));
     }
 
@@ -43,9 +49,9 @@ public class PlayerHitBox : MonoBehaviour
         {   
             _isDirectionLocked = true;
             _hitBox.offset = direction.normalized;
-
+            _effectGO.gameObject.SetActive(true);
             yield return new WaitForSeconds(_coolTime);
-
+            _effectGO.gameObject.SetActive(false);
             _isDirectionLocked = false;
         }
     }

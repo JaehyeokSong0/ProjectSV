@@ -9,7 +9,6 @@ public class PlayerAnimationController : MonoBehaviour
     [SerializeField] private PlayerStateManager _stateManager;
 
     private bool _isDirectionLocked = false; // Used to lock direction of attack animation
-    private Vector2 _directionBuffer;
 
     private void Awake()
     {
@@ -51,7 +50,7 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void UpdateDirection(Vector2 direction)
     {
-        _directionBuffer = direction;
+        _manager.PlayerDirectionBuffer = direction;
         if(_isDirectionLocked == false)
         {
             _animator.SetFloat("DirectionX", direction.x);
@@ -79,7 +78,7 @@ public class PlayerAnimationController : MonoBehaviour
             yield return new WaitForSeconds(animationTime);
 
             _isDirectionLocked = false;
-            UpdateDirection(_directionBuffer);
+            UpdateDirection(_manager.PlayerDirectionBuffer);
             SetMoveAnimation(_stateManager.MoveState.ToString());
         }
     }

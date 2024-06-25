@@ -6,16 +6,27 @@ public class PlayerManager : MonoBehaviour
 {
     [SerializeField] private PlayerInputController _inputController;
     [SerializeField] private PlayerNormalAttackController _normalAttackController;
-    [HideInInspector] public Vector2 PlayerDirectionBuffer { get; set; }
+
+    private Vector2 _playerDirectionBuffer = Vector2.down;
     [SerializeField] protected SpriteRenderer _spriteRenderer;
-    private WaitForSeconds _colorChangeTimeWait = new WaitForSeconds(1.5f);
+    private WaitForSeconds _colorChangeTimeWait = new WaitForSeconds(2f);
 
     private const float _invincibleTime = 2f;
     private WaitForSeconds _invincibleTimeWait;
     public bool IsInvincible { get; set; }
-
-    public PlayerData Data
-    { get; set; }
+    public PlayerData Data { get; set; }
+    public Vector2 PlayerDirectionBuffer 
+    { 
+        get 
+        { return _playerDirectionBuffer; }
+        set 
+        { 
+            if (value == Vector2.zero) 
+                _playerDirectionBuffer = Vector2.down; 
+            else 
+                _playerDirectionBuffer = value; 
+        } 
+    }
 
     #region Event Functions
     private void Awake()
