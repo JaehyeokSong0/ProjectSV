@@ -55,17 +55,15 @@ public class PlayerManager : MonoBehaviour
         if (IsInvincible == true)
             return;
 
-        if (Data.Hp - damage >= 0)
-            Data.Hp -= damage;
+        if (Data.CurrentHp - damage >= 0)
+            Data.CurrentHp -= damage;
         else
-            Data.Hp = 0;
+            Data.CurrentHp = 0;
 
         StartCoroutine(C_TurnInvincible());
         StartCoroutine(ChangeSpriteColor(Color.red));
 
-        Debug.Log($"Player damaged : {damage} , Remain HP : {Data.Hp}");
-
-        if (Data.Hp == 0)
+        if (Data.CurrentHp == 0)
             EventManager.Instance.OnPlayerDead?.Invoke();
     }
 
@@ -85,11 +83,9 @@ public class PlayerManager : MonoBehaviour
     #region Utility Functions
     private IEnumerator C_TurnInvincible()
     {
-        Debug.Log("Invincible Activated");
         IsInvincible = true;
         yield return _invincibleTimeWait;
         IsInvincible = false;
-        Debug.Log("Invincible Deactivated");
     }
 
     private IEnumerator ChangeSpriteColor(Color color)

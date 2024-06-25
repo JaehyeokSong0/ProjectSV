@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d35aa0007d957854593cc63416e93382, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  Hp: 200
-  Mp: 100
-  Stamina: 100
+  CurrentHp: 200
+  MaxHp: 200
+  CurrentMp: 100
+  MaxMp: 100
+  CurrentStamina: 100
+  MaxStamina: 100
   Exp: 0
   WalkSpeed: 0.02
   RunSpeed: 0.04

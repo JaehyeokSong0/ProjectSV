@@ -23,8 +23,6 @@ public abstract class Base_EnemyManager : MonoBehaviour
     {
         if (IsAttacked == false)
         {
-            Debug.Log($"{gameObject.name} damaged : {Data.Hp} -> {Data.Hp - damage}");
-
             _actionController.TakeDamage(damage, coolTime);
         }
     }
