@@ -85,4 +85,9 @@ public class PlayerAnimationController : MonoBehaviour
             _animator.SetBool(((PlayerMoveState)i).ToString(), false);
         _animator.SetBool(animationName, true);
     }
+    public float GetCurrentAnimationLength()
+    {
+        float animationTime = _animator.GetCurrentAnimatorStateInfo(0).length;
+        return animationTime;
+    }
 }

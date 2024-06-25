@@ -1,10 +1,8 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "EnemyData", menuName = "Data/Create EnemyData")]
+[CreateAssetMenu(fileName = "DeathLordData", menuName = "Data/Create DeathLordData")]
 public class EnemyData : ScriptableObject
 {
-    public string Name;
-
     public float Hp = 100f;
     public float WalkSpeed = 1f;
     public float RunSpeed = 2f;

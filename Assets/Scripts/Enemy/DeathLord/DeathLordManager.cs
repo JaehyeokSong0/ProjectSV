@@ -1,23 +1,26 @@
 using UnityEngine;
 
-public class DeathLordManager : MonoBehaviour
+public class DeathLordManager : Base_EnemyManager
 {
-    [SerializeField] private EnemyData _data;
-    [SerializeField] private DeathLordActionController _actionController;
-
     private void Awake()
     {
+        Data = ScriptableObject.CreateInstance<EnemyData>();
         if (_actionController == null)
             _actionController = GetComponent<DeathLordActionController>();
     }
 
-    private void Start()
+    protected override void Start()
     {
-        Initialize();
+        base.Start();
     }
 
-    public void Initialize()
+    public override void OnEnemyDamaged(float damage, float coolTime)
     {
-        _actionController.Walk(_data.WalkSpeed);
+        base.OnEnemyDamaged(damage, coolTime);
+    }
+
+    protected override void Initialize()
+    {
+        base.Initialize();
     }
 }

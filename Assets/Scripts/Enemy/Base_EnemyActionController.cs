@@ -1,15 +1,19 @@
 using System.Collections;
 using UnityEngine;
 
+// Manages animationController
 public abstract class Base_EnemyActionController : MonoBehaviour
 {
+    private const float _deadRemainTime = 0.5f;
+
     protected GameObject _player;
     [SerializeField] protected EnemyStateManager _stateManager;
-    [SerializeField] protected EnemyData _enemyData;
+    [SerializeField] protected Base_EnemyManager _manager;
 
     // AnimationContoller class should be downcasted in derived class
     [SerializeField] protected Base_EnemyAnimationController _animationController;
-    
+    protected Coroutine _walkCoroutine;
+
     protected virtual void Start()
     {
         if(_player == null)
@@ -20,9 +24,15 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         }
     }
 
+    public virtual void Idle()
+    {
+        _stateManager.MoveState = EnemyMoveState.Idle;
+        _animationController.Idle();
+    }
+
     public virtual void Walk(float moveSpeed)
     {
-        StartCoroutine(C_Walk(moveSpeed));
+        _walkCoroutine = StartCoroutine(C_Walk(moveSpeed));
     }
 
     protected virtual IEnumerator C_Walk(float moveSpeed)
@@ -36,7 +46,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         {
             direction = _player.transform.position - transform.position;
 
-            if (direction.magnitude < _enemyData.NormalAttackRange)
+            if (direction.magnitude < _manager.Data.NormalAttackRange)
                 yield return C_NormalAttack();
 
             transform.position += direction.normalized * moveSpeed * Time.deltaTime;
@@ -56,14 +66,52 @@ public abstract class Base_EnemyActionController : MonoBehaviour
 
         _animationController.NormalAttack();
 
-        yield return new WaitForSeconds(_enemyData.NormalAttackSpeed);
+        yield return new WaitForSeconds(_manager.Data.NormalAttackSpeed);
 
         // Reset Move Animation
         Vector3 direction = _player.transform.position - transform.position;
-        if (direction.magnitude < _enemyData.NormalAttackRange)
+        if (direction.magnitude < _manager.Data.NormalAttackRange)
             _stateManager.MoveState = EnemyMoveState.Idle;
         else
             _stateManager.MoveState = EnemyMoveState.Walk;
         _animationController.Move();
+    }
+
+    public virtual void TakeDamage(float damage, float coolTime)
+    {
+        StartCoroutine(ReduceHP(damage, coolTime));
+    }
+
+    public virtual void Die()
+    {
+        _stateManager.MoveState = EnemyMoveState.Idle;
+        StopCoroutine(_walkCoroutine);
+        StartCoroutine(C_Die());
+    }
+
+    protected virtual IEnumerator C_Die()
+    {
+        _animationController.Die();
+        float animationTime = _animationController.GetCurrentAnimationLength();
+
+        yield return new WaitForSeconds(animationTime);
+        Destroy(gameObject, _deadRemainTime);
+    }
+
+
+    protected IEnumerator ReduceHP(float damage, float coolTime)
+    {
+        _manager.IsAttacked = true;
+        if (_manager.Data.Hp - damage >= 0)
+            _manager.Data.Hp -= damage;
+        else
+            _manager.Data.Hp = 0;
+
+        if (_manager.Data.Hp == 0)
+            Die();
+
+        yield return new WaitForSeconds(coolTime);
+
+        _manager.IsAttacked = false;
     }
 }

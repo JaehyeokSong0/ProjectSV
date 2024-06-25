@@ -8,8 +8,13 @@ public class PlayerNormalAttackController : MonoBehaviour
     [SerializeField] private PlayerHitBox _hitBox;
 
     private float _attackSpeed;
-    private WaitForSeconds _coolTime = null;
+    private WaitForSeconds _attackSpeedWait = null;
     private WaitForSeconds _attackDelay = new WaitForSeconds(1f);
+
+    // Correction factors for attack animation time
+    private const float _preAttackTime = 0.2f;
+    private const float _postAttackTime = 0.1f;
+    private WaitForSeconds _preAttackTimeWait;
 
     private void Awake()
     {
@@ -19,18 +24,14 @@ public class PlayerNormalAttackController : MonoBehaviour
             _animationController = FindObjectOfType<PlayerAnimationController>();
         if (_hitBox == null)
             _hitBox = GameObject.Find("HitBox").GetComponent<PlayerHitBox>();
+
+        _preAttackTimeWait = new WaitForSeconds(_preAttackTime);
     }
 
     private void Start()
     {
         _attackSpeed = _manager.Data.NormalAttackSpeed;
-        _coolTime = new WaitForSeconds(_attackSpeed);
-    }
-
-    private void OnDataUpdate()
-    {
-        if (_attackSpeed != _manager.Data.NormalAttackSpeed)
-            _coolTime = new WaitForSeconds(_manager.Data.NormalAttackSpeed);
+        _attackSpeedWait = new WaitForSeconds(_attackSpeed);
     }
 
     private IEnumerator NormalAttack()
@@ -39,9 +40,10 @@ public class PlayerNormalAttackController : MonoBehaviour
 
         while (true)
         {
-            _hitBox.SetHitBoxOffset();
             _animationController.NormalAttack();
-            yield return _coolTime;
+            yield return _preAttackTimeWait;
+            _hitBox.SetHitBoxOffset(_animationController.GetCurrentAnimationLength() - _postAttackTime);
+            yield return _attackSpeedWait;
         }
     }
 

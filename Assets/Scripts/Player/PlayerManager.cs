@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// Manages Player Data
+// Manages Player Data and status
 public class PlayerManager : MonoBehaviour
 {
     [SerializeField] private PlayerNormalAttackController _normalAttackController;

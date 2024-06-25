@@ -16,6 +16,8 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
     protected virtual void Awake()
     {
         _animator = GetComponent<Animator>();
+        if(_stateManager == null)
+            _stateManager = gameObject.GetComponentInParent<EnemyStateManager>();
         _player = GameObject.FindGameObjectWithTag("Player");
     }
 
@@ -51,6 +53,11 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
         PlayAnimation("NormalAttack", false);
     }
 
+    public virtual void Die()
+    {
+        PlayAnimation("Die", false);
+    }
+
     protected virtual void PlayAnimation(string animationName, bool canTransition)
     { 
         StartCoroutine(C_PlayAnimation(animationName, canTransition));
@@ -76,11 +83,17 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
         }
     }
 
-    public virtual void SetMoveAnimation(string animationName)
+    public void SetMoveAnimation(string animationName)
     {
         int length = (int)EnemyMoveState.Length;
         for (int i = 0; i < length; i++)
             _animator.SetBool(((EnemyMoveState)i).ToString(), false);
         _animator.SetBool(animationName, true);
+    }
+
+    public float GetCurrentAnimationLength()
+    {
+        float animationTime = _animator.GetCurrentAnimatorStateInfo(0).length;
+        return animationTime;
     }
 }
