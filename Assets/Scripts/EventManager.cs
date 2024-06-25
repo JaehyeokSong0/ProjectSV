@@ -24,4 +24,14 @@ public class EventManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        // TEST CODE
+        OnPlayerDead?.AddListener(TestFunc);
+    }
+
+    private void TestFunc()
+    {
+        Debug.Log("player dead");
+    }
 }

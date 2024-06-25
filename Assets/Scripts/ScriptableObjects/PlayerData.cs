@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PlayerData", menuName = "Data/Create PlayerData")]
 public class PlayerData : ScriptableObject
 {
-    public float Hp = 100f;
+    public float Hp = 200f;
     public float Mp = 100f;
     public float Stamina = 100f;
     public float Exp = 0f;

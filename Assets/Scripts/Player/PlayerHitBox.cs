@@ -31,18 +31,16 @@ public class PlayerHitBox : MonoBehaviour
         }
     }
 
-    public void SetHitBoxOffset(float coolTime)
+    public void SetHitBoxOffset(Vector2 direction, float coolTime)
     {
         _coolTime = coolTime;
-        StartCoroutine(C_SetHitBoxOffset());
+        StartCoroutine(C_SetHitBoxOffset(direction));
     }
 
-    private IEnumerator C_SetHitBoxOffset()
+    private IEnumerator C_SetHitBoxOffset(Vector2 direction)
     {
         if (_isDirectionLocked == false)
-        {                
-            Vector2 direction = _manager.GetPlayerDirection();
-
+        {   
             _isDirectionLocked = true;
             _hitBox.offset = direction.normalized;
 

@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class PlayerAnimationController : MonoBehaviour
 {
+    [SerializeField] private PlayerManager _manager;
     [SerializeField] private Animator _animator;
     [SerializeField] private PlayerStateManager _stateManager;
 
@@ -15,11 +16,10 @@ public class PlayerAnimationController : MonoBehaviour
         _animator = GetComponent<Animator>();
         if (_stateManager == null)
             _stateManager = FindObjectOfType<PlayerStateManager>();
-    }
+        if(_manager == null)
+            _manager = transform.parent.GetComponent<PlayerManager>();
 
-    private void Update()
-    {
-        
+        EventManager.Instance.OnPlayerDead?.AddListener(Die);
     }
 
     public void Idle()
@@ -42,6 +42,11 @@ public class PlayerAnimationController : MonoBehaviour
     public void NormalAttack()
     {
         PlayAnimation("NormalAttack", false);
+    }
+
+    public void Die()
+    {
+        PlayAnimation("Die", false);
     }
 
     public void UpdateDirection(Vector2 direction)

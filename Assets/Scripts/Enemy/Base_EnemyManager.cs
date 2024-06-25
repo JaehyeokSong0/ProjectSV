@@ -1,16 +1,17 @@
 using System.Collections;
 using UnityEngine;
 
-// Manages Enemy Data and status
+// Manages Enemy status and events
 public abstract class Base_EnemyManager : MonoBehaviour
 {
     protected Base_EnemyActionController _actionController;
 
     // Should be assigned in Awake() of derived class
     // Data = ScriptableObject.CreateInstance<EnemyData>();
-    public EnemyData Data 
+    public EnemyData Data
     { get; set; }
-    public bool IsAttacked
+
+    public bool IsAttacked // If attacked recently, it has invincible time for a while
     { get; set; }
 
     protected virtual void Start()
@@ -20,7 +21,7 @@ public abstract class Base_EnemyManager : MonoBehaviour
 
     public virtual void OnEnemyDamaged(float damage, float coolTime)
     {
-        if(IsAttacked == false) // If attacked recently, it has invincible time for a while
+        if (IsAttacked == false)
         {
             Debug.Log($"{gameObject.name} damaged : {Data.Hp} -> {Data.Hp - damage}");
 
@@ -33,5 +34,5 @@ public abstract class Base_EnemyManager : MonoBehaviour
         _actionController.Walk(Data.WalkSpeed);
     }
 
- 
+
 }

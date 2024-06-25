@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d35aa0007d957854593cc63416e93382, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  Hp: 100
+  Hp: 200
   Mp: 100
   Stamina: 100
   Exp: 0
-  WalkSpeed: 0.03
-  RunSpeed: 0.05
+  WalkSpeed: 0.02
+  RunSpeed: 0.04
+  NormalAttackSpeed: 3
+  NormalAttackDamage: 20

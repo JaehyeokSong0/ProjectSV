@@ -41,8 +41,9 @@ public class PlayerNormalAttackController : MonoBehaviour
         while (true)
         {
             _animationController.NormalAttack();
+            Vector2 direction = _manager.PlayerDirectionBuffer;
             yield return _preAttackTimeWait;
-            _hitBox.SetHitBoxOffset(_animationController.GetCurrentAnimationLength() - _postAttackTime);
+            _hitBox.SetHitBoxOffset(direction, _animationController.GetCurrentAnimationLength() - _postAttackTime);
             yield return _attackSpeedWait;
         }
     }

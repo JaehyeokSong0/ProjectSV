@@ -74,7 +74,7 @@ public class PlayerInputController : MonoBehaviour
         if (_arrowInput != Vector2.zero)
             _playerDirection = _arrowInput;
 
-        _manager.SetPlayerDirection(_playerDirection);
+        _manager.PlayerDirectionBuffer = _playerDirection;
 
         if (_isLeftShiftPressed == false)
             Walk();

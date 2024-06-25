@@ -76,6 +76,7 @@ MonoBehaviour:
   _stateManager: {fileID: 1199603433414236016}
   _manager: {fileID: 4345296431834202498}
   _animationController: {fileID: 3251062995762313782}
+  _spriteRenderer: {fileID: 4204507492029140168}
 --- !u!70 &2719839352838828563
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
