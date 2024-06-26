@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -17,7 +18,8 @@ public abstract class Base_EnemyActionController : MonoBehaviour
 
     // Should be initialized in derived class
     // Used to synchronize with attack animation of each enemy classes
-    protected float _preAttackTime = 0f; 
+    protected float _preAttackTime = 0f;
+    protected WaitForSeconds _preAttackTimeWait;
 
     [SerializeField] protected SpriteRenderer _spriteRenderer;
     private WaitForSeconds _colorChangeTimeWait = new WaitForSeconds(0.5f);
@@ -40,6 +42,8 @@ public abstract class Base_EnemyActionController : MonoBehaviour
 
     protected virtual void Start()
     {
+        _preAttackTimeWait = new WaitForSeconds(_preAttackTime);
+
         EventManager.Instance.OnPlayerDead?.AddListener(this.OnPlayerDead);
     }
 
@@ -94,15 +98,20 @@ public abstract class Base_EnemyActionController : MonoBehaviour
     {
         _stateManager.MoveState = EnemyMoveState.Idle;
         _animationController.SetMoveAnimation("Idle");
-
         _animationController.NormalAttack();
+
+        // Synchronize attack event with attack animation
+        yield return _preAttackTimeWait;
+        Vector3 direction = _player.transform.position - transform.position;
+        if (direction.magnitude < _manager.Data.NormalAttackRange)
+            EventManager.Instance.OnPlayerDamaged?.Invoke(_manager.Data.NormalAttackDamage);
         //EventManager.Instance.OnPlayerDamaged?.Invoke(_manager.Data.NormalAttackDamage);
-        StartCoroutine(C_InvokeDelayedEvent(
-            EventManager.Instance.OnPlayerDamaged, _manager.Data.NormalAttackDamage, _preAttackTime));
+        //StartCoroutine(C_InvokeDelayedEvent(
+        //    EventManager.Instance.OnPlayerDamaged, _manager.Data.NormalAttackDamage, _preAttackTime));
         yield return new WaitForSeconds(_manager.Data.NormalAttackSpeed);
 
         // Reset Move Animation
-        Vector3 direction = _player.transform.position - transform.position;
+        direction = _player.transform.position - transform.position;
         if (direction.magnitude < _manager.Data.NormalAttackRange)
             _stateManager.MoveState = EnemyMoveState.Idle;
         else

@@ -3,7 +3,7 @@ public class DeathLordActionController : Base_EnemyActionController
     protected override void Awake()
     {
         base.Awake();
-        _preAttackTime = 0.5f;
+        _preAttackTime = 1f;
     }
 
     protected override void Start()
