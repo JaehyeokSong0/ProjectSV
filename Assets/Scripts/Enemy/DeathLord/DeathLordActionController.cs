@@ -1,12 +1,9 @@
-using System.Collections;
-using UnityEngine;
-
 public class DeathLordActionController : Base_EnemyActionController
 {
-
     protected override void Awake()
     {
         base.Awake();
+        _preAttackTime = 0.5f;
     }
 
     protected override void Start()

@@ -14,5 +14,5 @@ public class PlayerData : ScriptableObject
     public float WalkSpeed = 0.02f;
     public float RunSpeed = 0.04f;
     public float NormalAttackSpeed = 3.0f;
-    public float NormalAttackDamage = 20f;
+    public float NormalAttackDamage = 50f;
 }

@@ -5,13 +5,13 @@ using UnityEngine;
 [RequireComponent (typeof(Animator))]
 public abstract class Base_EnemyAnimationController : MonoBehaviour
 {
-    private const float _attackDelay = 0.5f;
+    private const float _postActionDelay = 0.5f; // after action(canTransition) delay
 
     [SerializeField] protected Animator _animator;
     [SerializeField] protected EnemyStateManager _stateManager;
     protected GameObject _player;
 
-    private bool _isDirectionLocked = false; // Used to lock direction of attack animation
+    private bool _isDirectionLocked; // Used to lock direction of attack animation
 
     protected virtual void Awake()
     {
@@ -19,6 +19,16 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
         if(_stateManager == null)
             _stateManager = gameObject.GetComponentInParent<EnemyStateManager>();
         _player = GameObject.FindGameObjectWithTag("Player");
+    }
+
+    protected virtual void OnEnable()
+    {
+        _isDirectionLocked = false;
+    }
+
+    protected virtual void OnDisable()
+    {
+        StopAllCoroutines();
     }
 
     protected virtual void Update()
@@ -75,7 +85,7 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
 
             _animator.SetTrigger(animationName);
             float animationTime = _animator.GetCurrentAnimatorStateInfo(0).length;
-            yield return new WaitForSeconds(animationTime + _attackDelay);
+            yield return new WaitForSeconds(animationTime + _postActionDelay);
 
             SetMoveAnimation(_stateManager.MoveState.ToString());
 

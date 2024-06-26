@@ -19,9 +19,15 @@ public class EnemyStateManager : MonoBehaviour
 {
     [SerializeField] private EnemyMoveState _enemyMoveState;
     public EnemyMoveState MoveState { get { return _enemyMoveState; } set { _enemyMoveState = value; } }
+    [HideInInspector] public bool IsDead;
 
     private void Awake()
     {
         MoveState = EnemyMoveState.Walk;
+    }
+
+    private void OnEnable()
+    {
+        IsDead = false;
     }
 }

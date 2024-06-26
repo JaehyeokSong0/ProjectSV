@@ -1,5 +1,5 @@
-using System.Collections;
 using UnityEngine;
+using UnityEngine.Pool;
 
 // Manages Enemy status and events
 public abstract class Base_EnemyManager : MonoBehaviour
@@ -8,13 +8,12 @@ public abstract class Base_EnemyManager : MonoBehaviour
 
     // Should be assigned in Awake() of derived class
     // Data = ScriptableObject.CreateInstance<EnemyData>();
-    public EnemyData Data
-    { get; set; }
+    public EnemyData Data;
+    public bool IsAttacked; // If attacked recently, it has invincible time for a while
 
-    public bool IsAttacked // If attacked recently, it has invincible time for a while
-    { get; set; }
+    public IObjectPool<GameObject> Pool;
 
-    protected virtual void Start()
+    protected virtual void OnEnable()
     {
         Initialize();
     }
@@ -27,10 +26,13 @@ public abstract class Base_EnemyManager : MonoBehaviour
         }
     }
 
+    public virtual void OnEnemyDead()
+    {
+        Pool.Release(gameObject);
+    }
+
     protected virtual void Initialize()
     {
         _actionController.Walk(Data.WalkSpeed);
     }
-
-
 }

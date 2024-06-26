@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 // Manages actions of the enemy
 public abstract class Base_EnemyActionController : MonoBehaviour
@@ -14,11 +15,20 @@ public abstract class Base_EnemyActionController : MonoBehaviour
     [SerializeField] protected Base_EnemyAnimationController _animationController;
     protected Coroutine _walkCoroutine;
 
+    // Should be initialized in derived class
+    // Used to synchronize with attack animation of each enemy classes
+    protected float _preAttackTime = 0f; 
+
     [SerializeField] protected SpriteRenderer _spriteRenderer;
     private WaitForSeconds _colorChangeTimeWait = new WaitForSeconds(0.5f);
 
-
     protected virtual void Awake()
+    {
+        if (_spriteRenderer == null)
+            _spriteRenderer = transform.Find("Model").GetComponent<SpriteRenderer>();
+    }
+
+    protected virtual void OnEnable()
     {
         if (_player == null)
         {
@@ -26,8 +36,6 @@ public abstract class Base_EnemyActionController : MonoBehaviour
             if (_player == null)
                 Debug.Log("Cannot find Player");
         }
-        if (_spriteRenderer == null)
-            _spriteRenderer = transform.Find("Model").GetComponent<SpriteRenderer>();
     }
 
     protected virtual void Start()
@@ -38,7 +46,8 @@ public abstract class Base_EnemyActionController : MonoBehaviour
     public void OnPlayerDead()
     {
         StopAllCoroutines();
-        Idle();
+        if (_stateManager.IsDead == false)// If not in die animation
+            Idle();
     }
 
     public virtual void Idle()
@@ -58,7 +67,12 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         _animationController.Walk();
 
         Vector3 direction;
-
+        if (_player == null)
+        {
+            _player = GameObject.FindGameObjectWithTag("Player");
+            if (_player == null)
+                Debug.Log("Cannot find Player");
+        }
         while (true)
         {
             direction = _player.transform.position - transform.position;
@@ -76,14 +90,15 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         StartCoroutine(C_NormalAttack());
     }
 
-    protected IEnumerator C_NormalAttack()
+    protected virtual IEnumerator C_NormalAttack()
     {
         _stateManager.MoveState = EnemyMoveState.Idle;
         _animationController.SetMoveAnimation("Idle");
 
         _animationController.NormalAttack();
-        EventManager.Instance.OnPlayerDamaged.Invoke(_manager.Data.NormalAttackDamage);
-
+        //EventManager.Instance.OnPlayerDamaged?.Invoke(_manager.Data.NormalAttackDamage);
+        StartCoroutine(C_InvokeDelayedEvent(
+            EventManager.Instance.OnPlayerDamaged, _manager.Data.NormalAttackDamage, _preAttackTime));
         yield return new WaitForSeconds(_manager.Data.NormalAttackSpeed);
 
         // Reset Move Animation
@@ -104,6 +119,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
     public virtual void Die()
     {
         _stateManager.MoveState = EnemyMoveState.Idle;
+        _stateManager.IsDead = true;
         StopCoroutine(_walkCoroutine);
         StartCoroutine(C_Die());
     }
@@ -113,8 +129,8 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         _animationController.Die();
         float animationTime = _animationController.GetCurrentAnimationLength();
 
-        yield return new WaitForSeconds(animationTime);
-        Destroy(gameObject, _deadRemainTime);
+        yield return new WaitForSeconds(animationTime + _deadRemainTime);
+        _manager.OnEnemyDead();
     }
 
     private IEnumerator ReduceHP(float damage, float coolTime)
@@ -133,6 +149,19 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         _manager.IsAttacked = false;
     }
 
+    #region Utility Functions
+    protected IEnumerator C_InvokeDelayedEvent(UnityEvent @event, float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+        @event?.Invoke();
+    }
+
+    protected IEnumerator C_InvokeDelayedEvent(UnityEvent<float> @event, float param, float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+        @event?.Invoke(param);
+    }
+
     private IEnumerator ChangeSpriteColor(Color color)
     {
         Color colorBuffer = _spriteRenderer.color;
@@ -142,4 +171,5 @@ public abstract class Base_EnemyActionController : MonoBehaviour
 
         _spriteRenderer.color = colorBuffer;
     }
+    #endregion
 }

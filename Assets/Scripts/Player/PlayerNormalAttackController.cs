@@ -9,7 +9,7 @@ public class PlayerNormalAttackController : MonoBehaviour
 
     private float _attackSpeed;
     private WaitForSeconds _attackSpeedWait = null;
-    private WaitForSeconds _attackDelay = new WaitForSeconds(1f);
+    private WaitForSeconds _preAttackDelayWait = new WaitForSeconds(0.2f); // Before attack delay.
 
     // Correction factors for attack animation time
     private const float _preAttackTime = 0.2f;
@@ -36,7 +36,7 @@ public class PlayerNormalAttackController : MonoBehaviour
 
     private IEnumerator NormalAttack()
     {
-        yield return _attackDelay;
+        yield return _preAttackDelayWait;
 
         while (true)
         {

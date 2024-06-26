@@ -4,14 +4,14 @@ public class DeathLordManager : Base_EnemyManager
 {
     private void Awake()
     {
-        Data = ScriptableObject.CreateInstance<EnemyData>();
         if (_actionController == null)
             _actionController = GetComponent<DeathLordActionController>();
     }
 
-    protected override void Start()
+    protected override void OnEnable()
     {
-        base.Start();
+        Data = ScriptableObject.CreateInstance<EnemyData>();
+        base.OnEnable();
     }
 
     public override void OnEnemyDamaged(float damage, float coolTime)

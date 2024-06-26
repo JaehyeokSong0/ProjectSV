@@ -17,8 +17,10 @@ public class PlayerAnimationController : MonoBehaviour
             _stateManager = FindObjectOfType<PlayerStateManager>();
         if(_manager == null)
             _manager = transform.parent.GetComponent<PlayerManager>();
-
-        EventManager.Instance.OnPlayerDead?.AddListener(Die);
+    }
+    private void Start()
+    {
+        EventManager.Instance.OnPlayerDead?.AddListener(Die);    
     }
 
     public void Idle()
