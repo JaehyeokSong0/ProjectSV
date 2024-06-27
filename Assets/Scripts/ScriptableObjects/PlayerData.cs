@@ -17,5 +17,5 @@ public class PlayerData : ScriptableObject
     [HideInInspector] public float NormalAttackSpeed = 3.0f;
     [HideInInspector] public float NormalAttackDamage = 50f;
 
-    [HideInInspector] public float SkillCapacity = 3f;
+    [HideInInspector] public int SkillCapacity = 7;
 }
