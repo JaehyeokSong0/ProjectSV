@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -22,7 +21,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
     protected WaitForSeconds _preAttackTimeWait;
 
     [SerializeField] protected SpriteRenderer _spriteRenderer;
-    private WaitForSeconds _colorChangeTimeWait = new WaitForSeconds(0.5f);
+    private WaitForSeconds _colorChangeTimeWait = new WaitForSeconds(0.1f);
 
     protected virtual void Awake()
     {
@@ -30,7 +29,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
             _spriteRenderer = transform.Find("Model").GetComponent<SpriteRenderer>();
     }
 
-    protected virtual void OnEnable()
+    protected void OnEnable()
     {
         if (_player == null)
         {
@@ -47,6 +46,12 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         EventManager.Instance.OnPlayerDead?.AddListener(this.OnPlayerDead);
     }
 
+    public void Initialize()
+    {
+        _spriteRenderer.color = Color.white;
+        Walk(_manager.Data.WalkSpeed);
+    }
+
     public void OnPlayerDead()
     {
         StopAllCoroutines();
@@ -54,13 +59,13 @@ public abstract class Base_EnemyActionController : MonoBehaviour
             Idle();
     }
 
-    public virtual void Idle()
+    public void Idle()
     {
         _stateManager.MoveState = EnemyMoveState.Idle;
         _animationController.Idle();
     }
 
-    public virtual void Walk(float moveSpeed)
+    public void Walk(float moveSpeed)
     {
         _walkCoroutine = StartCoroutine(C_Walk(moveSpeed));
     }
@@ -89,12 +94,12 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         }
     }
 
-    public virtual void NormalAttack()
+    public void NormalAttack()
     {
         StartCoroutine(C_NormalAttack());
     }
 
-    protected virtual IEnumerator C_NormalAttack()
+    protected IEnumerator C_NormalAttack()
     {
         _stateManager.MoveState = EnemyMoveState.Idle;
         _animationController.SetMoveAnimation("Idle");
@@ -119,13 +124,19 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         _animationController.Move();
     }
 
-    public virtual void TakeDamage(float damage, float coolTime)
+    public void TakeDamage(float damage) 
+    {
+        ReduceHP(damage);
+        StartCoroutine(ChangeSpriteColor(Color.red));
+    }
+
+    public void TakeDamage(float damage, float coolTime)
     {
         StartCoroutine(ReduceHP(damage, coolTime));
         StartCoroutine(ChangeSpriteColor(Color.red));
     }
 
-    public virtual void Die()
+    public void Die()
     {
         _stateManager.MoveState = EnemyMoveState.Idle;
         _stateManager.IsDead = true;
@@ -142,15 +153,26 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         _manager.OnEnemyDead();
     }
 
+    private void ReduceHP(float damage)
+    {
+        if (_manager.Data.Hp - damage >= 0f)
+            _manager.Data.Hp -= damage;
+        else
+            _manager.Data.Hp = 0f;
+
+        if (_manager.Data.Hp <= 0f)
+            Die();
+    }
+
     private IEnumerator ReduceHP(float damage, float coolTime)
     {
         _manager.IsAttacked = true;
-        if (_manager.Data.Hp - damage >= 0)
+        if (_manager.Data.Hp - damage >= 0f)
             _manager.Data.Hp -= damage;
         else
-            _manager.Data.Hp = 0;
+            _manager.Data.Hp = 0f;
 
-        if (_manager.Data.Hp <= 0)
+        if (_manager.Data.Hp <= 0f)
             Die();
 
         yield return new WaitForSeconds(coolTime);
@@ -159,17 +181,6 @@ public abstract class Base_EnemyActionController : MonoBehaviour
     }
 
     #region Utility Functions
-    protected IEnumerator C_InvokeDelayedEvent(UnityEvent @event, float delayTime)
-    {
-        yield return new WaitForSeconds(delayTime);
-        @event?.Invoke();
-    }
-
-    protected IEnumerator C_InvokeDelayedEvent(UnityEvent<float> @event, float param, float delayTime)
-    {
-        yield return new WaitForSeconds(delayTime);
-        @event?.Invoke(param);
-    }
 
     private IEnumerator ChangeSpriteColor(Color color)
     {

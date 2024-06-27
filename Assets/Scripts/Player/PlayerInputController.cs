@@ -8,6 +8,7 @@ public class PlayerInputController : MonoBehaviour
     [SerializeField] private PlayerAnimationController _animationController;
     [SerializeField] private PlayerStateManager _stateManager;
     [SerializeField] private PlayerNormalAttackController _normalAttackController;
+    [SerializeField] private PlayerSkillController _skillController;
 
     private Vector2 _arrowInput;
     private Vector2 _playerDirection;
@@ -80,6 +81,12 @@ public class PlayerInputController : MonoBehaviour
 
         if (context.canceled == true)
             Idle();
+    }
+
+    public void OnKeyQPressed(InputAction.CallbackContext context)
+    {
+        if (context.performed == true)
+            _skillController.CastSkill();
     }
 
     private void Idle()

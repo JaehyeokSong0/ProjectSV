@@ -1,8 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider2D))]
-[RequireComponent (typeof(Rigidbody2D))]
+[RequireComponent(typeof(BoxCollider2D)), RequireComponent (typeof(Rigidbody2D))]
 public class PlayerHitBox : MonoBehaviour
 {
     [SerializeField] private PlayerManager _manager;

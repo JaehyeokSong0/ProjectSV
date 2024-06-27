@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// Manages game flow
 public class GameManager : MonoBehaviour
 {
     [SerializeField] PlayerManager _playerManager;

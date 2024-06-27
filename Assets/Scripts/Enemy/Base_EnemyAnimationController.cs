@@ -13,7 +13,7 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
 
     private bool _isDirectionLocked; // Used to lock direction of attack animation
 
-    protected virtual void Awake()
+    protected void Awake()
     {
         _animator = GetComponent<Animator>();
         if(_stateManager == null)
@@ -21,17 +21,17 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
         _player = GameObject.FindGameObjectWithTag("Player");
     }
 
-    protected virtual void OnEnable()
+    protected void OnEnable()
     {
         _isDirectionLocked = false;
     }
 
-    protected virtual void OnDisable()
+    protected void OnDisable()
     {
         StopAllCoroutines();
     }
 
-    protected virtual void Update()
+    protected void Update()
     {
         Vector2 direction = _player.transform.position - transform.position;
         direction.Normalize();
@@ -43,37 +43,37 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
         }
     }
 
-    public virtual void Move()
+    public void Move()
     {
         PlayAnimation(_stateManager.MoveState.ToString(), true);
     }
 
-    public virtual void Idle()
+    public void Idle()
     {
         PlayAnimation("Idle", true);
     }
 
-    public virtual void Walk()
+    public void Walk()
     {
         PlayAnimation("Walk", true);
     }
 
-    public virtual void NormalAttack()
+    public void NormalAttack()
     {
         PlayAnimation("NormalAttack", false);
     }
 
-    public virtual void Die()
+    public void Die()
     {
         PlayAnimation("Die", false);
     }
 
-    protected virtual void PlayAnimation(string animationName, bool canTransition)
+    protected void PlayAnimation(string animationName, bool canTransition)
     { 
         StartCoroutine(C_PlayAnimation(animationName, canTransition));
     }
 
-    protected virtual IEnumerator C_PlayAnimation(string animationName, bool canTransition)
+    protected IEnumerator C_PlayAnimation(string animationName, bool canTransition)
     {
         yield return null;
 

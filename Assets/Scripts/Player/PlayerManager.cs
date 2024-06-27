@@ -11,10 +11,9 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] protected SpriteRenderer _spriteRenderer;
     private WaitForSeconds _colorChangeTimeWait = new WaitForSeconds(2f);
 
-    private const float _invincibleTime = 2f;
     private WaitForSeconds _invincibleTimeWait;
-    public bool IsInvincible { get; set; }
-    public PlayerData Data { get; set; }
+    public bool IsInvincible { get; private set; }
+    [HideInInspector] public PlayerData Data;
     public Vector2 PlayerDirectionBuffer 
     { 
         get 
@@ -32,6 +31,7 @@ public class PlayerManager : MonoBehaviour
     private void Awake()
     {
         Data = ScriptableObject.CreateInstance<PlayerData>();
+            
         if(_inputController == null )
             _inputController = transform.Find("InputController").GetComponent<PlayerInputController>();
         if (_normalAttackController == null)
@@ -39,7 +39,7 @@ public class PlayerManager : MonoBehaviour
         if (_spriteRenderer == null)
             _spriteRenderer = transform.Find("Model").GetComponent<SpriteRenderer>();
 
-        _invincibleTimeWait = new WaitForSeconds(_invincibleTime);
+        _invincibleTimeWait = new WaitForSeconds(Data.InvincibleTime);
     }
 
     private void Start()

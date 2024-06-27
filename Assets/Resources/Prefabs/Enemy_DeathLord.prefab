@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4399067219307610265}
   - component: {fileID: 1199603433414236016}
+  - component: {fileID: 8756936298146715425}
   - component: {fileID: 4345296431834202498}
   - component: {fileID: 5734785738671160797}
   - component: {fileID: 2719839352838828563}
@@ -49,6 +50,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyMoveState: 1
+  IsDead: 0
+--- !u!114 &8756936298146715425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5015749245414901926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f2113aa2b1977c4d9bcba3b0b8cf8d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Hp: 0
+  WalkSpeed: 0
+  RunSpeed: 0
+  NormalAttackSpeed: 0
+  NormalAttackRange: 0
+  NormalAttackDamage: 0
 --- !u!114 &4345296431834202498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,6 +81,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e8e1db6fa1cad340b62099b676f1057, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Data: {fileID: 8756936298146715425}
+  IsAttacked: 0
 --- !u!114 &5734785738671160797
 MonoBehaviour:
   m_ObjectHideFlags: 0

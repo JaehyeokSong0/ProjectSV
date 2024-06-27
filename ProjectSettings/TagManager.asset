@@ -48,9 +48,18 @@ TagManager:
   - name: Enemy
     uniqueID: 4284256293
     locked: 0
+  - name: NormalAttackEffect
+    uniqueID: 3113070767
+    locked: 0
+  - name: SkillEffect
+    uniqueID: 3325132457
+    locked: 0
   - name: Player
     uniqueID: 2924175793
     locked: 0
-  - name: Effect
-    uniqueID: 3325132457
+  - name: UI
+    uniqueID: 3515485847
+    locked: 0
+  - name: UI_SkillIcon
+    uniqueID: 1681316979
     locked: 0
