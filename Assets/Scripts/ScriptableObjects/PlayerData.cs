@@ -3,8 +3,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PlayerData", menuName = "Data/Create PlayerData")]
 public class PlayerData : ScriptableObject
 {
-    [HideInInspector] public float CurrentHp = 200f;
-    [HideInInspector] public float MaxHp = 200f;
+    [HideInInspector] public float CurrentHp = 1000f;
+    [HideInInspector] public float MaxHp = 1000f;
     [HideInInspector] public float CurrentMp = 100f;
     [HideInInspector] public float MaxMp = 100f;
     [HideInInspector] public float CurrentStamina = 100f;
@@ -17,5 +17,5 @@ public class PlayerData : ScriptableObject
     [HideInInspector] public float NormalAttackSpeed = 3.0f;
     [HideInInspector] public float NormalAttackDamage = 50f;
 
-    [HideInInspector] public int SkillCapacity = 8;
+    [HideInInspector] public int SkillCapacity = 8; // Must change Panel_Skill of GameScene if changed
 }

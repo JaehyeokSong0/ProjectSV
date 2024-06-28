@@ -140,7 +140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _manager: {fileID: 243380511}
-  _gravityGO: {fileID: 0}
+  _gravityGO: {fileID: 619776870881187676, guid: 56381ad15048e9a43a928aec5a09183a, type: 3}
 --- !u!1 &74725063
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,6 +255,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 621ec93968124a74187a5a5455064b27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &243380512 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5187549852781043030, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
+  m_PrefabInstance: {fileID: 1876690416818662481}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a88c85a0d932358478c954e6e4508c28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &253313280
@@ -1087,6 +1098,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &1377767755 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3672128317819342846, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
+  m_PrefabInstance: {fileID: 1876690416818662481}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1549006316 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6878835149580052311, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
@@ -1419,6 +1435,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 110308792844473865, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
+      propertyPath: m_Name
+      value: SkillController
+      objectReference: {fileID: 0}
     - target: {fileID: 204264316295508176, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
       propertyPath: m_SortingLayer
       value: 3
@@ -1431,6 +1451,10 @@ PrefabInstance:
       propertyPath: Data
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1868679089362906964, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
+      propertyPath: _stateManager
+      value: 
+      objectReference: {fileID: 243380512}
     - target: {fileID: 1868679089362906964, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
       propertyPath: _skillController
       value: 
@@ -1515,6 +1539,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2969739278909448516, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
+      propertyPath: _spriteRenderer
+      value: 
+      objectReference: {fileID: 1377767755}
     - target: {fileID: 4140274996680484669, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
       propertyPath: m_Name
       value: Player

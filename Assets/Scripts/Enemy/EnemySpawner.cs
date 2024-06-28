@@ -8,9 +8,9 @@ public class EnemySpawner : MonoBehaviour
 {
     public static EnemySpawner Instance = null;
 
-    private const int _defaultCapacity = 10;
-    private const int _maxSize = 100;
-    private float _spawnTime = 2.5f;
+    private const int _defaultCapacity = 20;
+    private const int _maxSize = 50;
+    private float _spawnTime = 1.5f;
     private WaitForSeconds _spawnTimeWait;
     private Coroutine _spawnCoroutine = null;
 
@@ -60,7 +60,7 @@ public class EnemySpawner : MonoBehaviour
     {
         while(true)
         {
-            var enemy = Pool.Get();
+            Pool.Get();
             yield return _spawnTimeWait;
         }
     }
@@ -75,7 +75,7 @@ public class EnemySpawner : MonoBehaviour
     {
         Pool = new ObjectPool<GameObject>(
             CreateEnemy, OnGetEnemy, OnReleaseEnemy, OnDestroyEnemy, 
-            defaultCapacity: _defaultCapacity, maxSize:_maxSize);
+            defaultCapacity: _defaultCapacity, maxSize: _maxSize);
 
         for(int i = 0; i < _defaultCapacity; i++)
         {

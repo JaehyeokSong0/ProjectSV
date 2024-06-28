@@ -6,7 +6,6 @@ public class PlayerInputController : MonoBehaviour
     [SerializeField] private PlayerManager _manager;
     [SerializeField] private GameObject _playerGO;
     [SerializeField] private PlayerAnimationController _animationController;
-    [SerializeField] private PlayerStateManager _stateManager;
     [SerializeField] private PlayerNormalAttackController _normalAttackController;
     [SerializeField] private PlayerSkillController _skillController;
 
@@ -22,8 +21,6 @@ public class PlayerInputController : MonoBehaviour
             _playerGO = GameObject.FindGameObjectWithTag("Player");
         if (_animationController == null)
             _animationController = FindObjectOfType<PlayerAnimationController>();
-        if (_stateManager == null)
-            _stateManager = FindObjectOfType<PlayerStateManager>();
         if(_normalAttackController == null)
             _normalAttackController = FindObjectOfType<PlayerNormalAttackController>(); 
     }
@@ -40,7 +37,7 @@ public class PlayerInputController : MonoBehaviour
         }
         else
         {
-            if (_stateManager.MoveState != PlayerMoveState.Idle)
+            if (_manager.State.MoveState != PlayerMoveState.Idle)
                 Idle();
         }
     }
@@ -52,13 +49,13 @@ public class PlayerInputController : MonoBehaviour
 
         _isLeftShiftPressed = true;
 
-        if (_stateManager.MoveState != PlayerMoveState.Idle) // IsMoving
+        if (_manager.State.MoveState != PlayerMoveState.Idle) // IsMoving
             Run();
 
         if (context.canceled)
         {
             _isLeftShiftPressed = false;
-            if (_stateManager.MoveState != PlayerMoveState.Idle)
+            if (_manager.State.MoveState != PlayerMoveState.Idle)
                 Walk();
         }
     }
@@ -91,19 +88,19 @@ public class PlayerInputController : MonoBehaviour
 
     private void Idle()
     {
-        _stateManager.MoveState = PlayerMoveState.Idle;
+        _manager.State.MoveState = PlayerMoveState.Idle;
         _animationController.Idle();
     }
 
     private void Walk()
     {
-        _stateManager.MoveState = PlayerMoveState.Walk;
+        _manager.State.MoveState = PlayerMoveState.Walk;
         _animationController.Walk(_playerDirection);
     }
 
     private void Run()
     {
-        _stateManager.MoveState = PlayerMoveState.Run;
+        _manager.State.MoveState = PlayerMoveState.Run;
         _animationController.Run(_playerDirection);
     }
 }

@@ -27,7 +27,7 @@ public class PlayerHitBox : MonoBehaviour
         {
             if (collision.gameObject.CompareTag("Enemy") == true)
             {
-                collision.gameObject.GetComponent<Base_EnemyManager>()?.OnEnemyDamaged(_manager.Data.NormalAttackDamage, _coolTime);
+                collision.gameObject.GetComponent<Base_EnemyManager>().OnEnemyDamaged(_manager.Data.NormalAttackDamage, _coolTime);
             }
         }
     }

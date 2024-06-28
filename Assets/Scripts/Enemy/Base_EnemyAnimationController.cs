@@ -8,16 +8,16 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
     private const float _postActionDelay = 0.5f; // after action(canTransition) delay
 
     [SerializeField] protected Animator _animator;
-    [SerializeField] protected EnemyStateManager _stateManager;
+    [SerializeField] protected Base_EnemyManager _manager;
     protected GameObject _player;
 
-    private bool _isDirectionLocked; // Used to lock direction of attack animation
+    [SerializeField] private bool _isDirectionLocked; // Used to lock direction of attack animation
 
     protected void Awake()
     {
         _animator = GetComponent<Animator>();
-        if(_stateManager == null)
-            _stateManager = gameObject.GetComponentInParent<EnemyStateManager>();
+        if(_manager == null)
+            _manager = GetComponentInParent<Base_EnemyManager>(); // TODO : fix initialize
         _player = GameObject.FindGameObjectWithTag("Player");
     }
 
@@ -45,7 +45,7 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
 
     public void Move()
     {
-        PlayAnimation(_stateManager.MoveState.ToString(), true);
+        PlayAnimation(_manager.State.MoveState.ToString(), true);
     }
 
     public void Idle()
@@ -87,7 +87,7 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
             float animationTime = _animator.GetCurrentAnimatorStateInfo(0).length;
             yield return new WaitForSeconds(animationTime + _postActionDelay);
 
-            SetMoveAnimation(_stateManager.MoveState.ToString());
+            SetMoveAnimation(_manager.State.MoveState.ToString());
 
             _isDirectionLocked = false;
         }

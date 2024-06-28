@@ -10,6 +10,7 @@ public class EnemyDataManager : MonoBehaviour
     [HideInInspector] public float NormalAttackRange;
     [HideInInspector] public float NormalAttackDamage;
 
+    // Used in derived class of Base_EnemyManager
     public void LoadEnemyData(EnemyData data)
     {
         Hp = data.Hp;

@@ -21,9 +21,10 @@ public class PlayerSkillController : MonoBehaviour
         StartCoroutine(TestFunc());
     }
 
-    private IEnumerator TestFunc()
+    private IEnumerator TestFunc() // TEST CODE
     {
         WaitForSeconds regenTime = new WaitForSeconds(4f);
+        yield return new WaitForSeconds(3f); // Start delay
         while (true)
         {
             if(_skillQueue.Count < _manager.Data.SkillCapacity)

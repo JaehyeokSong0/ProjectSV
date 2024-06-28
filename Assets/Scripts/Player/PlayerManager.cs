@@ -5,20 +5,22 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     [SerializeField] private PlayerInputController _inputController;
+    [SerializeField] private PlayerStateManager _stateManager;
+    [SerializeField] private PlayerData _data;
     [SerializeField] private PlayerNormalAttackController _normalAttackController;
     [SerializeField] private PlayerSkillController _skillController;
+    [SerializeField] private PlayerAnimationController _animationController;
 
     private Vector2 _playerDirectionBuffer = Vector2.down;
-    [SerializeField] protected SpriteRenderer _spriteRenderer;
-    private WaitForSeconds _colorChangeTimeWait = new WaitForSeconds(2f);
 
-    private WaitForSeconds _invincibleTimeWait;
-    public bool IsInvincible { get; private set; }
-    [HideInInspector] public PlayerData Data;
+    public PlayerStateManager State { get { return _stateManager; } }
+    public PlayerData Data { get { return _data; } }
     public Vector2 PlayerDirectionBuffer 
     { 
         get 
-        { return _playerDirectionBuffer; }
+        { 
+            return _playerDirectionBuffer; 
+        }
         set 
         { 
             if (value == Vector2.zero) 
@@ -31,18 +33,18 @@ public class PlayerManager : MonoBehaviour
     #region Event Functions
     private void Awake()
     {
-        Data = ScriptableObject.CreateInstance<PlayerData>();
-            
-        if(_inputController == null )
+        _data = ScriptableObject.CreateInstance<PlayerData>();
+
+        if (_inputController == null )
             _inputController = transform.Find("InputController").GetComponent<PlayerInputController>();
+        if (_stateManager == null)
+            _stateManager = GetComponent<PlayerStateManager>();       
         if (_normalAttackController == null)
             _normalAttackController = transform.Find("NormalAttackController").GetComponent<PlayerNormalAttackController>();
         if (_skillController == null)
             _skillController = transform.Find("SkillController").GetComponent<PlayerSkillController>();
-        if (_spriteRenderer == null)
-            _spriteRenderer = transform.Find("Model").GetComponent<SpriteRenderer>();
-
-        _invincibleTimeWait = new WaitForSeconds(Data.InvincibleTime);
+        if (_animationController == null)
+            _animationController = transform.Find("Model").GetComponent<PlayerAnimationController>();
     }
 
     private void Start()
@@ -55,52 +57,32 @@ public class PlayerManager : MonoBehaviour
     #region Event Callback Actions
     public void OnPlayerDamaged(float damage)
     {
-        if (IsInvincible == true)
+        if (State.IsInvincible == true)
             return;
 
-        if (Data.CurrentHp - damage >= 0)
+        State.SetInvincible(Data.InvincibleTime);
+        if (Data.CurrentHp - damage >= 0f)
             Data.CurrentHp -= damage;
         else
-            Data.CurrentHp = 0;
+            Data.CurrentHp = 0f;
 
-        StartCoroutine(C_TurnInvincible());
-        StartCoroutine(ChangeSpriteColor(Color.red));
+        _animationController.ChangeSpriteColor(Color.red);
 
-        if (Data.CurrentHp == 0)
+        if (Data.CurrentHp <= 0f)
             EventManager.Instance.OnPlayerDead?.Invoke();
     }
 
     public void OnPlayerDead()
     {
-        // Die animation is processed in PlayerAnimationController
         _inputController.gameObject.SetActive(false);
         _normalAttackController.gameObject.SetActive(false);
         _skillController.gameObject.SetActive(false);
+        _animationController.Die();
     }
-
     #endregion
 
     public void Initialize()
     {
         _normalAttackController.StartNormalAttack();
     }
-
-    #region Utility Functions
-    private IEnumerator C_TurnInvincible()
-    {
-        IsInvincible = true;
-        yield return _invincibleTimeWait;
-        IsInvincible = false;
-    }
-
-    private IEnumerator ChangeSpriteColor(Color color)
-    {
-        Color colorBuffer = _spriteRenderer.color;
-        _spriteRenderer.color = color;
-
-        yield return _colorChangeTimeWait;
-
-        _spriteRenderer.color = colorBuffer;
-    }
-    #endregion
 }

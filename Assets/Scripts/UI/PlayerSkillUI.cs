@@ -6,7 +6,7 @@ public class PlayerSkillUI : MonoBehaviour
 {
     private const string _iconPath = "Prefabs/Skills/Icons/";
     private const int _skillCapacity = 8;
-    private const float _iconMoveSpeed = 2f;
+    private const float _iconMoveSpeed = 3f;
     [SerializeField] private List<Transform> _skillGrids = new List<Transform>(); // Just used with its position value
     [SerializeField] private List<GameObject> _skillIcons = new List<GameObject>();
     [SerializeField] private PlayerSkillController _skillController;
@@ -24,7 +24,7 @@ public class PlayerSkillUI : MonoBehaviour
         if (_skillController == null)
             _skillController = FindFirstObjectByType<PlayerSkillController>();
         if (_gravityIcon == null)
-            _gravityIcon = Resources.Load(_iconPath + "Skill_Gravity") as GameObject;
+            _gravityIcon = Resources.Load(_iconPath + "Skill_Gravity_Icon") as GameObject;
 
         _skillIcons.Add(null);
     }
@@ -47,13 +47,13 @@ public class PlayerSkillUI : MonoBehaviour
         {
             _currSkillCount = currSkillCount;
             GameObject iconGO = Instantiate(_gravityIcon, _skillGrids[_skillCapacity - 1]); // TEST CODE
+            StartCoroutine(MoveIcon(iconGO, iconGO.transform.position, _skillGrids[_currSkillCount - 1].position));
 
             if (_skillIcons[_skillIcons.Count - 1] == null)
                 _skillIcons[_skillIcons.Count - 1] = iconGO;
             else
                 _skillIcons.Add(iconGO);
             RefreshIconList();
-            StartCoroutine(MoveIcon(iconGO, iconGO.transform.position, _skillGrids[_currSkillCount - 1].position));
         }
     }
 

@@ -6,21 +6,18 @@ public class PlayerAnimationController : MonoBehaviour
 {
     [SerializeField] private PlayerManager _manager;
     [SerializeField] private Animator _animator;
-    [SerializeField] private PlayerStateManager _stateManager;
+    [SerializeField] protected SpriteRenderer _spriteRenderer;
 
     private bool _isDirectionLocked = false; // Used to lock direction of attack animation
+    private WaitForSeconds _colorChangeTimeWait = new WaitForSeconds(2f);
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        if (_stateManager == null)
-            _stateManager = FindObjectOfType<PlayerStateManager>();
         if(_manager == null)
             _manager = transform.parent.GetComponent<PlayerManager>();
-    }
-    private void Start()
-    {
-        EventManager.Instance.OnPlayerDead?.AddListener(Die);    
+        if (_spriteRenderer == null)
+            _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public void Idle()
@@ -81,7 +78,7 @@ public class PlayerAnimationController : MonoBehaviour
 
             _isDirectionLocked = false;
             UpdateDirection(_manager.PlayerDirectionBuffer);
-            SetMoveAnimation(_stateManager.MoveState.ToString());
+            SetMoveAnimation(_manager.State.MoveState.ToString());
         }
     }
     private void SetMoveAnimation(string animationName)
@@ -95,5 +92,19 @@ public class PlayerAnimationController : MonoBehaviour
     {
         float animationTime = _animator.GetCurrentAnimatorStateInfo(0).length;
         return animationTime;
+    }
+
+    public void ChangeSpriteColor(Color color)
+    {
+        StartCoroutine(C_ChangeSpriteColor(color));
+    }
+    private IEnumerator C_ChangeSpriteColor(Color color)
+    {
+        Color colorBuffer = _spriteRenderer.color;
+        _spriteRenderer.color = color;
+
+        yield return _colorChangeTimeWait;
+
+        _spriteRenderer.color = colorBuffer;
     }
 }

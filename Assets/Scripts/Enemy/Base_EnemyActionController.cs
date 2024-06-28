@@ -8,7 +8,6 @@ public abstract class Base_EnemyActionController : MonoBehaviour
     private const float _deadRemainTime = 0.5f;
 
     protected GameObject _player;
-    [SerializeField] protected EnemyStateManager _stateManager;
     [SerializeField] protected Base_EnemyManager _manager;
 
     // AnimationContoller class should be downcasted in derived class
@@ -48,6 +47,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
 
     public void Initialize()
     {
+        _manager.State.IsDead = false;
         _spriteRenderer.color = Color.white;
         Walk(_manager.Data.WalkSpeed);
     }
@@ -55,13 +55,13 @@ public abstract class Base_EnemyActionController : MonoBehaviour
     public void OnPlayerDead()
     {
         StopAllCoroutines();
-        if (_stateManager.IsDead == false)// If not in die animation
+        if (_manager.State.IsDead == false)// If not in die animation
             Idle();
     }
 
     public void Idle()
     {
-        _stateManager.MoveState = EnemyMoveState.Idle;
+        _manager.State.MoveState = EnemyMoveState.Idle;
         _animationController.Idle();
     }
 
@@ -72,7 +72,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
 
     protected IEnumerator C_Walk(float moveSpeed)
     {
-        _stateManager.MoveState = EnemyMoveState.Walk;
+        _manager.State.MoveState = EnemyMoveState.Walk;
         _animationController.Walk();
 
         Vector3 direction;
@@ -101,7 +101,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
 
     protected IEnumerator C_NormalAttack()
     {
-        _stateManager.MoveState = EnemyMoveState.Idle;
+        _manager.State.MoveState = EnemyMoveState.Idle;
         _animationController.SetMoveAnimation("Idle");
         _animationController.NormalAttack();
 
@@ -110,36 +110,39 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         Vector3 direction = _player.transform.position - transform.position;
         if (direction.magnitude < _manager.Data.NormalAttackRange)
             EventManager.Instance.OnPlayerDamaged?.Invoke(_manager.Data.NormalAttackDamage);
-        //EventManager.Instance.OnPlayerDamaged?.Invoke(_manager.Data.NormalAttackDamage);
-        //StartCoroutine(C_InvokeDelayedEvent(
-        //    EventManager.Instance.OnPlayerDamaged, _manager.Data.NormalAttackDamage, _preAttackTime));
+
         yield return new WaitForSeconds(_manager.Data.NormalAttackSpeed);
 
         // Reset Move Animation
         direction = _player.transform.position - transform.position;
         if (direction.magnitude < _manager.Data.NormalAttackRange)
-            _stateManager.MoveState = EnemyMoveState.Idle;
+            _manager.State.MoveState = EnemyMoveState.Idle;
         else
-            _stateManager.MoveState = EnemyMoveState.Walk;
+            _manager.State.MoveState = EnemyMoveState.Walk;
         _animationController.Move();
     }
 
     public void TakeDamage(float damage) 
     {
+        if (_manager.State.IsDead) 
+            return;
         ReduceHP(damage);
         StartCoroutine(ChangeSpriteColor(Color.red));
     }
 
     public void TakeDamage(float damage, float coolTime)
     {
+        if (_manager.State.IsDead) 
+            return;
         StartCoroutine(ReduceHP(damage, coolTime));
         StartCoroutine(ChangeSpriteColor(Color.red));
     }
 
     public void Die()
     {
-        _stateManager.MoveState = EnemyMoveState.Idle;
-        _stateManager.IsDead = true;
+        _manager.State.MoveState = EnemyMoveState.Idle;
+        _manager.State.IsDead = true;
+        _spriteRenderer.color = Color.white;
         StopCoroutine(_walkCoroutine);
         StartCoroutine(C_Die());
     }
@@ -166,7 +169,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
 
     private IEnumerator ReduceHP(float damage, float coolTime)
     {
-        _manager.IsAttacked = true;
+        _manager.State.IsAttacked = true;
         if (_manager.Data.Hp - damage >= 0f)
             _manager.Data.Hp -= damage;
         else
@@ -177,7 +180,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
 
         yield return new WaitForSeconds(coolTime);
 
-        _manager.IsAttacked = false;
+        _manager.State.IsAttacked = false;
     }
 
     #region Utility Functions
