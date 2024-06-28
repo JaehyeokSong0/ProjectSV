@@ -638,9 +638,10 @@ MonoBehaviour:
   - {fileID: 74725064}
   - {fileID: 473087918}
   - {fileID: 1958639235}
-  _skillList: []
+  _skillIcons: []
   _skillController: {fileID: 74162552}
   _gravityIcon: {fileID: 7290469968091517359, guid: 704cf1798388d8f4ca16f7fa14828104, type: 3}
+  _currSkillCount: 0
 --- !u!1 &920267373
 GameObject:
   m_ObjectHideFlags: 0
@@ -1430,6 +1431,10 @@ PrefabInstance:
       propertyPath: Data
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1868679089362906964, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
+      propertyPath: _skillController
+      value: 
+      objectReference: {fileID: 74162552}
     - target: {fileID: 2240328899645511037, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
       propertyPath: m_ActionEvents.Array.size
       value: 3

@@ -6,6 +6,7 @@ public class PlayerManager : MonoBehaviour
 {
     [SerializeField] private PlayerInputController _inputController;
     [SerializeField] private PlayerNormalAttackController _normalAttackController;
+    [SerializeField] private PlayerSkillController _skillController;
 
     private Vector2 _playerDirectionBuffer = Vector2.down;
     [SerializeField] protected SpriteRenderer _spriteRenderer;
@@ -35,7 +36,9 @@ public class PlayerManager : MonoBehaviour
         if(_inputController == null )
             _inputController = transform.Find("InputController").GetComponent<PlayerInputController>();
         if (_normalAttackController == null)
-            _normalAttackController = GetComponent<PlayerNormalAttackController>();
+            _normalAttackController = transform.Find("NormalAttackController").GetComponent<PlayerNormalAttackController>();
+        if (_skillController == null)
+            _skillController = transform.Find("SkillController").GetComponent<PlayerSkillController>();
         if (_spriteRenderer == null)
             _spriteRenderer = transform.Find("Model").GetComponent<SpriteRenderer>();
 
@@ -71,6 +74,8 @@ public class PlayerManager : MonoBehaviour
     {
         // Die animation is processed in PlayerAnimationController
         _inputController.gameObject.SetActive(false);
+        _normalAttackController.gameObject.SetActive(false);
+        _skillController.gameObject.SetActive(false);
     }
 
     #endregion

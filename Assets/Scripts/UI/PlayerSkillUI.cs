@@ -6,12 +6,12 @@ public class PlayerSkillUI : MonoBehaviour
 {
     private const string _iconPath = "Prefabs/Skills/Icons/";
     private const int _skillCapacity = 8;
-    private const float _iconMoveSpeed = 1f;
-    [SerializeField] private List<Transform> _skillGrids = new List<Transform>();
-    [SerializeField] private List<GameObject> _skillList;
+    private const float _iconMoveSpeed = 2f;
+    [SerializeField] private List<Transform> _skillGrids = new List<Transform>(); // Just used with its position value
+    [SerializeField] private List<GameObject> _skillIcons = new List<GameObject>();
     [SerializeField] private PlayerSkillController _skillController;
     [SerializeField] private GameObject _gravityIcon;
-    private int _currSkillCount = 0;
+    [SerializeField] private int _currSkillCount = 0;
 
     private void Awake()
     {
@@ -26,8 +26,11 @@ public class PlayerSkillUI : MonoBehaviour
         if (_gravityIcon == null)
             _gravityIcon = Resources.Load(_iconPath + "Skill_Gravity") as GameObject;
 
-        _skillList = new List<GameObject>();
-        _skillList.Capacity = _skillCapacity;
+        _skillIcons.Add(null);
+    }
+    private void Start()
+    {
+        EventManager.Instance.OnPlayerDead?.AddListener(this.OnPlayerDead);
     }
 
     private void LateUpdate()
@@ -36,16 +39,27 @@ public class PlayerSkillUI : MonoBehaviour
         if (_currSkillCount > currSkillCount) // Release(Use) Skill
         {
             _currSkillCount = currSkillCount;
-            Destroy(_skillList[_currSkillCount]);
+            Destroy(_skillIcons[0].gameObject); // TEST CODE -> TODO : {0 -> index}
+            _skillIcons[0] = null;
+            RearrangeIcons();
         }
         else if (_currSkillCount < currSkillCount) // Get(Stack) Skill
         {
             _currSkillCount = currSkillCount;
-            GameObject skillGO = Instantiate(_gravityIcon, _skillGrids[_skillCapacity - 1]); // TEST CODE
-            Debug.Log(_currSkillCount + " " + _skillList.Capacity);
-            _skillList.Add(skillGO);
-            StartCoroutine(MoveIcon(skillGO, skillGO.transform.position, _skillGrids[_currSkillCount - 1].position));
+            GameObject iconGO = Instantiate(_gravityIcon, _skillGrids[_skillCapacity - 1]); // TEST CODE
+
+            if (_skillIcons[_skillIcons.Count - 1] == null)
+                _skillIcons[_skillIcons.Count - 1] = iconGO;
+            else
+                _skillIcons.Add(iconGO);
+            RefreshIconList();
+            StartCoroutine(MoveIcon(iconGO, iconGO.transform.position, _skillGrids[_currSkillCount - 1].position));
         }
+    }
+
+    public void OnPlayerDead()
+    {
+        this.enabled = false;
     }
 
     private IEnumerator MoveIcon(GameObject icon, Vector3 startPosition, Vector3 endPosition)
@@ -60,8 +74,48 @@ public class PlayerSkillUI : MonoBehaviour
         }
     }
 
-    private void ResetIconPosition()
+    private void RefreshIconList()
     {
+        int maxSkillCount = _skillIcons.Count;
+        for (int i = 0; i < maxSkillCount - 1; i++)
+        {
+            if (_skillIcons[i] != null)
+                continue;
 
+            for (int j = i + 1; j < maxSkillCount; j++)
+            {
+                if (_skillIcons[j] != null)
+                {
+                    _skillIcons[i] = _skillIcons[j];
+                    _skillIcons[j] = null;
+                    break;
+                }
+            }
+
+        }
+    }
+
+    // Called after destroy GameObject in list[index]
+    private void RearrangeIcons()
+    {
+        int maxSkillCount = _skillIcons.Count;
+        for (int i = 0; i < maxSkillCount - 1; i++)
+        {
+            if (_skillIcons[i] != null)
+                continue;
+
+            for (int j = i + 1; j < maxSkillCount; j++)
+            {
+                if (_skillIcons[j] != null)
+                {
+                    StartCoroutine(MoveIcon(_skillIcons[j], _skillGrids[j].position, _skillGrids[i].position));
+
+                    _skillIcons[i] = _skillIcons[j];
+                    _skillIcons[j] = null;
+                    break;
+                }
+            }
+
+        }
     }
 }
