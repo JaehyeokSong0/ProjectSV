@@ -10,7 +10,7 @@ public class EnemySpawner : MonoBehaviour
 
     private const int _defaultCapacity = 20;
     private const int _maxSize = 50;
-    private float _spawnTime = 1.5f;
+    private float _spawnTime = 0.5f;
     private WaitForSeconds _spawnTimeWait;
     private Coroutine _spawnCoroutine = null;
 

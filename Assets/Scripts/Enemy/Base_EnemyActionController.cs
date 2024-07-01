@@ -18,16 +18,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
     protected float _preAttackTime = 0f;
     protected WaitForSeconds _preAttackTimeWait;
 
-    [SerializeField] protected SpriteRenderer _spriteRenderer;
-    private WaitForSeconds _colorChangeTimeWait = new WaitForSeconds(0.1f);
-
     #region Event Functions
-    protected virtual void Awake()
-    {
-        if (_spriteRenderer == null)
-            _spriteRenderer = transform.Find("Model").gameObject.GetComponent<SpriteRenderer>();
-    }
-
     protected void OnEnable()
     {
         if (_player == null)
@@ -48,7 +39,6 @@ public abstract class Base_EnemyActionController : MonoBehaviour
     public virtual void Initialize()
     {
         _manager.State.IsDead = false;
-        _spriteRenderer.color = Color.white;
         Walk(_manager.Data.WalkSpeed);
     }
 
@@ -132,7 +122,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         if (_manager.State.IsDead == true)
             return;
         ReduceHP(damage);
-        StartCoroutine(ChangeSpriteColor(Color.red));
+        _animationController.ChangeSpriteColor(Color.red);
     }
 
     public void TakeDamage(float damage, float coolTime)
@@ -140,14 +130,13 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         if (_manager.State.IsDead == true)
             return;
         StartCoroutine(ReduceHP(damage, coolTime));
-        StartCoroutine(ChangeSpriteColor(Color.red));
+        _animationController.ChangeSpriteColor(Color.red);
     }
 
     public void Die()
     {
         _manager.State.MoveState = EnemyMoveState.Idle;
         _manager.State.IsDead = true;
-        _spriteRenderer.color = Color.white;
 
         StopCoroutine(_walkCoroutine);
         StartCoroutine(C_Die());
@@ -189,17 +178,4 @@ public abstract class Base_EnemyActionController : MonoBehaviour
 
         _manager.State.IsAttacked = false;
     }
-
-    #region Utility Functions
-
-    private IEnumerator ChangeSpriteColor(Color color)
-    {
-        Color colorBuffer = _spriteRenderer.color;
-        _spriteRenderer.color = color;
-
-        yield return _colorChangeTimeWait;
-
-        _spriteRenderer.color = colorBuffer;
-    }
-    #endregion
 }

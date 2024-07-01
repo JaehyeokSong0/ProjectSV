@@ -1,18 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerSkillUI : MonoBehaviour
 {
     private const string _iconPath = "Prefabs/Skills/Icons/";
     private const int _skillCapacity = 8;
     private const float _iconMoveSpeed = 3f;
-    [SerializeField] private List<Transform> _skillGrids = new List<Transform>(); // Just used with its position value
+    private int _currSkillCount = 0;
+    private int _availableGridCount = 3;
+
+    [SerializeField] private PlayerManager _manager;
+    [SerializeField] private List<Transform> _skillGrids = new List<Transform>();
     [SerializeField] private List<GameObject> _skillIcons = new List<GameObject>();
     [SerializeField] private PlayerSkillController _skillController;
     [SerializeField] private GameObject _gravityIcon;
-    [SerializeField] private int _currSkillCount = 0;
 
+    [SerializeField] private TMP_Text _mpCountText;
+    [SerializeField] private TMP_Text _deckCountText;
+    [SerializeField] private Image _timeBar;
     private void Awake()
     {
         if (_skillGrids.Count == 0)
@@ -38,23 +46,16 @@ public class PlayerSkillUI : MonoBehaviour
         int currSkillCount = _skillController.GetSkillCount();
         if (_currSkillCount > currSkillCount) // Release(Use) Skill
         {
+            UseSkill(_currSkillCount - currSkillCount);
             _currSkillCount = currSkillCount;
-            Destroy(_skillIcons[0].gameObject); // TEST CODE -> TODO : {0 -> index}
-            _skillIcons[0] = null;
-            RearrangeIcons();
         }
         else if (_currSkillCount < currSkillCount) // Get(Stack) Skill
         {
+            GetSkill(currSkillCount - _currSkillCount);
             _currSkillCount = currSkillCount;
-            GameObject iconGO = Instantiate(_gravityIcon, _skillGrids[_skillCapacity - 1]); // TEST CODE
-            StartCoroutine(MoveIcon(iconGO, iconGO.transform.position, _skillGrids[_currSkillCount - 1].position));
-
-            if (_skillIcons[_skillIcons.Count - 1] == null)
-                _skillIcons[_skillIcons.Count - 1] = iconGO;
-            else
-                _skillIcons.Add(iconGO);
-            RefreshIconList();
         }
+
+        _timeBar.fillAmount = _skillController.ElaspedTime / _skillController.MaxTime;
     }
 
     public void OnPlayerDead()
@@ -117,5 +118,31 @@ public class PlayerSkillUI : MonoBehaviour
             }
 
         }
+    }
+
+    private void GetSkill(int count)
+    {
+        // Clamp max range of count
+        if (_currSkillCount + count >= _skillCapacity)
+            count = (_currSkillCount + count) - _skillCapacity;
+
+        GameObject iconGO = Instantiate(_gravityIcon, _skillGrids[_skillCapacity - 1]); // TEST CODE
+        for (int i = _currSkillCount; i < _currSkillCount + count; i++)
+            StartCoroutine(MoveIcon(iconGO, iconGO.transform.position, _skillGrids[i].position));
+
+        _skillIcons.Add(iconGO);
+        RefreshIconList();
+    }
+
+    private void UseSkill(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            if (_skillIcons[i] != null)
+                Destroy(_skillIcons[i]);
+            _skillIcons[i] = null;
+        }
+
+        RearrangeIcons();
     }
 }

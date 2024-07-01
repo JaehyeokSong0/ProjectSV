@@ -153,6 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Data: {fileID: 11400000, guid: 4c072a0e863a1ab49893e7ee2aae2a60, type: 2}
+  _hitBox: {fileID: 4217597421120989710}
 --- !u!1 &8332823003558455594
 GameObject:
   m_ObjectHideFlags: 0

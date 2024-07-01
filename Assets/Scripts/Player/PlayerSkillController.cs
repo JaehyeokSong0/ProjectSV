@@ -7,6 +7,10 @@ public class PlayerSkillController : MonoBehaviour
     [SerializeField] private PlayerManager _manager;
     private Queue<GameObject> _skillQueue = new Queue<GameObject>();
     [SerializeField] private GameObject _gravityGO; // TEST CODE
+
+    public float ElaspedTime { get; private set; }
+    public float MaxTime { get; private set; }
+
     private void Awake()
     {
         if (_manager == null)
@@ -14,21 +18,45 @@ public class PlayerSkillController : MonoBehaviour
 
         if (_gravityGO == null)
             _gravityGO = Resources.Load("Prefabs/Skills/Skill_Gravity") as GameObject;
+
+        ElaspedTime = 0f;
+        MaxTime = 6f;
     }
 
     private void Start()
     {
-        StartCoroutine(TestFunc());
+        StartCoroutine(TestFunc(3));
     }
 
-    private IEnumerator TestFunc() // TEST CODE
+    private void Update()
     {
-        WaitForSeconds regenTime = new WaitForSeconds(4f);
-        yield return new WaitForSeconds(3f); // Start delay
+        ElaspedTime += Time.deltaTime;
+        if (ElaspedTime > MaxTime)
+        {
+            StartCoroutine(TestFunc(3));
+            ElaspedTime = 0f;
+        }
+    }
+
+    private IEnumerator TestFunc(int count) // TEST CODE
+    {
+        WaitForSeconds regenTime = new WaitForSeconds(0.1f);
+        
+        foreach (var skills in _skillQueue)
+        {
+            Destroy(skills);
+        }
+        _skillQueue.Clear();
+
+        yield return regenTime;
+
         while (true)
         {
             if(_skillQueue.Count < _manager.Data.SkillCapacity)
                 GetSkill(_gravityGO);
+            if (--count <= 0)
+                yield break;
+
             yield return regenTime;
         }
     }
@@ -37,7 +65,6 @@ public class PlayerSkillController : MonoBehaviour
     {
         _skillQueue.Enqueue(Instantiate(skillGO));
     }
-
 
     public void CastSkill()
     {

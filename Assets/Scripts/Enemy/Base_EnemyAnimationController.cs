@@ -11,6 +11,9 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
     [SerializeField] protected Animator _animator;
     protected GameObject _player;
 
+    [SerializeField] protected SpriteRenderer _spriteRenderer;
+    private WaitForSeconds _colorChangeTimeWait = new WaitForSeconds(0.1f);
+
     [SerializeField] public bool _isDirectionLocked; // Used to lock direction of attack animation
 
     protected Coroutine _currentAnimation = null;
@@ -19,6 +22,8 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
     protected virtual void Awake()
     {
         _animator = GetComponent<Animator>();
+        if (_spriteRenderer == null)
+            _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     protected void Start()
@@ -29,6 +34,7 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
     protected void OnEnable()
     {
         _isDirectionLocked = false;
+        _spriteRenderer.color = Color.white;
     }
 
     protected void Update()
@@ -68,6 +74,7 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
     {
         StopCoroutine(_currentAnimation);
         PlayAnimation("Die", false);
+        _spriteRenderer.color = Color.white;
     }
 
     protected void PlayAnimation(string animationName, bool canTransition)
@@ -108,5 +115,19 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
     {
         float animationTime = _animator.GetCurrentAnimatorStateInfo(0).length;
         return animationTime;
+    }
+
+    public void ChangeSpriteColor(Color color)
+    {
+        StartCoroutine(C_ChangeSpriteColor(color));
+    }
+
+    private IEnumerator C_ChangeSpriteColor(Color color)
+    {
+        _spriteRenderer.color = color;
+
+        yield return _colorChangeTimeWait;
+
+        _spriteRenderer.color = Color.white;
     }
 }

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider2D)), RequireComponent (typeof(Rigidbody2D))]
+[RequireComponent(typeof(BoxCollider2D)), RequireComponent(typeof(Rigidbody2D))]
 public class PlayerHitBox : MonoBehaviour
 {
     [SerializeField] private PlayerManager _manager;
@@ -13,9 +13,9 @@ public class PlayerHitBox : MonoBehaviour
 
     private void Awake()
     {
-        if(_manager == null)
+        if (_manager == null)
             _manager = FindObjectOfType<PlayerManager>();
-        if (_hitBox == null )
+        if (_hitBox == null)
             _hitBox = GetComponent<BoxCollider2D>();
         if (_effectGO == null)
             _effectGO = transform.Find("Effect").gameObject;
@@ -38,14 +38,17 @@ public class PlayerHitBox : MonoBehaviour
 
         // Show normalAttack effect
         _effectGO.transform.localPosition = direction.normalized;
+        Vector3 rotateValue = new Vector3(0f, 0f, 90f + Mathf.Atan2(direction.y, direction.x)) * Mathf.Rad2Deg;
         
+        _effectGO.transform.rotation = Quaternion.Euler(rotateValue);
+
         StartCoroutine(C_SetHitBoxOffset(direction));
     }
 
     private IEnumerator C_SetHitBoxOffset(Vector2 direction)
     {
         if (_isDirectionLocked == false)
-        {   
+        {
             _isDirectionLocked = true;
             _hitBox.offset = direction.normalized;
             _effectGO.gameObject.SetActive(true);
