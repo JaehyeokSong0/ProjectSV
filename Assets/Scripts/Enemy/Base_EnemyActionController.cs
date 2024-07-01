@@ -1,14 +1,13 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 
 // Manages actions of the enemy
 public abstract class Base_EnemyActionController : MonoBehaviour
 {
     private const float _deadRemainTime = 0.5f;
 
-    protected GameObject _player;
     [SerializeField] protected Base_EnemyManager _manager;
+    protected GameObject _player;
 
     // AnimationContoller class should be downcasted in derived class
     [SerializeField] protected Base_EnemyAnimationController _animationController;
@@ -22,10 +21,11 @@ public abstract class Base_EnemyActionController : MonoBehaviour
     [SerializeField] protected SpriteRenderer _spriteRenderer;
     private WaitForSeconds _colorChangeTimeWait = new WaitForSeconds(0.1f);
 
+    #region Event Functions
     protected virtual void Awake()
     {
         if (_spriteRenderer == null)
-            _spriteRenderer = transform.Find("Model").GetComponent<SpriteRenderer>();
+            _spriteRenderer = transform.Find("Model").gameObject.GetComponent<SpriteRenderer>();
     }
 
     protected void OnEnable()
@@ -44,21 +44,24 @@ public abstract class Base_EnemyActionController : MonoBehaviour
 
         EventManager.Instance.OnPlayerDead?.AddListener(this.OnPlayerDead);
     }
-
-    public void Initialize()
+    #endregion
+    public virtual void Initialize()
     {
         _manager.State.IsDead = false;
         _spriteRenderer.color = Color.white;
         Walk(_manager.Data.WalkSpeed);
     }
 
+    #region Event Callback Actions
     public void OnPlayerDead()
     {
-        StopAllCoroutines();
-        if (_manager.State.IsDead == false)// If not in die animation
+        if (_manager.State.IsDead == false) // If not in die animation
+        {
+            StopCoroutine(_walkCoroutine);
             Idle();
+        }
     }
-
+    #endregion
     public void Idle()
     {
         _manager.State.MoveState = EnemyMoveState.Idle;
@@ -102,11 +105,13 @@ public abstract class Base_EnemyActionController : MonoBehaviour
     protected IEnumerator C_NormalAttack()
     {
         _manager.State.MoveState = EnemyMoveState.Idle;
-        _animationController.SetMoveAnimation("Idle");
+        //_animationController.SetMoveAnimation("Idle"); // Prevent walk animation after attack
+        _animationController.Idle();
         _animationController.NormalAttack();
 
         // Synchronize attack event with attack animation
         yield return _preAttackTimeWait;
+
         Vector3 direction = _player.transform.position - transform.position;
         if (direction.magnitude < _manager.Data.NormalAttackRange)
             EventManager.Instance.OnPlayerDamaged?.Invoke(_manager.Data.NormalAttackDamage);
@@ -122,9 +127,9 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         _animationController.Move();
     }
 
-    public void TakeDamage(float damage) 
+    public void TakeDamage(float damage)
     {
-        if (_manager.State.IsDead) 
+        if (_manager.State.IsDead == true)
             return;
         ReduceHP(damage);
         StartCoroutine(ChangeSpriteColor(Color.red));
@@ -132,7 +137,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
 
     public void TakeDamage(float damage, float coolTime)
     {
-        if (_manager.State.IsDead) 
+        if (_manager.State.IsDead == true)
             return;
         StartCoroutine(ReduceHP(damage, coolTime));
         StartCoroutine(ChangeSpriteColor(Color.red));
@@ -143,6 +148,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         _manager.State.MoveState = EnemyMoveState.Idle;
         _manager.State.IsDead = true;
         _spriteRenderer.color = Color.white;
+
         StopCoroutine(_walkCoroutine);
         StartCoroutine(C_Die());
     }
@@ -170,6 +176,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
     private IEnumerator ReduceHP(float damage, float coolTime)
     {
         _manager.State.IsAttacked = true;
+
         if (_manager.Data.Hp - damage >= 0f)
             _manager.Data.Hp -= damage;
         else

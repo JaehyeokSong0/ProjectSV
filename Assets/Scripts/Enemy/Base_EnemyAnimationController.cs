@@ -7,28 +7,28 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
 {
     private const float _postActionDelay = 0.5f; // after action(canTransition) delay
 
-    [SerializeField] protected Animator _animator;
     [SerializeField] protected Base_EnemyManager _manager;
+    [SerializeField] protected Animator _animator;
     protected GameObject _player;
 
-    [SerializeField] private bool _isDirectionLocked; // Used to lock direction of attack animation
+    [SerializeField] public bool _isDirectionLocked; // Used to lock direction of attack animation
 
-    protected void Awake()
+    protected Coroutine _currentAnimation = null;
+
+    #region Event Functions
+    protected virtual void Awake()
     {
         _animator = GetComponent<Animator>();
-        if(_manager == null)
-            _manager = GetComponentInParent<Base_EnemyManager>(); // TODO : fix initialize
+    }
+
+    protected void Start()
+    {
         _player = GameObject.FindGameObjectWithTag("Player");
     }
 
     protected void OnEnable()
     {
         _isDirectionLocked = false;
-    }
-
-    protected void OnDisable()
-    {
-        StopAllCoroutines();
     }
 
     protected void Update()
@@ -42,6 +42,7 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
             _animator.SetFloat("DirectionY", direction.y);
         }
     }
+    #endregion
 
     public void Move()
     {
@@ -65,12 +66,13 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
 
     public void Die()
     {
+        StopCoroutine(_currentAnimation);
         PlayAnimation("Die", false);
     }
 
     protected void PlayAnimation(string animationName, bool canTransition)
     { 
-        StartCoroutine(C_PlayAnimation(animationName, canTransition));
+        _currentAnimation = StartCoroutine(C_PlayAnimation(animationName, canTransition));
     }
 
     protected IEnumerator C_PlayAnimation(string animationName, bool canTransition)
@@ -89,11 +91,12 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
 
             SetMoveAnimation(_manager.State.MoveState.ToString());
 
-            _isDirectionLocked = false;
+            if(animationName.Equals("Die") == false)
+                _isDirectionLocked = false;
         }
     }
 
-    public void SetMoveAnimation(string animationName)
+    private void SetMoveAnimation(string animationName)
     {
         int length = (int)EnemyMoveState.Length;
         for (int i = 0; i < length; i++)

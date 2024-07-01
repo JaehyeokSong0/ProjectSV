@@ -7,7 +7,7 @@ public abstract class Base_EnemyManager : MonoBehaviour
 {
     protected EnemyStateManager _stateManager;
     protected EnemyDataManager _dataManager;
-    // Should be initialized in derived class
+    // Should be assigned in derived class
     protected Base_EnemyActionController _actionController = null;
 
     // Should be initialized with Data.LoadData() in Initialize() of derived class
@@ -16,6 +16,7 @@ public abstract class Base_EnemyManager : MonoBehaviour
     public EnemyStateManager State { get { return _stateManager; } }
     public IObjectPool<GameObject> Pool;
 
+    #region Event Functions
     protected virtual void Awake()
     {
         if (_dataManager == null)
@@ -28,11 +29,13 @@ public abstract class Base_EnemyManager : MonoBehaviour
     {
         Initialize();
     }
-
+    #endregion
+    #region Event Callback Actions
     public void OnEnemyDamaged(float damage) // Attacked by skill
     {
         _actionController.TakeDamage(damage);
     }
+
     public void OnEnemyDamaged(float damage, float coolTime) // Attacked by normalAttack
     {
         if (State.IsAttacked == false)
@@ -45,7 +48,7 @@ public abstract class Base_EnemyManager : MonoBehaviour
     {
         Pool.Release(gameObject);
     }
-
+    #endregion
     protected virtual void Initialize()
     {
         _actionController.Initialize();

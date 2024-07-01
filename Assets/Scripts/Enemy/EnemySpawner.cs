@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Pool;
 
 // Singleton Pattern
-// Manages Enemy spawn events using object pool
+// Manages Enemy spawn events using object pooling
 public class EnemySpawner : MonoBehaviour
 {
     public static EnemySpawner Instance = null;
@@ -14,7 +14,7 @@ public class EnemySpawner : MonoBehaviour
     private WaitForSeconds _spawnTimeWait;
     private Coroutine _spawnCoroutine = null;
 
-    [SerializeField] private GameObject _deathLordGO;
+    [SerializeField] private GameObject _deathLordGO; // TODO
     public IObjectPool<GameObject> Pool
     { get; private set; }
 
@@ -40,8 +40,7 @@ public class EnemySpawner : MonoBehaviour
             _deathLordGO = Resources.Load("Prefabs/Enemy_DeathLord") as GameObject;
             if (_deathLordGO == null)
                 Debug.LogError("Cannot find Enemy_DeathLord.");
-        }
-
+        }      
         InitializePool();
     }
 

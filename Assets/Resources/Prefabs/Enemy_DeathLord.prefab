@@ -49,8 +49,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8f5c4bbb1185cb42874b27cc1835b69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyMoveState: 1
+  MoveState: 0
   IsDead: 0
+  IsAttacked: 0
 --- !u!114 &8756936298146715425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,8 +82,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e8e1db6fa1cad340b62099b676f1057, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Data: {fileID: 8756936298146715425}
-  IsAttacked: 0
 --- !u!114 &5734785738671160797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95,7 +94,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fe599292fd6e7449971043aab7d5a96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stateManager: {fileID: 1199603433414236016}
   _manager: {fileID: 4345296431834202498}
   _animationController: {fileID: 3251062995762313782}
   _spriteRenderer: {fileID: 4204507492029140168}
@@ -253,5 +251,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1d01b6d31d6a364b8e15c5c1cff991f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _manager: {fileID: 0}
   _animator: {fileID: 7220399531525677414}
-  _stateManager: {fileID: 1199603433414236016}
+  _isDirectionLocked: 0
