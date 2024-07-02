@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class PlayerSkillUI : MonoBehaviour
@@ -21,6 +22,7 @@ public class PlayerSkillUI : MonoBehaviour
     [SerializeField] private TMP_Text _mpCountText;
     [SerializeField] private TMP_Text _deckCountText;
     [SerializeField] private Image _timeBar;
+
     private void Awake()
     {
         if (_skillGrids.Count == 0)
@@ -39,9 +41,20 @@ public class PlayerSkillUI : MonoBehaviour
     private void Start()
     {
         EventManager.Instance.OnPlayerDead?.AddListener(this.OnPlayerDead);
+        EventManager.Instance.OnSkillsUpdated?.AddListener(this.OnSkillsUpdated);
     }
 
     private void LateUpdate()
+    {
+        _timeBar.fillAmount = _skillController.ElaspedTime / _skillController.MaxTime;
+    }
+
+    public void OnPlayerDead()
+    {
+        this.enabled = false;
+    }
+
+    public void OnSkillsUpdated() // Update Skill UI
     {
         int currSkillCount = _skillController.GetSkillCount();
         if (_currSkillCount > currSkillCount) // Release(Use) Skill
@@ -54,13 +67,6 @@ public class PlayerSkillUI : MonoBehaviour
             GetSkill(currSkillCount - _currSkillCount);
             _currSkillCount = currSkillCount;
         }
-
-        _timeBar.fillAmount = _skillController.ElaspedTime / _skillController.MaxTime;
-    }
-
-    public void OnPlayerDead()
-    {
-        this.enabled = false;
     }
 
     private IEnumerator MoveIcon(GameObject icon, Vector3 startPosition, Vector3 endPosition)

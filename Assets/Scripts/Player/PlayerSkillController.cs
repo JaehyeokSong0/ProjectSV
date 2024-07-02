@@ -38,7 +38,7 @@ public class PlayerSkillController : MonoBehaviour
         }
     }
 
-    private IEnumerator TestFunc(int count) // TEST CODE
+    private IEnumerator TestFunc(int count) // TEST CODE -> Generates 3 skills
     {
         WaitForSeconds regenTime = new WaitForSeconds(0.1f);
         
@@ -64,6 +64,8 @@ public class PlayerSkillController : MonoBehaviour
     public void GetSkill(GameObject skillGO) // Prefab in project, not in scene
     {
         _skillQueue.Enqueue(Instantiate(skillGO));
+
+        EventManager.Instance.OnSkillsUpdated.Invoke();
     }
 
     public void CastSkill()
@@ -77,6 +79,8 @@ public class PlayerSkillController : MonoBehaviour
         var skillScript = skillGO.GetComponent<Base_Skill>();
         skillScript.Initialize(transform.parent.position);
         skillScript.CastSkill();
+
+        EventManager.Instance.OnSkillsUpdated.Invoke();
     }
 
     public int GetSkillCount()
