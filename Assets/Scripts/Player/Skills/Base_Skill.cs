@@ -3,14 +3,12 @@ using UnityEngine;
 
 public abstract class Base_Skill : MonoBehaviour
 {
-    public SkillData Data; // Should be initiailzed in derived class
     protected WaitForSecondsRealtime _timeWait = null;
     protected bool _isValid = true; // true when the skill can apply damage
-    public bool IsValid { get { return _isValid; } }
-
     protected float _elapsedTime;
     protected Coroutine _checkElapsedTimeCoroutine;
 
+    public SkillData Data; // Should be initiailzed in derived class
     protected void OnEnable()
     {
         _isValid = true;
@@ -18,19 +16,20 @@ public abstract class Base_Skill : MonoBehaviour
     }
 
     public abstract void Initialize(Vector3 position); // Should initialize data and transform
-    public abstract void CastSkill();
+    public virtual void CastSkill() { }
+    protected virtual IEnumerator C_CastSkill() { yield return null; }
     protected void SetTransform(Vector3 position)
     {
         gameObject.transform.position = position;
     }
 
-    protected void CastAreaSkill(float tick, float duration) // Used for DOT skills
+    protected void StartCheckValidation(float tick, float duration) // Used for DOT skills
     {
         _timeWait = new WaitForSecondsRealtime(tick);
-        StartCoroutine(C_CastAreaSkill(duration));
+        StartCoroutine(C_StartCheckValidation(duration));
     }
 
-    protected IEnumerator C_CastAreaSkill(float duration)
+    protected IEnumerator C_StartCheckValidation(float duration)
     {
         StartCoroutine(C_CheckElapsedTime());
         while(_elapsedTime < duration)
@@ -43,7 +42,7 @@ public abstract class Base_Skill : MonoBehaviour
         }
         _isValid = false;
         StopCoroutine(C_CheckElapsedTime());
-        Destroy(this.gameObject);
+        Destroy(gameObject);
     }
 
     protected IEnumerator C_CheckElapsedTime()

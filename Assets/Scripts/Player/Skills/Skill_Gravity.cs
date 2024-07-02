@@ -3,33 +3,46 @@ using UnityEngine;
 
 public class Skill_Gravity : Base_Skill
 {
-    private WaitForSeconds testEnum = new WaitForSeconds(1f);
-    // TEST CODE
-    [SerializeField] private Skill_Gravity_HitBox _hitBox;
-
-    // Damage system is implemented in Skill_Gravity_HitBox
     public override void Initialize(Vector3 position)
     {
         if (Data == null)
             Data = Resources.Load("Data/Skills/GravityData") as SkillData;
-        SetTransform(position); // TEST CODE
+        SetTransform(position);
     }
 
     public override void CastSkill()
     {
-        CastAreaSkill(Data.Tick, Data.Duration);
-        //StartCoroutine(testFunc());
+        StartCoroutine(C_CheckElapsedTime());
+        StartCoroutine(C_CastSkill());
     }
 
-    private IEnumerator testFunc()
+    protected override IEnumerator C_CastSkill()
     {
-        while (true)
+        while (_elapsedTime < Data.Duration)
         {
-
-            _hitBox.enabled = true;
-            yield return testEnum;
-            _hitBox.enabled = false;
-            yield return null;
+            RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, Data.Radius, Vector2.zero);
+            foreach (var hit in hits)
+            {
+                GameObject hitGO = hit.collider.gameObject;
+                if (hitGO.CompareTag("Enemy") == true)
+                {
+                    if (_isValid == true)
+                    {
+                        hitGO.GetComponent<Base_EnemyManager>().OnEnemyDamaged(Data.Damage);
+                    }
+                }
+            }
+            yield return new WaitForSeconds(Data.Tick);
         }
+
+        _isValid = false;
+        StopCoroutine(C_CheckElapsedTime());
+        Destroy(gameObject);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(transform.position, Data.Radius);
     }
 }

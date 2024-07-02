@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ad0ec05bc27b04d831ea1186dde789, type: 3}
   m_Name: GravityData
   m_EditorClassIdentifier: 
-  IsDOT: 1
-  Tick: 0.2
-  Duration: 5
   Damage: 20
+  Duration: 5
+  Tick: 0.5
+  Radius: 1.5
