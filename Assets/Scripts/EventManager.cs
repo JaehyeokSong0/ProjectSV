@@ -7,9 +7,10 @@ public class EventManager : MonoBehaviour
 { 
     public static EventManager Instance = null;
 
-    public UnityEvent<float> OnPlayerDamaged;
+    public UnityEvent<float> OnPlayerDamaged; // {Damage}
     public UnityEvent OnPlayerDead;
-    public UnityEvent OnSkillsUpdated;
+    public UnityEvent<GameObject> OnGetSkill; // {IconResource}
+    public UnityEvent OnUseSkill;
 
     private void Awake()
     {

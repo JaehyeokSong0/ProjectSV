@@ -21,7 +21,12 @@ public class PlayerStatusUI : MonoBehaviour
             _hpText = transform.Find("Image_HP").GetChild(0).GetComponent<TMP_Text>();
     }
 
-    private void LateUpdate()
+    private void Start()
+    {
+        EventManager.Instance.OnPlayerDamaged?.AddListener(UpdateHPUI);
+    }
+    
+    private void UpdateHPUI(float dummy)
     {
         _hpGauge.fillAmount = _manager.Data.CurrentHp / _manager.Data.MaxHp;
         _hpText.text = $"{_manager.Data.CurrentHp} / {_manager.Data.MaxHp}";

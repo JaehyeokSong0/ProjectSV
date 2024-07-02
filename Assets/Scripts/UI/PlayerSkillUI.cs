@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class PlayerSkillUI : MonoBehaviour
 {
-    private const string _iconPath = "Prefabs/Skills/Icons/";
     private const int _skillCapacity = 8;
     private const float _iconMoveSpeed = 3f;
     private int _currSkillCount = 0;
@@ -17,12 +16,12 @@ public class PlayerSkillUI : MonoBehaviour
     [SerializeField] private List<Transform> _skillGrids = new List<Transform>();
     [SerializeField] private List<GameObject> _skillIcons = new List<GameObject>();
     [SerializeField] private PlayerSkillController _skillController;
-    [SerializeField] private GameObject _gravityIcon;
 
     [SerializeField] private TMP_Text _mpCountText;
     [SerializeField] private TMP_Text _deckCountText;
     [SerializeField] private Image _timeBar;
 
+    #region Event Functions
     private void Awake()
     {
         if (_skillGrids.Count == 0)
@@ -32,43 +31,52 @@ public class PlayerSkillUI : MonoBehaviour
                 _skillGrids.Add(grid);
         }
         if (_skillController == null)
-            _skillController = FindFirstObjectByType<PlayerSkillController>();
-        if (_gravityIcon == null)
-            _gravityIcon = Resources.Load(_iconPath + "Skill_Gravity_Icon") as GameObject;
+            _skillController = transform.parent.GetComponent<PlayerSkillController>();
 
         _skillIcons.Add(null);
     }
     private void Start()
     {
         EventManager.Instance.OnPlayerDead?.AddListener(this.OnPlayerDead);
-        EventManager.Instance.OnSkillsUpdated?.AddListener(this.OnSkillsUpdated);
+        EventManager.Instance.OnGetSkill?.AddListener(this.OnGetSkill);
+        EventManager.Instance.OnUseSkill?.AddListener(this.OnUseSkill);
     }
 
     private void LateUpdate()
     {
         _timeBar.fillAmount = _skillController.ElaspedTime / _skillController.MaxTime;
     }
+    #endregion
+    #region Event Callback Actions
 
     public void OnPlayerDead()
     {
         this.enabled = false;
     }
 
-    public void OnSkillsUpdated() // Update Skill UI
+    public void OnGetSkill(GameObject icon)
     {
         int currSkillCount = _skillController.GetSkillCount();
-        if (_currSkillCount > currSkillCount) // Release(Use) Skill
+        if (_currSkillCount < currSkillCount)
         {
-            UseSkill(_currSkillCount - currSkillCount);
-            _currSkillCount = currSkillCount;
-        }
-        else if (_currSkillCount < currSkillCount) // Get(Stack) Skill
-        {
-            GetSkill(currSkillCount - _currSkillCount);
+            GetSkill(currSkillCount - _currSkillCount, icon);
             _currSkillCount = currSkillCount;
         }
     }
 
+    public void OnUseSkill()
+    {
+        int currSkillCount = _skillController.GetSkillCount();
+
+        if (_currSkillCount > currSkillCount)
+        {
+            UseSkill(_currSkillCount - currSkillCount);
+            _currSkillCount = currSkillCount;
+        }
+    }
+
+
+    #endregion
     private IEnumerator MoveIcon(GameObject icon, Vector3 startPosition, Vector3 endPosition)
     {
         Vector3 direction = (endPosition - startPosition).normalized;
@@ -126,13 +134,14 @@ public class PlayerSkillUI : MonoBehaviour
         }
     }
 
-    private void GetSkill(int count)
+    private void GetSkill(int count, GameObject icon)
     {
+        Debug.Log(icon.name);
         // Clamp max range of count
         if (_currSkillCount + count >= _skillCapacity)
             count = (_currSkillCount + count) - _skillCapacity;
 
-        GameObject iconGO = Instantiate(_gravityIcon, _skillGrids[_skillCapacity - 1]); // TEST CODE
+        GameObject iconGO = Instantiate(icon, _skillGrids[_skillCapacity - 1]); // TEST CODE
         for (int i = _currSkillCount; i < _currSkillCount + count; i++)
             StartCoroutine(MoveIcon(iconGO, iconGO.transform.position, _skillGrids[i].position));
 

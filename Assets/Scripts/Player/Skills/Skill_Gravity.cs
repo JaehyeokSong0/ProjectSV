@@ -5,8 +5,10 @@ public class Skill_Gravity : Base_Skill
 {
     public override void Initialize(Vector3 position)
     {
-        if (Data == null)
+        if(Data == null)
             Data = Resources.Load("Data/Skills/GravityData") as SkillData;
+        if (icon == null)
+            icon = Resources.Load("Prefabs/Skills/Icons/Skill_Gravity") as GameObject;
         SetTransform(position);
     }
 
@@ -24,7 +26,7 @@ public class Skill_Gravity : Base_Skill
             foreach (var hit in hits)
             {
                 GameObject hitGO = hit.collider.gameObject;
-                if (hitGO.CompareTag("Enemy") == true)
+                if (hitGO.CompareTag("Enemy") == true) // TODO -> LayerMask
                 {
                     if (_isValid == true)
                     {

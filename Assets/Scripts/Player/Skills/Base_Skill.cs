@@ -8,16 +8,21 @@ public abstract class Base_Skill : MonoBehaviour
     protected float _elapsedTime;
     protected Coroutine _checkElapsedTimeCoroutine;
 
-    public SkillData Data; // Should be initiailzed in derived class
+    // Should be assigned in Initialize() in derived class
+    public SkillData Data; 
+    public GameObject icon;
+
     protected void OnEnable()
     {
         _isValid = true;
         _elapsedTime = 0f;
     }
 
-    public abstract void Initialize(Vector3 position); // Should initialize data and transform
+    public virtual void Initialize() { }
+    public virtual void Initialize(Vector3 position) { } // Should initialize data and transform
     public virtual void CastSkill() { }
     protected virtual IEnumerator C_CastSkill() { yield return null; }
+
     protected void SetTransform(Vector3 position)
     {
         gameObject.transform.position = position;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ public class PlayerSkillController : MonoBehaviour
     [SerializeField] private PlayerManager _manager;
     private Queue<GameObject> _skillQueue = new Queue<GameObject>();
     [SerializeField] private GameObject _gravityGO; // TEST CODE
+    [SerializeField] private GameObject _walkSpeedUpGO; // TEST CODE
 
     public float ElaspedTime { get; private set; }
     public float MaxTime { get; private set; }
@@ -15,9 +17,10 @@ public class PlayerSkillController : MonoBehaviour
     {
         if (_manager == null)
             _manager = GetComponentInParent<PlayerManager>();
-
         if (_gravityGO == null)
             _gravityGO = Resources.Load("Prefabs/Skills/Skill_Gravity") as GameObject;
+        if (_walkSpeedUpGO == null)
+            _walkSpeedUpGO = Resources.Load("Prefabs/Skills/Skill_WalkSpeedUp") as GameObject;
 
         ElaspedTime = 0f;
         MaxTime = 6f;
@@ -46,14 +49,21 @@ public class PlayerSkillController : MonoBehaviour
         {
             Destroy(skills);
         }
+
         _skillQueue.Clear();
+        EventManager.Instance.OnUseSkill?.Invoke();
 
         yield return regenTime;
 
         while (true)
         {
             if(_skillQueue.Count < _manager.Data.SkillCapacity)
-                GetSkill(_gravityGO);
+            {
+                if(UnityEngine.Random.value >= 0.5f)
+                    GetSkill(_walkSpeedUpGO);
+                else
+                    GetSkill(_gravityGO);
+            }
             if (--count <= 0)
                 yield break;
 
@@ -63,9 +73,19 @@ public class PlayerSkillController : MonoBehaviour
 
     public void GetSkill(GameObject skillGO) // Prefab in project, not in scene
     {
-        _skillQueue.Enqueue(Instantiate(skillGO));
+        var skillScript = skillGO.GetComponent<Base_Skill>();
 
-        EventManager.Instance.OnSkillsUpdated.Invoke();
+        switch (skillScript.Data.Type)
+        {
+            case SkillData.SkillType.Attack:
+                _skillQueue.Enqueue(Instantiate(skillGO));
+                break;
+            case SkillData.SkillType.Buff:
+                _skillQueue.Enqueue(Instantiate(skillGO, transform.root));
+                break;
+        }
+
+        EventManager.Instance.OnGetSkill?.Invoke(skillScript.icon);
     }
 
     public void CastSkill()
@@ -75,12 +95,21 @@ public class PlayerSkillController : MonoBehaviour
 
         GameObject skillGO = _skillQueue.Dequeue();
         skillGO.SetActive(true);
-
         var skillScript = skillGO.GetComponent<Base_Skill>();
-        skillScript.Initialize(transform.parent.position);
-        skillScript.CastSkill();
 
-        EventManager.Instance.OnSkillsUpdated.Invoke();
+        // Initialize skill data
+        switch (skillScript.Data.Type)
+        {
+            case SkillData.SkillType.Attack:
+                skillScript.Initialize(transform.parent.position);
+                break;
+            case SkillData.SkillType.Buff:
+                skillScript.Initialize();
+                break;
+        }
+        
+        skillScript.CastSkill();
+        EventManager.Instance.OnUseSkill?.Invoke();
     }
 
     public int GetSkillCount()

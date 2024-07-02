@@ -141,6 +141,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _manager: {fileID: 243380511}
   _gravityGO: {fileID: 619776870881187676, guid: 56381ad15048e9a43a928aec5a09183a, type: 3}
+  _walkSpeedUpGO: {fileID: 8202472233691591118, guid: 66f1a12765710974ca627fc964304174, type: 3}
 --- !u!1 &74725063
 GameObject:
   m_ObjectHideFlags: 0
@@ -909,7 +910,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8dee174cf37b6048afe8a261c498f8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _manager: {fileID: 0}
+  _manager: {fileID: 243380511}
   _skillGrids:
   - {fileID: 2051710442}
   - {fileID: 599299212}
@@ -921,7 +922,6 @@ MonoBehaviour:
   - {fileID: 1958639235}
   _skillIcons: []
   _skillController: {fileID: 74162552}
-  _gravityIcon: {fileID: 7290469968091517359, guid: 704cf1798388d8f4ca16f7fa14828104, type: 3}
   _mpCountText: {fileID: 1528106001}
   _deckCountText: {fileID: 707229110}
   _timeBar: {fileID: 1892341620}
@@ -1384,6 +1384,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnPlayerDead:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGetSkill:
+    m_PersistentCalls:
+      m_Calls: []
+  OnUseSkill:
     m_PersistentCalls:
       m_Calls: []
 --- !u!4 &1137469761
