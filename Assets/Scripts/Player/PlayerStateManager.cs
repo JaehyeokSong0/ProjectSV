@@ -21,12 +21,12 @@ public class PlayerStateManager : MonoBehaviour
     private WaitForSeconds _invincibleTimeWait = null;
     private float _invincibleTimeBuffer = 0f;
 
-    public PlayerMoveState MoveState;
-    public bool IsInvincible { get; private set; }
+    public PlayerMoveState moveState;
+    public bool isInvincible { get; private set; }
 
     private void Awake()
     {
-        MoveState = PlayerMoveState.Idle;
+        moveState = PlayerMoveState.Idle;
     }
 
     public void SetInvincible(float time)
@@ -42,9 +42,9 @@ public class PlayerStateManager : MonoBehaviour
             _invincibleTimeWait = new WaitForSeconds(time);
         }
 
-        IsInvincible = true;
+        isInvincible = true;
         yield return _invincibleTimeWait;
-        IsInvincible = false;
+        isInvincible = false;
     }
 
 }

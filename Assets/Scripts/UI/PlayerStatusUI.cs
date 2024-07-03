@@ -23,12 +23,12 @@ public class PlayerStatusUI : MonoBehaviour
 
     private void Start()
     {
-        EventManager.Instance.OnPlayerDamaged?.AddListener(UpdateHPUI);
+        EventManager.instance.OnPlayerDamaged?.AddListener(UpdateHPUI);
     }
     
     private void UpdateHPUI(float dummy)
     {
-        _hpGauge.fillAmount = _manager.Data.CurrentHp / _manager.Data.MaxHp;
-        _hpText.text = $"{_manager.Data.CurrentHp} / {_manager.Data.MaxHp}";
+        _hpGauge.fillAmount = _manager.data.currentHp / _manager.data.maxHp;
+        _hpText.text = $"{_manager.data.currentHp} / {_manager.data.maxHp}";
     }
 }

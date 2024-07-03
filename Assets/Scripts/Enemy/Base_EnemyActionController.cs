@@ -4,80 +4,80 @@ using UnityEngine;
 // Manages actions of the enemy
 public abstract class Base_EnemyActionController : MonoBehaviour
 {
-    private const float _deadRemainTime = 0.5f;
+    private const float DEAD_REMAIN_TIME = 0.5f;
 
-    [SerializeField] protected Base_EnemyManager _manager;
-    protected GameObject _player;
+    [SerializeField] protected Base_EnemyManager manager;
+    protected GameObject playerGO;
 
     // AnimationContoller class should be downcasted in derived class
-    [SerializeField] protected Base_EnemyAnimationController _animationController;
-    protected Coroutine _walkCoroutine;
+    [SerializeField] protected Base_EnemyAnimationController animationController;
+    protected Coroutine walkCoroutine;
 
     // Should be initialized in derived class
     // Used to synchronize with attack animation of each enemy classes
-    protected float _preAttackTime = 0f;
-    protected WaitForSeconds _preAttackTimeWait;
+    protected float preAttackTime = 0f;
+    protected WaitForSeconds preAttackTimeWait;
 
     #region Event Functions
     protected void OnEnable()
     {
-        if (_player == null)
+        if (playerGO == null)
         {
-            _player = GameObject.FindGameObjectWithTag("Player");
-            if (_player == null)
+            playerGO = GameObject.FindGameObjectWithTag("Player");
+            if (playerGO == null)
                 Debug.Log("Cannot find Player");
         }
     }
 
     protected virtual void Start()
     {
-        _preAttackTimeWait = new WaitForSeconds(_preAttackTime);
+        preAttackTimeWait = new WaitForSeconds(preAttackTime);
 
-        EventManager.Instance.OnPlayerDead?.AddListener(this.OnPlayerDead);
+        EventManager.instance.OnPlayerDead?.AddListener(this.OnPlayerDead);
     }
     #endregion
     public virtual void Initialize()
     {
-        _manager.State.IsDead = false;
-        Walk(_manager.Data.WalkSpeed);
+        manager.state.isDead = false;
+        Walk(manager.data.WalkSpeed);
     }
 
     #region Event Callback Actions
     public void OnPlayerDead()
     {
-        if (_manager.State.IsDead == false) // If not in die animation
+        if (manager.state.isDead == false) // If not in die animation
         {
-            StopCoroutine(_walkCoroutine);
+            StopCoroutine(walkCoroutine);
             Idle();
         }
     }
     #endregion
     public void Idle()
     {
-        _manager.State.MoveState = EnemyMoveState.Idle;
-        _animationController.Idle();
+        manager.state.MoveState = EnemyMoveState.Idle;
+        animationController.Idle();
     }
 
     public void Walk(float moveSpeed)
     {
-        _walkCoroutine = StartCoroutine(C_Walk(moveSpeed));
+        walkCoroutine = StartCoroutine(C_Walk(moveSpeed));
     }
 
     protected IEnumerator C_Walk(float moveSpeed)
     {
-        _manager.State.MoveState = EnemyMoveState.Walk;
-        _animationController.Walk();
+        manager.state.MoveState = EnemyMoveState.Walk;
+        animationController.Walk();
 
-        if (_player == null)
+        if (playerGO == null)
         {
-            _player = GameObject.FindGameObjectWithTag("Player");
-            if (_player == null)
+            playerGO = GameObject.FindGameObjectWithTag("Player");
+            if (playerGO == null)
                 Debug.Log("Cannot find Player");
         }
         while (true)
         {
-            Vector3 direction = _player.transform.position - transform.position;
-            if (direction.magnitude < _manager.Data.NormalAttackRange)
+            Vector3 direction = playerGO.transform.position - transform.position;
+            if (direction.magnitude < manager.data.NormalAttackRange)
             {
                 yield return C_NormalAttack();
             }
@@ -94,89 +94,89 @@ public abstract class Base_EnemyActionController : MonoBehaviour
 
     protected IEnumerator C_NormalAttack()
     {
-        _manager.State.MoveState = EnemyMoveState.Idle;
+        manager.state.MoveState = EnemyMoveState.Idle;
         //_animationController.SetMoveAnimation("Idle"); // Prevent walk animation after attack
-        _animationController.Idle();
-        _animationController.NormalAttack();
+        animationController.Idle();
+        animationController.NormalAttack();
 
         // Synchronize attack event with attack animation
-        yield return _preAttackTimeWait;
+        yield return preAttackTimeWait;
 
-        Vector3 direction = _player.transform.position - transform.position;
+        Vector3 direction = playerGO.transform.position - transform.position;
 
-        if (direction.magnitude < _manager.Data.NormalAttackRange)
-            EventManager.Instance.OnPlayerDamaged?.Invoke(_manager.Data.NormalAttackDamage);
+        if (direction.magnitude < manager.data.NormalAttackRange)
+            EventManager.instance.OnPlayerDamaged?.Invoke(manager.data.NormalAttackDamage);
 
-        yield return new WaitForSeconds(_manager.Data.NormalAttackSpeed);
+        yield return new WaitForSeconds(manager.data.NormalAttackSpeed);
 
         // Reset Move Animation
-        direction = _player.transform.position - transform.position;
-        if (direction.magnitude < _manager.Data.NormalAttackRange)
-            _manager.State.MoveState = EnemyMoveState.Idle;
+        direction = playerGO.transform.position - transform.position;
+        if (direction.magnitude < manager.data.NormalAttackRange)
+            manager.state.MoveState = EnemyMoveState.Idle;
         else
-            _manager.State.MoveState = EnemyMoveState.Walk;
-        _animationController.Move();
+            manager.state.MoveState = EnemyMoveState.Walk;
+        animationController.Move();
     }
 
     public void TakeDamage(float damage)
     {
-        if (_manager.State.IsDead == true)
+        if (manager.state.isDead == true)
             return;
         ReduceHP(damage);
-        _animationController.ChangeSpriteColor(Color.red);
+        animationController.ChangeSpriteColor(Color.red);
     }
 
     public void TakeDamage(float damage, float coolTime)
     {
-        if (_manager.State.IsDead == true)
+        if (manager.state.isDead == true)
             return;
         StartCoroutine(ReduceHP(damage, coolTime));
-        _animationController.ChangeSpriteColor(Color.red);
+        animationController.ChangeSpriteColor(Color.red);
     }
 
     public void Die()
     {
-        _manager.State.MoveState = EnemyMoveState.Idle;
-        _manager.State.IsDead = true;
+        manager.state.MoveState = EnemyMoveState.Idle;
+        manager.state.isDead = true;
 
-        StopCoroutine(_walkCoroutine);
+        StopCoroutine(walkCoroutine);
         StartCoroutine(C_Die());
     }
 
     protected IEnumerator C_Die()
     {
-        _animationController.Die();
-        float animationTime = _animationController.GetCurrentAnimationLength();
+        animationController.Die();
+        float animationTime = animationController.GetCurrentAnimationLength();
 
-        yield return new WaitForSeconds(animationTime + _deadRemainTime);
-        _manager.OnEnemyDead();
+        yield return new WaitForSeconds(animationTime + DEAD_REMAIN_TIME);
+        manager.OnEnemyDead();
     }
 
     private void ReduceHP(float damage)
     {
-        if (_manager.Data.Hp - damage >= 0f)
-            _manager.Data.Hp -= damage;
+        if (manager.data.Hp - damage >= 0f)
+            manager.data.Hp -= damage;
         else
-            _manager.Data.Hp = 0f;
+            manager.data.Hp = 0f;
 
-        if (_manager.Data.Hp <= 0f)
+        if (manager.data.Hp <= 0f)
             Die();
     }
 
     private IEnumerator ReduceHP(float damage, float coolTime)
     {
-        _manager.State.IsAttacked = true;
+        manager.state.IsAttacked = true;
 
-        if (_manager.Data.Hp - damage >= 0f)
-            _manager.Data.Hp -= damage;
+        if (manager.data.Hp - damage >= 0f)
+            manager.data.Hp -= damage;
         else
-            _manager.Data.Hp = 0f;
+            manager.data.Hp = 0f;
 
-        if (_manager.Data.Hp <= 0f)
+        if (manager.data.Hp <= 0f)
             Die();
 
         yield return new WaitForSeconds(coolTime);
 
-        _manager.State.IsAttacked = false;
+        manager.state.IsAttacked = false;
     }
 }

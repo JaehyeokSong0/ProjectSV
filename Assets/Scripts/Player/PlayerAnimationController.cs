@@ -6,7 +6,7 @@ public class PlayerAnimationController : MonoBehaviour
 {
     [SerializeField] private PlayerManager _manager;
     [SerializeField] private Animator _animator;
-    [SerializeField] protected SpriteRenderer _spriteRenderer;
+    [SerializeField] private SpriteRenderer _spriteRenderer;
 
     private bool _isDirectionLocked = false; // Used to lock direction of attack animation
     private WaitForSeconds _colorChangeTimeWait = new WaitForSeconds(2f);
@@ -49,7 +49,7 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void UpdateDirection(Vector2 direction)
     {
-        _manager.PlayerDirectionBuffer = direction;
+        _manager.playerDirectionBuffer = direction;
         if(_isDirectionLocked == false)
         {
             _animator.SetFloat("DirectionX", direction.x);
@@ -77,8 +77,8 @@ public class PlayerAnimationController : MonoBehaviour
             yield return new WaitForSeconds(animationTime);
 
             _isDirectionLocked = false;
-            UpdateDirection(_manager.PlayerDirectionBuffer);
-            SetMoveAnimation(_manager.State.MoveState.ToString());
+            UpdateDirection(_manager.playerDirectionBuffer);
+            SetMoveAnimation(_manager.state.moveState.ToString());
         }
     }
     private void SetMoveAnimation(string animationName)

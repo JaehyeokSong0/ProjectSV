@@ -3,7 +3,7 @@ using UnityEngine;
 // Manages game flow
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] PlayerManager _playerManager;
+    [SerializeField] private PlayerManager _playerManager;
 
     private void Awake()
     {

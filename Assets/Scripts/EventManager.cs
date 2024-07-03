@@ -5,7 +5,7 @@ using UnityEngine.Events;
 // Manages global events
 public class EventManager : MonoBehaviour
 { 
-    public static EventManager Instance = null;
+    public static EventManager instance = null;
 
     public UnityEvent<float> OnPlayerDamaged; // {Damage}
     public UnityEvent OnPlayerDead;
@@ -14,14 +14,14 @@ public class EventManager : MonoBehaviour
 
     private void Awake()
     {
-        if(Instance == null)
+        if(instance == null)
         {
-            Instance = this;
+            instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
         {
-            if(Instance != this)
+            if(instance != this)
                 Destroy(this.gameObject);
         }
     }

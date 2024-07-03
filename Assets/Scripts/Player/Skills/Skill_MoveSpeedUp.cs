@@ -7,12 +7,12 @@ public class Skill_MoveSpeedUp : Base_Skill
 
     public override void Initialize()
     {
-        if (Data == null)
-            Data = Resources.Load("Data/Skills/MoveSpeedUpData") as SkillData;
+        if (data == null)
+            data = Resources.Load("Data/Skills/MoveSpeedUpData") as SkillData;
         if (icon == null)
             icon = Resources.Load("Prefabs/Skills/Icons/Skill_MoveSpeedUp_Icon") as GameObject;
 
-        _playerData = transform.root.GetComponent<PlayerManager>().Data;
+        _playerData = transform.root.GetComponent<PlayerManager>().data;
         if (_playerData == null)
             Debug.LogError("Cannot find player data");
     }
@@ -25,13 +25,13 @@ public class Skill_MoveSpeedUp : Base_Skill
 
     protected override IEnumerator C_CastSkill()
     {
-        _playerData.WalkSpeed += Data.Value;
-        _playerData.RunSpeed += Data.Value;
+        _playerData.walkSpeed += data.value;
+        _playerData.runSpeed += data.value;
 
-        yield return new WaitForSeconds(Data.Duration);
+        yield return new WaitForSeconds(data.duration);
 
-        _playerData.WalkSpeed -= Data.Value;
-        _playerData.RunSpeed -= Data.Value;
+        _playerData.walkSpeed -= data.value;
+        _playerData.runSpeed -= data.value;
 
         StopCoroutine(C_CheckElapsedTime());
         Destroy(gameObject);

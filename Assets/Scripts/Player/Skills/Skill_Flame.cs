@@ -12,31 +12,31 @@ public class Skill_Flame : Base_Skill
 
     public override void Initialize(Vector2 position, Vector2 direction)
     {
-        if (Data == null)
-            Data = Resources.Load("Data/Skills/FlameData") as SkillData;
+        if (data == null)
+            data = Resources.Load("Data/Skills/FlameData") as SkillData;
         if (icon == null)
             icon = Resources.Load("Prefabs/Skills/Icons/Skill_Flame_Icon") as GameObject;
-        _animator = transform.Find("Effect").GetComponent<Animator>();
+        animator = transform.Find("Effect").GetComponent<Animator>();
 
         SetTransform(position, direction);
     }
 
     public override void CastSkill()
     {
-        _radius = Data.Radius;
+        _radius = data.radius;
         StartCoroutine(C_CastSkill());
     }
 
     protected override IEnumerator C_CastSkill()
     {
-        Vector3 rotationValue = Vector3.forward * Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg;
+        Vector3 rotationValue = Vector3.forward * Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(rotationValue);
 
-        _moveCoroutine = StartCoroutine(Move(_direction, Data.MoveSpeed));
+        _moveCoroutine = StartCoroutine(Move(direction, data.moveSpeed));
 
-        while (_elapsedTime < Data.Duration)
+        while (elapsedTime < data.duration)
         {
-            RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, _radius, Vector2.zero, 0f, _enemyLayer);
+            RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, _radius, Vector2.zero, 0f, enemyLayer);
             if(hits.Length > 0)
             {
                 Explode();
@@ -53,16 +53,16 @@ public class Skill_Flame : Base_Skill
     {
         StopCoroutine(_moveCoroutine);
 
-        _animator.SetTrigger(HASH_ACTIVATED);
+        animator.SetTrigger(HASH_ACTIVATED);
         DestroyAfterAnimation();
 
         transform.localScale *= GO_SCALE_FACTOR;
         _radius *= EXPLOSION_RANGE;
 
-        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, _radius, Vector2.zero, 0f, _enemyLayer);
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, _radius, Vector2.zero, 0f, enemyLayer);
         foreach (var hit in hits)
         {
-            hit.collider.gameObject.GetComponent<Base_EnemyManager>().OnEnemyDamaged(Data.Damage);
+            hit.collider.gameObject.GetComponent<Base_EnemyManager>().OnEnemyDamaged(data.damage);
         }
     }
 

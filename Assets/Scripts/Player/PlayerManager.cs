@@ -12,9 +12,9 @@ public class PlayerManager : MonoBehaviour
 
     private Vector2 _playerDirectionBuffer = Vector2.down;
 
-    public PlayerStateManager State { get { return _stateManager; } }
-    public PlayerData Data { get { return _data; } }
-    public Vector2 PlayerDirectionBuffer 
+    public PlayerStateManager state { get { return _stateManager; } }
+    public PlayerData data { get { return _data; } }
+    public Vector2 playerDirectionBuffer 
     { 
         get 
         { 
@@ -48,27 +48,27 @@ public class PlayerManager : MonoBehaviour
 
     private void Start()
     {
-        EventManager.Instance.OnPlayerDamaged?.AddListener(this.OnPlayerDamaged);
-        EventManager.Instance.OnPlayerDead?.AddListener(this.OnPlayerDead);
+        EventManager.instance.OnPlayerDamaged?.AddListener(this.OnPlayerDamaged);
+        EventManager.instance.OnPlayerDead?.AddListener(this.OnPlayerDead);
     }
     #endregion
 
     #region Event Callback Actions
     public void OnPlayerDamaged(float damage)
     {
-        if (State.IsInvincible == true)
+        if (state.isInvincible == true)
             return;
 
-        State.SetInvincible(Data.InvincibleTime);
-        if (Data.CurrentHp - damage >= 0f)
-            Data.CurrentHp -= damage;
+        state.SetInvincible(data.invincibleTime);
+        if (data.currentHp - damage >= 0f)
+            data.currentHp -= damage;
         else
-            Data.CurrentHp = 0f;
+            data.currentHp = 0f;
 
         _animationController.ChangeSpriteColor(Color.red);
 
-        if (Data.CurrentHp <= 0f)
-            EventManager.Instance.OnPlayerDead?.Invoke();
+        if (data.currentHp <= 0f)
+            EventManager.instance.OnPlayerDead?.Invoke();
     }
 
     public void OnPlayerDead()

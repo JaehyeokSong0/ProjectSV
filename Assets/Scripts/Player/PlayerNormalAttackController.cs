@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class PlayerNormalAttackController : MonoBehaviour
 {
+    // Correction factors for attack animation time
+    private const float PRE_ATTACK_TIME = 0.2f;
+    private const float POST_ATTACK_TIME = 0.1f;
+
     private readonly Vector2 HITBOX_SIZE = new Vector2(1.2f, 1.2f);
 
     [SerializeField] private PlayerManager _manager;
@@ -15,11 +19,9 @@ public class PlayerNormalAttackController : MonoBehaviour
 
     private int _enemyLayer;
 
-    // Correction factors for attack animation time
-    private const float _preAttackTime = 0.2f;
-    private const float _postAttackTime = 0.1f;
     private WaitForSeconds _preAttackTimeWait;
-    Vector3 _gizmoDirection;
+    private Vector3 _gizmoDirection;
+
     private void Awake()
     {
         if (_manager == null)
@@ -29,13 +31,13 @@ public class PlayerNormalAttackController : MonoBehaviour
         if (_effectGO == null)
             _effectGO = transform.Find("Effect").gameObject;
 
-        _preAttackTimeWait = new WaitForSeconds(_preAttackTime);
+        _preAttackTimeWait = new WaitForSeconds(PRE_ATTACK_TIME);
         _enemyLayer = LayerMask.GetMask("Enemy");
     }
 
     private void Start()
     {
-        _attackSpeed = _manager.Data.NormalAttackSpeed;
+        _attackSpeed = _manager.data.normalAttackSpeed;
         _attackSpeedWait = new WaitForSeconds(_attackSpeed);
     }
 
@@ -47,14 +49,14 @@ public class PlayerNormalAttackController : MonoBehaviour
         {
             _animationController.NormalAttack();
 
-            Vector3 direction = _manager.PlayerDirectionBuffer.normalized;
+            Vector3 direction = _manager.playerDirectionBuffer.normalized;
             float rotationValue = 90f + Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             Vector3 rotationVector = Vector3.forward * (90f + Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
 
             // Set effect transform and play
             _effectGO.transform.position = transform.position + direction;
             _effectGO.transform.rotation = Quaternion.Euler(rotationVector);
-            PlayEffect(_animationController.GetCurrentAnimationLength() - _postAttackTime);
+            PlayEffect(_animationController.GetCurrentAnimationLength() - POST_ATTACK_TIME);
 
             _gizmoDirection = direction;
             yield return _preAttackTimeWait;
@@ -62,7 +64,7 @@ public class PlayerNormalAttackController : MonoBehaviour
             RaycastHit2D[] hits = Physics2D.BoxCastAll(transform.position + direction, HITBOX_SIZE, rotationValue, Vector2.zero, 0f, _enemyLayer);
             foreach (var hit in hits)
             {
-                hit.collider.gameObject.GetComponent<Base_EnemyManager>().OnEnemyDamaged(_manager.Data.NormalAttackDamage);
+                hit.collider.gameObject.GetComponent<Base_EnemyManager>().OnEnemyDamaged(_manager.data.normalAttackDamage);
             }
             yield return _attackSpeedWait;
             _effectGO.SetActive(false);

@@ -37,14 +37,14 @@ public class PlayerSkillUI : MonoBehaviour
     }
     private void Start()
     {
-        EventManager.Instance.OnPlayerDead?.AddListener(this.OnPlayerDead);
-        EventManager.Instance.OnGetSkill?.AddListener(this.OnGetSkill);
-        EventManager.Instance.OnUseSkill?.AddListener(this.OnUseSkill);
+        EventManager.instance.OnPlayerDead?.AddListener(this.OnPlayerDead);
+        EventManager.instance.OnGetSkill?.AddListener(this.OnGetSkill);
+        EventManager.instance.OnUseSkill?.AddListener(this.OnUseSkill);
     }
 
     private void LateUpdate()
     {
-        _timeBar.fillAmount = _skillController.ElaspedTime / _skillController.MaxTime;
+        _timeBar.fillAmount = _skillController.elaspedTime / _skillController.maxTime;
     }
     #endregion
     #region Event Callback Actions

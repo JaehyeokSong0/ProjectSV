@@ -31,13 +31,13 @@ public class PlayerInputController : MonoBehaviour
         if (_arrowInput != Vector2.zero)
         {
             if (_isLeftShiftPressed == false) // Player Walk
-                _playerGO.transform.position += new Vector3(_arrowInput.x, _arrowInput.y, 0f) * _manager.Data.WalkSpeed;
+                _playerGO.transform.position += new Vector3(_arrowInput.x, _arrowInput.y, 0f) * _manager.data.walkSpeed;
             else // Player Run
-                _playerGO.transform.position += new Vector3(_arrowInput.x, _arrowInput.y, 0f) * _manager.Data.RunSpeed;
+                _playerGO.transform.position += new Vector3(_arrowInput.x, _arrowInput.y, 0f) * _manager.data.runSpeed;
         }
         else
         {
-            if (_manager.State.MoveState != PlayerMoveState.Idle)
+            if (_manager.state.moveState != PlayerMoveState.Idle)
                 Idle();
         }
     }
@@ -49,13 +49,13 @@ public class PlayerInputController : MonoBehaviour
 
         _isLeftShiftPressed = true;
 
-        if (_manager.State.MoveState != PlayerMoveState.Idle) // IsMoving
+        if (_manager.state.moveState != PlayerMoveState.Idle) // IsMoving
             Run();
 
         if (context.canceled)
         {
             _isLeftShiftPressed = false;
-            if (_manager.State.MoveState != PlayerMoveState.Idle)
+            if (_manager.state.moveState != PlayerMoveState.Idle)
                 Walk();
         }
     }
@@ -69,7 +69,7 @@ public class PlayerInputController : MonoBehaviour
         if (_arrowInput != Vector2.zero)
             _playerDirection = _arrowInput;
 
-        _manager.PlayerDirectionBuffer = _playerDirection;
+        _manager.playerDirectionBuffer = _playerDirection;
 
         if (_isLeftShiftPressed == false)
             Walk();
@@ -88,19 +88,19 @@ public class PlayerInputController : MonoBehaviour
 
     private void Idle()
     {
-        _manager.State.MoveState = PlayerMoveState.Idle;
+        _manager.state.moveState = PlayerMoveState.Idle;
         _animationController.Idle();
     }
 
     private void Walk()
     {
-        _manager.State.MoveState = PlayerMoveState.Walk;
+        _manager.state.moveState = PlayerMoveState.Walk;
         _animationController.Walk(_playerDirection);
     }
 
     private void Run()
     {
-        _manager.State.MoveState = PlayerMoveState.Run;
+        _manager.state.moveState = PlayerMoveState.Run;
         _animationController.Run(_playerDirection);
     }
 }

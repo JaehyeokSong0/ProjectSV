@@ -5,54 +5,54 @@ using UnityEngine;
 [RequireComponent (typeof(Animator))]
 public abstract class Base_EnemyAnimationController : MonoBehaviour
 {
-    private const float _postActionDelay = 0.5f; // after action(canTransition) delay
+    private const float POST_ACTION_DELAY = 0.5f; // after action(canTransition) delay
 
-    [SerializeField] protected Base_EnemyManager _manager;
-    [SerializeField] protected Animator _animator;
-    protected GameObject _player;
+    [SerializeField] protected Base_EnemyManager manager;
+    [SerializeField] protected Animator animator;
+    protected GameObject playerGO;
 
-    [SerializeField] protected SpriteRenderer _spriteRenderer;
+    [SerializeField] protected SpriteRenderer spriteRenderer;
     private WaitForSeconds _colorChangeTimeWait = new WaitForSeconds(0.3f);
 
-    [SerializeField] public bool _isDirectionLocked; // Used to lock direction of attack animation
+    [SerializeField] private bool _isDirectionLocked; // Used to lock direction of attack animation
 
-    protected Coroutine _currentAnimation = null;
+    protected Coroutine currentAnimation = null;
 
     #region Event Functions
     protected virtual void Awake()
     {
-        _animator = GetComponent<Animator>();
-        if (_spriteRenderer == null)
-            _spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     protected void Start()
     {
-        _player = GameObject.FindGameObjectWithTag("Player");
+        playerGO = GameObject.FindGameObjectWithTag("Player");
     }
 
     protected void OnEnable()
     {
         _isDirectionLocked = false;
-        _spriteRenderer.color = Color.white;
+        spriteRenderer.color = Color.white;
     }
 
     protected void Update()
     {
-        Vector2 direction = _player.transform.position - transform.position;
+        Vector2 direction = playerGO.transform.position - transform.position;
         direction.Normalize();
 
         if (_isDirectionLocked == false)
         {
-            _animator.SetFloat("DirectionX", direction.x);
-            _animator.SetFloat("DirectionY", direction.y);
+            animator.SetFloat("DirectionX", direction.x);
+            animator.SetFloat("DirectionY", direction.y);
         }
     }
     #endregion
 
     public void Move()
     {
-        PlayAnimation(_manager.State.MoveState.ToString(), true);
+        PlayAnimation(manager.state.MoveState.ToString(), true);
     }
 
     public void Idle()
@@ -72,14 +72,14 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
 
     public void Die()
     {
-        StopCoroutine(_currentAnimation);
+        StopCoroutine(currentAnimation);
         PlayAnimation("Die", false);
-        _spriteRenderer.color = Color.white;
+        spriteRenderer.color = Color.white;
     }
 
     protected void PlayAnimation(string animationName, bool canTransition)
     { 
-        _currentAnimation = StartCoroutine(C_PlayAnimation(animationName, canTransition));
+        currentAnimation = StartCoroutine(C_PlayAnimation(animationName, canTransition));
     }
 
     protected IEnumerator C_PlayAnimation(string animationName, bool canTransition)
@@ -92,11 +92,11 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
         {
             _isDirectionLocked = true;
 
-            _animator.SetTrigger(animationName);
-            float animationTime = _animator.GetCurrentAnimatorStateInfo(0).length;
-            yield return new WaitForSeconds(animationTime + _postActionDelay);
+            animator.SetTrigger(animationName);
+            float animationTime = animator.GetCurrentAnimatorStateInfo(0).length;
+            yield return new WaitForSeconds(animationTime + POST_ACTION_DELAY);
 
-            SetMoveAnimation(_manager.State.MoveState.ToString());
+            SetMoveAnimation(manager.state.MoveState.ToString());
 
             if(animationName.Equals("Die") == false)
                 _isDirectionLocked = false;
@@ -107,13 +107,13 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
     {
         int length = (int)EnemyMoveState.Length;
         for (int i = 0; i < length; i++)
-            _animator.SetBool(((EnemyMoveState)i).ToString(), false);
-        _animator.SetBool(animationName, true);
+            animator.SetBool(((EnemyMoveState)i).ToString(), false);
+        animator.SetBool(animationName, true);
     }
 
     public float GetCurrentAnimationLength()
     {
-        float animationTime = _animator.GetCurrentAnimatorStateInfo(0).length;
+        float animationTime = animator.GetCurrentAnimatorStateInfo(0).length;
         return animationTime;
     }
 
@@ -124,10 +124,10 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
 
     private IEnumerator C_ChangeSpriteColor(Color color)
     {
-        _spriteRenderer.color = color;
+        spriteRenderer.color = color;
 
         yield return _colorChangeTimeWait;
 
-        _spriteRenderer.color = Color.white;
+        spriteRenderer.color = Color.white;
     }
 }

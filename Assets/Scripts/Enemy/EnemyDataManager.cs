@@ -13,11 +13,11 @@ public class EnemyDataManager : MonoBehaviour
     // Used in derived class of Base_EnemyManager
     public void LoadEnemyData(EnemyData data)
     {
-        Hp = data.Hp;
-        WalkSpeed = data.WalkSpeed;
-        RunSpeed = data.RunSpeed;
-        NormalAttackSpeed = data.NormalAttackSpeed;
-        NormalAttackRange = data.NormalAttackRange;
-        NormalAttackDamage = data.NormalAttackDamage;
+        Hp = data.hp;
+        WalkSpeed = data.walkSpeed;
+        RunSpeed = data.runSpeed;
+        NormalAttackSpeed = data.normalAttackSpeed;
+        NormalAttackRange = data.normalAttackRange;
+        NormalAttackDamage = data.normalAttackDamage;
     }
 }

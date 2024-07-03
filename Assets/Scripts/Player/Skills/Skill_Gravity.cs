@@ -5,8 +5,8 @@ public class Skill_Gravity : Base_Skill
 {
     public override void Initialize(Vector2 position, Vector2 direction)
     {
-        if (Data == null)
-            Data = Resources.Load("Data/Skills/GravityData") as SkillData;
+        if (data == null)
+            data = Resources.Load("Data/Skills/GravityData") as SkillData;
         if (icon == null)
             icon = Resources.Load("Prefabs/Skills/Icons/Skill_Gravity_Icon") as GameObject;
 
@@ -21,20 +21,20 @@ public class Skill_Gravity : Base_Skill
 
     protected override IEnumerator C_CastSkill()
     {
-        while (_elapsedTime < Data.Duration)
+        while (elapsedTime < data.duration)
         {
-            RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, Data.Radius, Vector2.zero, 0f, _enemyLayer);
+            RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, data.radius, Vector2.zero, 0f, enemyLayer);
             foreach (var hit in hits)
             {
-                if (_isValid == true)
+                if (isValid == true)
                 {
-                    hit.collider.gameObject.GetComponent<Base_EnemyManager>().OnEnemyDamaged(Data.Damage);
+                    hit.collider.gameObject.GetComponent<Base_EnemyManager>().OnEnemyDamaged(data.damage);
                 }
             }
-            yield return new WaitForSeconds(Data.Tick);
+            yield return new WaitForSeconds(data.tick);
         }
 
-        _isValid = false;
+        isValid = false;
         StopCoroutine(C_CheckElapsedTime());
         Destroy(gameObject);
     }
@@ -43,7 +43,7 @@ public class Skill_Gravity : Base_Skill
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawSphere(transform.position, Data.Radius);
+        Gizmos.DrawSphere(transform.position, data.radius);
     }
 #endif
 }
