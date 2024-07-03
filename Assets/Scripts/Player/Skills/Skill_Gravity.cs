@@ -5,10 +5,11 @@ public class Skill_Gravity : Base_Skill
 {
     public override void Initialize(Vector2 position, Vector2 direction)
     {
-        if(Data == null)
+        if (Data == null)
             Data = Resources.Load("Data/Skills/GravityData") as SkillData;
         if (icon == null)
             icon = Resources.Load("Prefabs/Skills/Icons/Skill_Gravity_Icon") as GameObject;
+
         SetTransform(position, direction);
     }
 
@@ -22,16 +23,12 @@ public class Skill_Gravity : Base_Skill
     {
         while (_elapsedTime < Data.Duration)
         {
-            RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, Data.Radius, Vector2.zero);
+            RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, Data.Radius, Vector2.zero, 0f, ENEMY_LAYER);
             foreach (var hit in hits)
             {
-                GameObject hitGO = hit.collider.gameObject;
-                if (hitGO.CompareTag("Enemy") == true) // TODO -> LayerMask
+                if (_isValid == true)
                 {
-                    if (_isValid == true)
-                    {
-                        hitGO.GetComponent<Base_EnemyManager>().OnEnemyDamaged(Data.Damage);
-                    }
+                    hit.collider.gameObject.GetComponent<Base_EnemyManager>().OnEnemyDamaged(Data.Damage);
                 }
             }
             yield return new WaitForSeconds(Data.Tick);
@@ -42,9 +39,11 @@ public class Skill_Gravity : Base_Skill
         Destroy(gameObject);
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(transform.position, Data.Radius);
     }
+#endif
 }

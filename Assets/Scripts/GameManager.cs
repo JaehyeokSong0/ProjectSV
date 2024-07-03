@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         if (_playerManager == null)
-            _playerManager = GameObject.FindWithTag("Player").GetComponent<PlayerManager>();
+            _playerManager = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerManager>();
     }
 
     private void Start()

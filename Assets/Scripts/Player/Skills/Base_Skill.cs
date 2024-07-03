@@ -3,8 +3,11 @@ using UnityEngine;
 
 public abstract class Base_Skill : MonoBehaviour
 {
+    protected int ENEMY_LAYER;
+
+    protected Animator _animator = null; // Can be null
     protected WaitForSecondsRealtime _timeWait = null;
-    protected bool _isValid = true; // true when the skill can apply damage
+    protected bool _isValid = true; // True when the skill can apply damage
     protected float _elapsedTime;
     protected Coroutine _checkElapsedTimeCoroutine;
     protected Vector2 _direction = Vector2.zero;
@@ -12,6 +15,11 @@ public abstract class Base_Skill : MonoBehaviour
     // Should be assigned in Initialize() in derived class
     public SkillData Data; 
     public GameObject icon;
+
+    protected void Awake()
+    {
+        ENEMY_LAYER = LayerMask.GetMask("Enemy");
+    }
 
     protected void OnEnable()
     {
@@ -28,6 +36,15 @@ public abstract class Base_Skill : MonoBehaviour
     {
         gameObject.transform.position = position;
         _direction = direction;
+    }
+
+    protected IEnumerator Move(Vector2 direction, float speed)
+    {
+        while (_elapsedTime < Data.Duration)
+        {
+            transform.position += new Vector3(direction.x, direction.y, 0f) * speed * Time.deltaTime;
+            yield return null;
+        }
     }
 
     protected void StartCheckValidation(float tick, float duration) // Used for DOT skills
@@ -59,5 +76,17 @@ public abstract class Base_Skill : MonoBehaviour
             _elapsedTime += Time.deltaTime;
             yield return null;
         }
+    }
+
+    protected void DestroyAfterAnimation()
+    {
+        StartCoroutine(C_DestroyAfterAnimation());
+    }
+
+    protected IEnumerator C_DestroyAfterAnimation()
+    {
+        float animationTime = _animator.GetCurrentAnimatorStateInfo(0).length;
+        yield return new WaitForSeconds(animationTime);
+        Destroy(gameObject);
     }
 }

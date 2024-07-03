@@ -16,5 +16,5 @@ MonoBehaviour:
   Damage: 20
   Duration: 5
   Tick: 0.5
-  Radius: 1.2
+  Radius: 1.3
   Value: 0

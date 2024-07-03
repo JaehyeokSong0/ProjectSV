@@ -38,9 +38,8 @@ public class PlayerHitBox : MonoBehaviour
 
         // Show normalAttack effect
         _effectGO.transform.localPosition = direction.normalized;
-        Vector3 rotateValue = new Vector3(0f, 0f, 90f + Mathf.Atan2(direction.y, direction.x)) * Mathf.Rad2Deg;
-        
-        _effectGO.transform.rotation = Quaternion.Euler(rotateValue);
+        Vector3 rotationValue = Vector3.forward * (90f + Mathf.Atan2(direction.y, direction.x)) * Mathf.Rad2Deg;
+        _effectGO.transform.rotation = Quaternion.Euler(rotationValue);
 
         StartCoroutine(C_SetHitBoxOffset(direction));
     }

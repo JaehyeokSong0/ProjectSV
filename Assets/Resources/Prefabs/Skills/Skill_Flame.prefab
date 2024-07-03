@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Data: {fileID: 11400000, guid: 9912470cd8dc27047a2bdadc54d0afa1, type: 2}
   icon: {fileID: 2315474844313808763, guid: 41cd5df7faf2a3547bc408ffa9301a21, type: 3}
-  animator: {fileID: 234702375807914324}
+  _animator: {fileID: 0}
 --- !u!1 &3784880935636468223
 GameObject:
   m_ObjectHideFlags: 0
@@ -124,7 +124,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: -258664260, guid: 6bde20b82d69e3847a8c8dff87891a49, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 0.96, y: 0.48}

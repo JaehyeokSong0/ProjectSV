@@ -12,6 +12,7 @@ public class SkillData : ScriptableObject
     public SkillType Type;
 
     public float Damage;
+    public float MoveSpeed; // Used in skills such as shooting
 
     public float Duration;
     public float Tick;
