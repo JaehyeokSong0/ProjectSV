@@ -23,7 +23,7 @@ public class Skill_Gravity : Base_Skill
     {
         while (_elapsedTime < Data.Duration)
         {
-            RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, Data.Radius, Vector2.zero, 0f, ENEMY_LAYER);
+            RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, Data.Radius, Vector2.zero, 0f, _enemyLayer);
             foreach (var hit in hits)
             {
                 if (_isValid == true)

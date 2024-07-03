@@ -86,16 +86,15 @@ public class EnemySpawner : MonoBehaviour
     private GameObject CreateEnemy()
     {
         // TEST CODE -> TODO : Refactor with dictionary
-        GameObject enemy = Instantiate(_deathLordGO);
-        enemy.transform.position = Random.insideUnitCircle * 10f;
+        GameObject enemy = Instantiate(_deathLordGO, Random.insideUnitCircle * 10f, Quaternion.identity);
         enemy.GetComponent<Base_EnemyManager>().Pool = this.Pool;
         return enemy;
     }
 
     private void OnGetEnemy(GameObject enemy)
     {
-        enemy.SetActive(true);
         enemy.transform.position = Random.insideUnitCircle * 10f; // TEST CODE
+        enemy.SetActive(true);
     }
 
     private void OnReleaseEnemy(GameObject enemy)

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public abstract class Base_Skill : MonoBehaviour
 {
-    protected int ENEMY_LAYER;
+    protected int _enemyLayer;
 
     protected Animator _animator = null; // Can be null
     protected WaitForSecondsRealtime _timeWait = null;
@@ -18,7 +18,7 @@ public abstract class Base_Skill : MonoBehaviour
 
     protected void Awake()
     {
-        ENEMY_LAYER = LayerMask.GetMask("Enemy");
+        _enemyLayer = LayerMask.GetMask("Enemy");
     }
 
     protected void OnEnable()

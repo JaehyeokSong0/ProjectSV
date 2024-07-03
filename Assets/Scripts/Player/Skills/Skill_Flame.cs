@@ -36,7 +36,7 @@ public class Skill_Flame : Base_Skill
 
         while (_elapsedTime < Data.Duration)
         {
-            RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, _radius, Vector2.zero, 0f, ENEMY_LAYER);
+            RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, _radius, Vector2.zero, 0f, _enemyLayer);
             if(hits.Length > 0)
             {
                 Explode();
@@ -59,7 +59,7 @@ public class Skill_Flame : Base_Skill
         transform.localScale *= GO_SCALE_FACTOR;
         _radius *= EXPLOSION_RANGE;
 
-        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, _radius, Vector2.zero, 0f, ENEMY_LAYER);
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, _radius, Vector2.zero, 0f, _enemyLayer);
         foreach (var hit in hits)
         {
             hit.collider.gameObject.GetComponent<Base_EnemyManager>().OnEnemyDamaged(Data.Damage);

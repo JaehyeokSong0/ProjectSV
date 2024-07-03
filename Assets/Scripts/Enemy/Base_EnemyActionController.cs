@@ -68,7 +68,6 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         _manager.State.MoveState = EnemyMoveState.Walk;
         _animationController.Walk();
 
-        Vector3 direction;
         if (_player == null)
         {
             _player = GameObject.FindGameObjectWithTag("Player");
@@ -77,10 +76,11 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         }
         while (true)
         {
-            direction = _player.transform.position - transform.position;
-
+            Vector3 direction = _player.transform.position - transform.position;
             if (direction.magnitude < _manager.Data.NormalAttackRange)
+            {
                 yield return C_NormalAttack();
+            }
 
             transform.position += direction.normalized * moveSpeed * Time.deltaTime;
             yield return null;
@@ -103,6 +103,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         yield return _preAttackTimeWait;
 
         Vector3 direction = _player.transform.position - transform.position;
+
         if (direction.magnitude < _manager.Data.NormalAttackRange)
             EventManager.Instance.OnPlayerDamaged?.Invoke(_manager.Data.NormalAttackDamage);
 

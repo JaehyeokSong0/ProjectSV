@@ -2270,10 +2270,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 8577466123949112689, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
-      propertyPath: _flameGO
-      value: 
-      objectReference: {fileID: 3333147273857035084, guid: c46aaedd9278b9c4ca3d3b9ea3eb0140, type: 3}
+    - target: {fileID: 6773802571401370898, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6773802571401370898, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8897653136156624885, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

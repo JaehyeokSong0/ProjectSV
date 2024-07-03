@@ -16,5 +16,5 @@ MonoBehaviour:
   WalkSpeed: 1
   RunSpeed: 2
   NormalAttackSpeed: 3
-  NormalAttackRange: 1.5
+  NormalAttackRange: 1
   NormalAttackDamage: 20
