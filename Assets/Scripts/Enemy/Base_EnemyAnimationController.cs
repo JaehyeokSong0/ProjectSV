@@ -12,7 +12,7 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
     protected GameObject _player;
 
     [SerializeField] protected SpriteRenderer _spriteRenderer;
-    private WaitForSeconds _colorChangeTimeWait = new WaitForSeconds(0.1f);
+    private WaitForSeconds _colorChangeTimeWait = new WaitForSeconds(0.3f);
 
     [SerializeField] public bool _isDirectionLocked; // Used to lock direction of attack animation
 

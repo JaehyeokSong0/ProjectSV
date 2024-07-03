@@ -9,6 +9,8 @@ public class PlayerSkillController : MonoBehaviour
     private Queue<GameObject> _skillQueue = new Queue<GameObject>();
     [SerializeField] private GameObject _gravityGO; // TEST CODE
     [SerializeField] private GameObject _walkSpeedUpGO; // TEST CODE
+    [SerializeField] private GameObject _flameGO; // TEST CODE
+
 
     public float ElaspedTime { get; private set; }
     public float MaxTime { get; private set; }
@@ -59,8 +61,11 @@ public class PlayerSkillController : MonoBehaviour
         {
             if(_skillQueue.Count < _manager.Data.SkillCapacity)
             {
-                if(UnityEngine.Random.value >= 0.5f)
+                float randomV = UnityEngine.Random.value;
+                if (randomV <= 0.3f)
                     GetSkill(_walkSpeedUpGO);
+                else if (randomV <= 0.6f)
+                    GetSkill(_flameGO);
                 else
                     GetSkill(_gravityGO);
             }
@@ -101,7 +106,7 @@ public class PlayerSkillController : MonoBehaviour
         switch (skillScript.Data.Type)
         {
             case SkillData.SkillType.Attack:
-                skillScript.Initialize(transform.parent.position);
+                skillScript.Initialize(transform.parent.position, _manager.PlayerDirectionBuffer);
                 break;
             case SkillData.SkillType.Buff:
                 skillScript.Initialize();

@@ -136,7 +136,7 @@ public class PlayerSkillUI : MonoBehaviour
 
     private void GetSkill(int count, GameObject icon)
     {
-        Debug.Log(icon.name);
+        // Debug.Log(icon.name);
         // Clamp max range of count
         if (_currSkillCount + count >= _skillCapacity)
             count = (_currSkillCount + count) - _skillCapacity;

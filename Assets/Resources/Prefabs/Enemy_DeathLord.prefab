@@ -96,7 +96,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _manager: {fileID: 4345296431834202498}
   _animationController: {fileID: 3251062995762313782}
-  _spriteRenderer: {fileID: 4204507492029140168}
 --- !u!70 &2719839352838828563
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -251,6 +250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1d01b6d31d6a364b8e15c5c1cff991f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _manager: {fileID: 0}
+  _manager: {fileID: 4345296431834202498}
   _animator: {fileID: 7220399531525677414}
+  _spriteRenderer: {fileID: 4204507492029140168}
   _isDirectionLocked: 0

@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class Skill_Gravity : Base_Skill
 {
-    public override void Initialize(Vector3 position)
+    public override void Initialize(Vector2 position, Vector2 direction)
     {
         if(Data == null)
             Data = Resources.Load("Data/Skills/GravityData") as SkillData;
         if (icon == null)
-            icon = Resources.Load("Prefabs/Skills/Icons/Skill_Gravity") as GameObject;
-        SetTransform(position);
+            icon = Resources.Load("Prefabs/Skills/Icons/Skill_Gravity_Icon") as GameObject;
+        SetTransform(position, direction);
     }
 
     public override void CastSkill()

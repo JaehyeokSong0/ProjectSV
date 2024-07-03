@@ -9,6 +9,8 @@ public class Skill_MoveSpeedUp : Base_Skill
     {
         if (Data == null)
             Data = Resources.Load("Data/Skills/MoveSpeedUpData") as SkillData;
+        if (icon == null)
+            icon = Resources.Load("Prefabs/Skills/Icons/Skill_MoveSpeedUp_Icon") as GameObject;
 
         _playerData = transform.root.GetComponent<PlayerManager>().Data;
         if (_playerData == null)
