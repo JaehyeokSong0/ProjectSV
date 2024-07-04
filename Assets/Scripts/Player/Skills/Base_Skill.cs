@@ -3,90 +3,84 @@ using UnityEngine;
 
 public abstract class Base_Skill : MonoBehaviour
 {
-    protected int enemyLayer;
+    #region Property
+    public int EnemyLayer => _enemyLayer; // Readonly
+    public abstract SkillData Data { get; set; }
+    public abstract GameObject Icon { get; set; }
+    #endregion
 
-    protected Animator animator = null; // Can be null
-    protected WaitForSecondsRealtime timeWait = null;
-    protected bool isValid = true; // True when the skill can apply damage
-    protected float elapsedTime;
-    protected Coroutine checkElapsedTimeCoroutine;
-    protected Vector2 direction = Vector2.zero;
+    #region Field
+    protected Animator _animator = null; // Can be null
+    protected Vector2 _direction = Vector2.zero; // Normalized direction
+    protected float _elapsedTime = 0f;
+    protected Coroutine _checkTimeCoroutine = null;
 
-    // Should be assigned in Initialize() in derived class
-    public SkillData data; 
-    public GameObject icon;
+    private int _enemyLayer;
+    #endregion
 
-    protected void Awake()
+    #region Event Method
+    protected virtual void Awake()
     {
-        enemyLayer = LayerMask.GetMask("Enemy");
+        _enemyLayer = LayerMask.GetMask("Enemy");
     }
+    #endregion
 
-    protected void OnEnable()
-    {
-        isValid = true;
-        elapsedTime = 0f;
-    }
-
+    #region Method
     public virtual void Initialize() { }
-    public virtual void Initialize(Vector2 position, Vector2 direction) { } // Should initialize data and transform
-    public virtual void CastSkill() { }
-    protected virtual IEnumerator C_CastSkill() { yield return null; }
-
-    protected void SetTransform(Vector2 position, Vector2 direction)
+    public virtual void Initialize(Vector2 position, Vector2 direction) 
     {
         gameObject.transform.position = position;
-        this.direction = direction;
+        _direction = direction;
     }
-
-    protected IEnumerator Move(Vector2 direction, float speed)
+    /// <summary>
+    /// Set skill data if needed
+    /// </summary>
+    public virtual void CastSkill() 
     {
-        while (elapsedTime < data.duration)
+        StartCheckTime();
+        StartCoroutine(C_CastSkill());
+    }
+    /// <summary>
+    /// Implement skill logic
+    /// </summary>
+    protected virtual IEnumerator C_CastSkill() { yield return null; } 
+    protected IEnumerator C_Move(Vector2 direction, float speed)
+    {
+        Vector3 moveDirection = direction;
+        while (_elapsedTime < Data.Duration)
         {
-            transform.position += new Vector3(direction.x, direction.y, 0f) * speed * Time.deltaTime;
+            transform.position += moveDirection * speed * Time.deltaTime;
             yield return null;
         }
     }
-
-    protected void StartCheckValidation(float tick, float duration) // Used for DOT skills
+    protected void StartCheckTime()
     {
-        timeWait = new WaitForSecondsRealtime(tick);
-        StartCoroutine(C_StartCheckValidation(duration));
+        _elapsedTime = 0f;
+        _checkTimeCoroutine = StartCoroutine(C_CheckElapsedTime());
     }
-
-    protected IEnumerator C_StartCheckValidation(float duration)
+    protected void StopCheckTime()
     {
-        StartCoroutine(C_CheckElapsedTime());
-        while(elapsedTime < duration)
-        {
-            yield return null;
-            isValid = false;
-            yield return timeWait;
-            isValid = true;
-            yield return null;
-        }
-        isValid = false;
-        StopCoroutine(C_CheckElapsedTime());
-        Destroy(gameObject);
+        StopCoroutine(_checkTimeCoroutine);
     }
-
     protected IEnumerator C_CheckElapsedTime()
     {
-        while(true)
+        while (_elapsedTime < Data.Duration)
         {
-            elapsedTime += Time.deltaTime;
+            _elapsedTime += Time.deltaTime;
             yield return null;
         }
     }
-
     protected void DestroyAfterAnimation()
     {
+        if (_animator == null)
+            Debug.LogError("Animator not found");
         StartCoroutine(C_DestroyAfterAnimation());
     }
-
     protected IEnumerator C_DestroyAfterAnimation()
     {
-        float animationTime = animator.GetCurrentAnimatorStateInfo(0).length;
+        float animationTime = _animator.GetCurrentAnimatorStateInfo(0).length;
         yield return new WaitForSeconds(animationTime);
         Destroy(gameObject);
     }
+    #endregion
 }

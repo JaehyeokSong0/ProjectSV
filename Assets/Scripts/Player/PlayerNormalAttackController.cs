@@ -6,7 +6,6 @@ public class PlayerNormalAttackController : MonoBehaviour
     // Correction factors for attack animation time
     private const float PRE_ATTACK_TIME = 0.2f;
     private const float POST_ATTACK_TIME = 0.1f;
-
     private readonly Vector2 HITBOX_SIZE = new Vector2(1.2f, 1.2f);
 
     [SerializeField] private PlayerManager _manager;
@@ -37,7 +36,7 @@ public class PlayerNormalAttackController : MonoBehaviour
 
     private void Start()
     {
-        _attackSpeed = _manager.data.normalAttackSpeed;
+        _attackSpeed = _manager.Data.NormalAttackSpeed;
         _attackSpeedWait = new WaitForSeconds(_attackSpeed);
     }
 
@@ -49,7 +48,7 @@ public class PlayerNormalAttackController : MonoBehaviour
         {
             _animationController.NormalAttack();
 
-            Vector3 direction = _manager.playerDirectionBuffer.normalized;
+            Vector3 direction = _manager.PlayerDirectionBuffer.normalized;
             float rotationValue = 90f + Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             Vector3 rotationVector = Vector3.forward * (90f + Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
 
@@ -64,7 +63,7 @@ public class PlayerNormalAttackController : MonoBehaviour
             RaycastHit2D[] hits = Physics2D.BoxCastAll(transform.position + direction, HITBOX_SIZE, rotationValue, Vector2.zero, 0f, _enemyLayer);
             foreach (var hit in hits)
             {
-                hit.collider.gameObject.GetComponent<Base_EnemyManager>().OnEnemyDamaged(_manager.data.normalAttackDamage);
+                hit.collider.gameObject.GetComponent<Base_EnemyManager>().OnEnemyDamaged(_manager.Data.NormalAttackDamage);
             }
             yield return _attackSpeedWait;
             _effectGO.SetActive(false);

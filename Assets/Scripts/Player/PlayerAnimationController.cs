@@ -49,7 +49,7 @@ public class PlayerAnimationController : MonoBehaviour
 
     public void UpdateDirection(Vector2 direction)
     {
-        _manager.playerDirectionBuffer = direction;
+        _manager.PlayerDirectionBuffer = direction;
         if(_isDirectionLocked == false)
         {
             _animator.SetFloat("DirectionX", direction.x);
@@ -77,8 +77,8 @@ public class PlayerAnimationController : MonoBehaviour
             yield return new WaitForSeconds(animationTime);
 
             _isDirectionLocked = false;
-            UpdateDirection(_manager.playerDirectionBuffer);
-            SetMoveAnimation(_manager.state.moveState.ToString());
+            UpdateDirection(_manager.PlayerDirectionBuffer);
+            SetMoveAnimation(_manager.State.MoveState.ToString());
         }
     }
     private void SetMoveAnimation(string animationName)

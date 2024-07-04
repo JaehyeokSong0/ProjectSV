@@ -8,15 +8,15 @@ public class EnemySpawner : MonoBehaviour
 {
     public static EnemySpawner Instance = null;
 
-    private const int DEFAULT_CAPACITY = 20;
-    private const int MAX_SIZE = 50;
+    private const int DEFAULT_CAPACITY = 5;
+    private const int MAX_SIZE = 5;
 
-    private float _spawnTime = 0.5f;
+    private float _spawnTime = 1f;
     private WaitForSeconds _spawnTimeWait;
     private Coroutine _spawnCoroutine = null;
 
     [SerializeField] private GameObject _deathLordGO; // TODO
-    public IObjectPool<GameObject> pool
+    public IObjectPool<GameObject> Pool
     { get; private set; }
 
     private void Awake()
@@ -48,7 +48,7 @@ public class EnemySpawner : MonoBehaviour
     private void Start()
     {
         StartCreateEnemy();
-        EventManager.instance.OnPlayerDead?.AddListener(this.StopCreateEnemy);
+        EventManager.Instance.OnPlayerDead?.AddListener(this.StopCreateEnemy);
     }
 
     public void StartCreateEnemy()
@@ -60,7 +60,7 @@ public class EnemySpawner : MonoBehaviour
     {
         while(true)
         {
-            pool.Get();
+            Pool.Get();
             yield return _spawnTimeWait;
         }
     }
@@ -73,14 +73,14 @@ public class EnemySpawner : MonoBehaviour
 
     private void InitializePool()
     {
-        pool = new ObjectPool<GameObject>(
+        Pool = new ObjectPool<GameObject>(
             CreateEnemy, OnGetEnemy, OnReleaseEnemy, OnDestroyEnemy, 
             defaultCapacity: DEFAULT_CAPACITY, maxSize: MAX_SIZE);
 
         for(int i = 0; i < DEFAULT_CAPACITY; i++)
         {
             var enemy = CreateEnemy().GetComponent<Base_EnemyManager>();
-            enemy.pool.Release(enemy.gameObject);
+            enemy.Pool.Release(enemy.gameObject);
         }
     }
 
@@ -88,7 +88,7 @@ public class EnemySpawner : MonoBehaviour
     {
         // TEST CODE -> TODO : Refactor with dictionary
         GameObject enemy = Instantiate(_deathLordGO, Random.insideUnitCircle * 10f, Quaternion.identity);
-        enemy.GetComponent<Base_EnemyManager>().pool = this.pool;
+        enemy.GetComponent<Base_EnemyManager>().Pool = this.Pool;
         return enemy;
     }
 

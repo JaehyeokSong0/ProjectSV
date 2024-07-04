@@ -1,8 +1,17 @@
+using UnityEngine;
 public class DeathLordActionController : Base_EnemyActionController
 {
+    public override Base_EnemyManager Manager 
+    { 
+        get => _manager; 
+        set => _manager = value as DeathLordManager; 
+    }
+
+    [SerializeField] private DeathLordManager _manager;
+
     private void Awake()
     {
-        preAttackTime = 1f; // TODO
+        _preAttackTime = 1f; // TODO
     }
 
     protected override void Start()
@@ -10,12 +19,13 @@ public class DeathLordActionController : Base_EnemyActionController
         base.Start();
     }
 
+
     public override void Initialize()
     {
-        if (manager == null)
-            manager = GetComponent<DeathLordManager>();
-        if (animationController == null)
-            animationController = transform.Find("Model").GetComponent<DeathLordAnimationController>();
+        if (Manager == null)
+            Manager = GetComponent<DeathLordManager>();
+        if (_animationController == null)
+            _animationController = transform.Find("Model").GetComponent<DeathLordAnimationController>();
 
         base.Initialize();
     }

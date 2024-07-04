@@ -3,18 +3,9 @@ using UnityEngine;
 // Manages Player status and events
 public class PlayerManager : MonoBehaviour
 {
-    [SerializeField] private PlayerInputController _inputController;
-    [SerializeField] private PlayerStateManager _stateManager;
-    [SerializeField] private PlayerData _data;
-    [SerializeField] private PlayerNormalAttackController _normalAttackController;
-    [SerializeField] private PlayerSkillController _skillController;
-    [SerializeField] private PlayerAnimationController _animationController;
-
-    private Vector2 _playerDirectionBuffer = Vector2.down;
-
-    public PlayerStateManager state { get { return _stateManager; } }
-    public PlayerData data { get { return _data; } }
-    public Vector2 playerDirectionBuffer 
+    public PlayerStateManager State { get { return _stateManager; } }
+    public PlayerData Data { get { return _data; } }
+    public Vector2 PlayerDirectionBuffer 
     { 
         get 
         { 
@@ -28,6 +19,15 @@ public class PlayerManager : MonoBehaviour
                 _playerDirectionBuffer = value; 
         } 
     }
+
+    [SerializeField] private PlayerInputController _inputController;
+    [SerializeField] private PlayerStateManager _stateManager;
+    [SerializeField] private PlayerData _data;
+    [SerializeField] private PlayerNormalAttackController _normalAttackController;
+    [SerializeField] private PlayerSkillController _skillController;
+    [SerializeField] private PlayerAnimationController _animationController;
+
+    private Vector2 _playerDirectionBuffer = Vector2.down;
 
     #region Event Functions
     private void Awake()
@@ -48,27 +48,27 @@ public class PlayerManager : MonoBehaviour
 
     private void Start()
     {
-        EventManager.instance.OnPlayerDamaged?.AddListener(this.OnPlayerDamaged);
-        EventManager.instance.OnPlayerDead?.AddListener(this.OnPlayerDead);
+        EventManager.Instance.OnPlayerDamaged?.AddListener(this.OnPlayerDamaged);
+        EventManager.Instance.OnPlayerDead?.AddListener(this.OnPlayerDead);
     }
     #endregion
 
     #region Event Callback Actions
     public void OnPlayerDamaged(float damage)
     {
-        if (state.isInvincible == true)
+        if (State.IsInvincible == true)
             return;
 
-        state.SetInvincible(data.invincibleTime);
-        if (data.currentHp - damage >= 0f)
-            data.currentHp -= damage;
+        State.SetInvincible(Data.InvincibleTime);
+        if (Data.CurrentHp - damage >= 0f)
+            Data.CurrentHp -= damage;
         else
-            data.currentHp = 0f;
+            Data.CurrentHp = 0f;
 
         _animationController.ChangeSpriteColor(Color.red);
 
-        if (data.currentHp <= 0f)
-            EventManager.instance.OnPlayerDead?.Invoke();
+        if (Data.CurrentHp <= 0f)
+            EventManager.Instance.OnPlayerDead?.Invoke();
     }
 
     public void OnPlayerDead()

@@ -1,0 +1,56 @@
+﻿// Visual Studio shortcut
+// Region expand/collapse on cursor : ctrl + M + M
+// Region expand/collapse all : ctrl + M + L
+// Region collpse only methods : ctrl + M + O
+
+using UnityEngine;
+
+public class Class : MonoBehaviour
+{
+    #region Enum
+    public enum EnumType
+    {
+        public int FirstElement;
+        public int SecondElement;
+    }
+    #endregion
+
+    #region Event
+    public UnityEvent OnEventStarted;
+    #endregion
+
+    #region Constant
+    public const int CONSTANT_1 = 1;
+    protected const float CONSTANT_1 = 2f;
+    private const bool CONSTANT_3 = true;
+    #endregion
+
+    #region Property
+    public bool BoolProperty
+    {
+        get => _fieldBool; 
+        set => _fieldBool = value;
+    }
+    #endregion
+
+    #region Field
+    public int FieldInt;
+    protected float _fieldFloat;
+    private bool _fieldBool;
+    #endregion
+
+    #region Event Method
+    private void Awake() {}
+    #endregion
+
+    #region Event Callback
+    public void OnEventReceived() {}
+    #endregion
+
+    #region Methods
+    public void SetBool(bool fieldBool)
+    {
+        _fieldBool = fieldBool;
+    }
+    #endregion
+}

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2244004342855657259}
   - component: {fileID: 1413917904883410775}
   m_Layer: 0
-  m_Name: Skill_WalkSpeedUp_Icon
+  m_Name: Skill_MoveSpeedUp_Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

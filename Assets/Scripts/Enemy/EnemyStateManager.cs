@@ -18,7 +18,7 @@ public enum EnemyActionState // trigger parameters in animator
 public class EnemyStateManager : MonoBehaviour
 {
     public EnemyMoveState MoveState;
-    [HideInInspector] public bool isDead;
+    [HideInInspector] public bool IsDead;
     [HideInInspector] public bool IsAttacked; // If attacked recently, it has invincible time for a while
 
     private void Awake()
@@ -28,6 +28,6 @@ public class EnemyStateManager : MonoBehaviour
 
     private void OnEnable()
     {
-        isDead = false;
+        IsDead = false;
     }
 }

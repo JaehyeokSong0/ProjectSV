@@ -9,10 +9,10 @@ public class DeathLordManager : Base_EnemyManager
 
     protected override void Initialize()
     {
-        if (actionController == null)
-            actionController = GetComponent<DeathLordActionController>();
+        if (ActionController == null)
+            ActionController = GetComponent<DeathLordActionController>();
 
-        data.LoadEnemyData((Resources.Load("Data/DeathLordData") as EnemyData));
+        Data.LoadEnemyData((Resources.Load("Data/DeathLordData") as EnemyData));
         base.Initialize();
     }
 }

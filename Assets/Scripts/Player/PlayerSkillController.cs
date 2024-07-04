@@ -1,73 +1,70 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerSkillController : MonoBehaviour
 {
+    #region Property
+    public float ElaspedTime => _elapsedTime;
+    public float MaxTime => _maxTime;
+    #endregion
+
+    #region Field
     [SerializeField] private PlayerManager _manager;
+    [SerializeField] private GameObject[] _skillPrefabs = new GameObject[3]; // TODO
     private Queue<GameObject> _skillQueue = new Queue<GameObject>();
-    [SerializeField] private GameObject _gravityGO; // TEST CODE
-    [SerializeField] private GameObject _walkSpeedUpGO; // TEST CODE
-    [SerializeField] private GameObject _flameGO; // TEST CODE
 
+    private float _elapsedTime = 0f;
+    private float _maxTime = 6f;
+    #endregion
 
-    public float elaspedTime { get; private set; }
-    public float maxTime { get; private set; }
-
+    #region Event Method
     private void Awake()
     {
         if (_manager == null)
-            _manager = GetComponentInParent<PlayerManager>();
-        if (_gravityGO == null)
-            _gravityGO = Resources.Load("Prefabs/Skills/Skill_Gravity") as GameObject;
-        if (_walkSpeedUpGO == null)
-            _walkSpeedUpGO = Resources.Load("Prefabs/Skills/Skill_WalkSpeedUp") as GameObject;
-
-        elaspedTime = 0f;
-        maxTime = 6f;
+            _manager = transform.parent.GetComponent<PlayerManager>();
     }
-
     private void Start()
     {
         StartCoroutine(TestFunc(3));
     }
-
     private void Update()
     {
-        elaspedTime += Time.deltaTime;
-        if (elaspedTime > maxTime)
+        _elapsedTime += Time.deltaTime;
+        if (ElaspedTime > MaxTime)
         {
             StartCoroutine(TestFunc(3));
-            elaspedTime = 0f;
+            _elapsedTime = 0f;
         }
     }
+    #endregion
 
+    #region Method
     private IEnumerator TestFunc(int count) // TEST CODE -> Generates 3 skills
     {
         WaitForSeconds regenTime = new WaitForSeconds(0.1f);
-        
+
         foreach (var skills in _skillQueue)
         {
             Destroy(skills);
         }
 
         _skillQueue.Clear();
-        EventManager.instance.OnUseSkill?.Invoke();
+        EventManager.Instance.OnUseSkill?.Invoke();
 
         yield return regenTime;
 
         while (true)
         {
-            if(_skillQueue.Count < _manager.data.skillCapacity)
+            if (_skillQueue.Count < _manager.Data.SkillCapacity)
             {
                 float randomV = UnityEngine.Random.value;
                 if (randomV <= 0.3f)
-                    GetSkill(_walkSpeedUpGO);
+                    GetSkill(_skillPrefabs[0]);
                 else if (randomV <= 0.6f)
-                    GetSkill(_flameGO);
+                    GetSkill(_skillPrefabs[1]);
                 else
-                    GetSkill(_gravityGO);
+                    GetSkill(_skillPrefabs[2]);
             }
             if (--count <= 0)
                 yield break;
@@ -79,8 +76,7 @@ public class PlayerSkillController : MonoBehaviour
     public void GetSkill(GameObject skillGO) // Prefab in project, not in scene
     {
         var skillScript = skillGO.GetComponent<Base_Skill>();
-
-        switch (skillScript.data.type)
+        switch (skillScript.Data.Type)
         {
             case SkillData.SkillType.Attack:
                 _skillQueue.Enqueue(Instantiate(skillGO));
@@ -90,7 +86,7 @@ public class PlayerSkillController : MonoBehaviour
                 break;
         }
 
-        EventManager.instance.OnGetSkill?.Invoke(skillScript.icon);
+        EventManager.Instance.OnGetSkill?.Invoke(skillScript.Icon);
     }
 
     public void CastSkill()
@@ -103,22 +99,24 @@ public class PlayerSkillController : MonoBehaviour
         var skillScript = skillGO.GetComponent<Base_Skill>();
 
         // Initialize skill data
-        switch (skillScript.data.type)
+        switch (skillScript.Data.Type)
         {
             case SkillData.SkillType.Attack:
-                skillScript.Initialize(transform.parent.position, _manager.playerDirectionBuffer);
+                skillScript.Initialize(transform.parent.position, _manager.PlayerDirectionBuffer);
                 break;
             case SkillData.SkillType.Buff:
                 skillScript.Initialize();
                 break;
         }
-        
+
         skillScript.CastSkill();
-        EventManager.instance.OnUseSkill?.Invoke();
+        EventManager.Instance.OnUseSkill?.Invoke();
     }
 
     public int GetSkillCount()
     {
         return _skillQueue.Count;
     }
+    #endregion
 }
+

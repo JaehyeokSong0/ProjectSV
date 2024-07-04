@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: GravityData
   m_EditorClassIdentifier: 
   Type: 0
-  Damage: 20
-  Duration: 5
+  Cost: 2
+  Damage: 15
+  MoveSpeed: 0
+  Duration: 2
   Tick: 0.5
   Radius: 1.3
   Value: 0

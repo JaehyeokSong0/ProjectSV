@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: FlameData
   m_EditorClassIdentifier: 
   Type: 0
+  Cost: 1
   Damage: 50
   MoveSpeed: 4
   Duration: 5

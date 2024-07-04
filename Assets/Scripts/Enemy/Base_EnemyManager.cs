@@ -5,24 +5,24 @@ using UnityEngine.Pool;
 [RequireComponent(typeof(EnemyDataManager)), RequireComponent(typeof(EnemyStateManager))]
 public abstract class Base_EnemyManager : MonoBehaviour
 {
-    protected EnemyStateManager stateManager;
-    protected EnemyDataManager dataManager;
+    protected EnemyStateManager StateManager;
+    protected EnemyDataManager DataManager;
     // Should be assigned in derived class
-    protected Base_EnemyActionController actionController = null;
+    protected Base_EnemyActionController ActionController = null;
 
     // Should be initialized with Data.LoadData() in Initialize() of derived class
     // (e.g.) Data.LoadEnemyData((Resources.Load("Data/EnemyData") as EnemyData));
-    public EnemyDataManager data { get { return dataManager; } }
-    public EnemyStateManager state { get { return stateManager; } }
-    public IObjectPool<GameObject> pool;
+    public EnemyDataManager Data { get { return DataManager; } }
+    public EnemyStateManager State { get { return StateManager; } }
+    public IObjectPool<GameObject> Pool;
 
     #region Event Functions
     protected virtual void Awake()
     {
-        if (dataManager == null)
-            dataManager = GetComponent<EnemyDataManager>();
-        if (stateManager == null)
-            stateManager = GetComponent<EnemyStateManager>();
+        if (DataManager == null)
+            DataManager = GetComponent<EnemyDataManager>();
+        if (StateManager == null)
+            StateManager = GetComponent<EnemyStateManager>();
     }
 
     protected void OnEnable()
@@ -33,16 +33,16 @@ public abstract class Base_EnemyManager : MonoBehaviour
     #region Event Callback Actions
     public void OnEnemyDamaged(float damage) // Attacked by skill
     {
-        actionController.TakeDamage(damage);
+        ActionController.TakeDamage(damage);
     }
 
     public void OnEnemyDead()
     {
-        pool.Release(gameObject);
+        Pool.Release(gameObject);
     }
     #endregion
     protected virtual void Initialize()
     {
-        actionController.Initialize();
+        ActionController.Initialize();
     }
 }

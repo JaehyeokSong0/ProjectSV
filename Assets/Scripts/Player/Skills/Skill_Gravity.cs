@@ -3,47 +3,61 @@ using UnityEngine;
 
 public class Skill_Gravity : Base_Skill
 {
-    public override void Initialize(Vector2 position, Vector2 direction)
+    #region Property
+    public override SkillData Data
     {
-        if (data == null)
-            data = Resources.Load("Data/Skills/GravityData") as SkillData;
-        if (icon == null)
-            icon = Resources.Load("Prefabs/Skills/Icons/Skill_Gravity_Icon") as GameObject;
-
-        SetTransform(position, direction);
+        get => _data;
+        set => _data = value;
     }
-
-    public override void CastSkill()
+    public override GameObject Icon
     {
-        StartCoroutine(C_CheckElapsedTime());
-        StartCoroutine(C_CastSkill());
+        get => _icon;
+        set => _icon = value;
     }
+    #endregion
 
+    #region Field
+    [SerializeField] private SkillData _data;
+    [SerializeField] private GameObject _icon;
+    #endregion
+
+    #region Event Method
+    protected override void Awake()
+    {
+        base.Awake();
+
+        if (_data == null)
+            _data = Resources.Load("Data/Skills/GravityData") as SkillData;
+        if (_icon == null)
+            _icon = Resources.Load("Prefabs/Skills/Icons/Skill_Gravity_Icon") as GameObject;
+    }
+    #endregion
+
+    #region Method
     protected override IEnumerator C_CastSkill()
     {
-        while (elapsedTime < data.duration)
+        WaitForSeconds tickWait =  new WaitForSeconds(Data.Tick);
+        while (_elapsedTime < Data.Duration)
         {
-            RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, data.radius, Vector2.zero, 0f, enemyLayer);
+            RaycastHit2D[] hits = Physics2D.CircleCastAll(
+                transform.position, Data.Radius, Vector2.zero, 0f, EnemyLayer);
             foreach (var hit in hits)
             {
-                if (isValid == true)
-                {
-                    hit.collider.gameObject.GetComponent<Base_EnemyManager>().OnEnemyDamaged(data.damage);
-                }
+                hit.collider.gameObject.GetComponent<Base_EnemyManager>().OnEnemyDamaged(Data.Damage);
             }
-            yield return new WaitForSeconds(data.tick);
+            yield return tickWait;
         }
 
-        isValid = false;
-        StopCoroutine(C_CheckElapsedTime());
+        StopCheckTime();
         Destroy(gameObject);
     }
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(transform.position, data.radius);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(transform.position, Data.Radius);
     }
 #endif
+    #endregion
 }

@@ -9,15 +9,12 @@ public class SkillData : ScriptableObject
         Buff
     }
 
-    public SkillType type;
-
-    public float damage;
-    public float moveSpeed; // Used in skills such as shooting
-
-    public float duration;
-    public float tick;
-
-    public float radius;
-
-    public float value; // Used in skills such as Buff
+    public SkillType Type;
+    public int Cost;
+    public float Damage;
+    public float MoveSpeed; // Used in skills such as shooting
+    public float Duration;
+    public float Tick;
+    public float Radius;
+    public float Value; // Used in skills such as Buff
 }
