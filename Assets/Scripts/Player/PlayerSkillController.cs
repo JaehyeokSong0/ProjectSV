@@ -15,7 +15,7 @@ public class PlayerSkillController : MonoBehaviour
     private Queue<GameObject> _skillQueue = new Queue<GameObject>();
 
     private float _elapsedTime = 0f;
-    private float _maxTime = 6f;
+    private float _maxTime = 6f; // TODO
     #endregion
 
     #region Event Method
@@ -31,7 +31,7 @@ public class PlayerSkillController : MonoBehaviour
     private void Update()
     {
         _elapsedTime += Time.deltaTime;
-        if (ElaspedTime > MaxTime)
+        if (_elapsedTime > _maxTime)
         {
             StartCoroutine(TestFunc(3));
             _elapsedTime = 0f;

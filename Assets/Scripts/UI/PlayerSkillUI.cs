@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class PlayerSkillUI : MonoBehaviour
 {
-    private const int _skillCapacity = 8;
-    private const float _iconMoveSpeed = 3f;
+    #region Constant
+    private const int SKILL_CAPACITY = 8;
+    private const float ICON_MOVE_SPEED = 3f;
+    #endregion
+
+    #region Field
     private int _skillCountBuffer = 0;
     private int _availableGridCount = 3;
 
@@ -20,20 +23,29 @@ public class PlayerSkillUI : MonoBehaviour
     [SerializeField] private TMP_Text _mpCountText;
     [SerializeField] private TMP_Text _deckCountText;
     [SerializeField] private Image _timeBar;
+    #endregion
 
-    #region Event Functions
+    #region Event Method
     private void Awake()
     {
-        if (_skillGrids.Count == 0)
+        // Check skill grid conformity
+        bool isReseted = false;
+        foreach (var grid in _skillGrids)
         {
-            Transform grids = transform.Find("Position");
-            foreach (Transform grid in grids)
-                _skillGrids.Add(grid);
+            if (grid == null)
+            {
+                ResetSkillGrids();
+                isReseted = true;
+                break;
+            }
         }
+        if (isReseted == false && _skillGrids.Count != SKILL_CAPACITY)
+        {
+            ResetSkillGrids();
+        }
+
         if (_skillController == null)
             _skillController = GameObject.FindFirstObjectByType<PlayerSkillController>();
-
-        _skillIcons.Add(null);
     }
     private void Start()
     {
@@ -47,13 +59,12 @@ public class PlayerSkillUI : MonoBehaviour
         _timeBar.fillAmount = _skillController.ElaspedTime / _skillController.MaxTime;
     }
     #endregion
-    #region Event Callback Actions
 
+    #region Event Callback
     public void OnPlayerDead()
     {
         this.enabled = false;
     }
-
     public void OnGetSkill(GameObject icon)
     {
         int currSkillCount = _skillController.GetSkillCount();
@@ -63,7 +74,6 @@ public class PlayerSkillUI : MonoBehaviour
             _skillCountBuffer = currSkillCount;
         }
     }
-
     public void OnUseSkill()
     {
         int currSkillCount = _skillController.GetSkillCount();
@@ -74,9 +84,12 @@ public class PlayerSkillUI : MonoBehaviour
             _skillCountBuffer = currSkillCount;
         }
     }
-
-
     #endregion
+    private void ResetSkillGrids()
+    {
+        _skillGrids.Clear();
+    }
+
     private IEnumerator MoveIcon(GameObject icon, Vector3 startPosition, Vector3 endPosition)
     {
         Vector3 direction = (endPosition - startPosition).normalized;
@@ -85,7 +98,7 @@ public class PlayerSkillUI : MonoBehaviour
             yield return null;
             if (icon == null)
                 yield break;
-            icon.transform.position += direction * _iconMoveSpeed;
+            icon.transform.position += direction * ICON_MOVE_SPEED;
         }
     }
 
@@ -133,22 +146,23 @@ public class PlayerSkillUI : MonoBehaviour
 
         }
     }
-
     private void GetSkill(int count, GameObject icon)
     {
-        // Debug.Log(icon.name);
         // Clamp max range of count
-        if (_skillCountBuffer + count >= _skillCapacity)
-            count = (_skillCountBuffer + count) - _skillCapacity;
+        if (_skillCountBuffer + count > SKILL_CAPACITY)
+            count = SKILL_CAPACITY - _skillCountBuffer;
 
-        GameObject iconGO = Instantiate(icon, _skillGrids[_skillCapacity - 1]); // TEST CODE
+        //GameObject iconGO = Instantiate(icon, _skillGrids[SKILL_CAPACITY - 1]); // TEST CODE
         for (int i = _skillCountBuffer; i < _skillCountBuffer + count; i++)
-            StartCoroutine(MoveIcon(iconGO, iconGO.transform.position, _skillGrids[i].position));
+        {
+            GameObject iconGO = Instantiate(icon, _skillGrids[i]);
+            AddSkillIcon(iconGO, i);
+            //StartCoroutine(MoveIcon(iconGO, iconGO.transform.position, _skillGrids[i].position));
+        }
 
-        AddSkillIcon(iconGO);
+        //AddSkillIcon(iconGO);
         RefreshIconList();
     }
-
     private void UseSkill(int count)
     {
         for (int i = 0; i < count; i++)
@@ -161,10 +175,25 @@ public class PlayerSkillUI : MonoBehaviour
         RearrangeIcons();
     }
 
-    private void AddSkillIcon(GameObject icon)
+    private void AddSkillIcon(GameObject icon, int index)
     {
-        // TODO
-        _skillIcons.Add(icon);
+        SetSkillIconCapacity();
+        if (_skillIcons[index] == null)
+            _skillIcons[index] = icon;
+        else
+            _skillIcons.Add(icon);
+    }
 
+    /// <summary>
+    /// Set capacity of the list _skillIcon to the maximum value of skill count
+    /// </summary>
+    private void SetSkillIconCapacity()
+    {
+        int currentSkillCount = _skillController.GetSkillCount();
+        if (_skillIcons.Count < currentSkillCount)
+        {
+            for(int i = 0; i < currentSkillCount - _skillIcons.Count; i++)
+                _skillIcons.Add(null);
+        }
     }
 }
