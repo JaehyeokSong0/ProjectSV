@@ -4,19 +4,25 @@ using UnityEngine;
 public class Skill_Gravity : Base_Skill
 {
     #region Property
+    public override SkillRepository.SkillName Name
+    {
+        get => _name;
+        protected set => _name = value;
+    }
     public override SkillData Data
     {
         get => _data;
-        set => _data = value;
+        protected set => _data = value;
     }
     public override GameObject Icon
     {
         get => _icon;
-        set => _icon = value;
+        protected  set => _icon = value;
     }
     #endregion
 
     #region Field
+    [SerializeField] private SkillRepository.SkillName _name;
     [SerializeField] private SkillData _data;
     [SerializeField] private GameObject _icon;
     #endregion
@@ -26,6 +32,7 @@ public class Skill_Gravity : Base_Skill
     {
         base.Awake();
 
+        _name = SkillRepository.SkillName.Gravity;
         if (_data == null)
             _data = Resources.Load("Data/Skills/GravityData") as SkillData;
         if (_icon == null)
@@ -40,7 +47,7 @@ public class Skill_Gravity : Base_Skill
         while (_elapsedTime < Data.Duration)
         {
             RaycastHit2D[] hits = Physics2D.CircleCastAll(
-                transform.position, Data.Radius, Vector2.zero, 0f, EnemyLayer);
+                transform.position, Data.Radius, Vector2.zero, 0f, EnemyLayerMask);
             foreach (var hit in hits)
             {
                 hit.collider.gameObject.GetComponent<Base_EnemyManager>().OnEnemyDamaged(Data.Damage);

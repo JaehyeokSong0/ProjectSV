@@ -33,10 +33,18 @@ public class Class : MonoBehaviour
     }
     #endregion
 
+    #region Indexer
+    public int this[int index]
+    {
+        get => FieldIntArray[index];
+    }
+    #endregion
+
     #region Field
     public int FieldInt;
     protected float _fieldFloat;
     private bool _fieldBool;
+    private int[] FieldIntArray;
     #endregion
 
     #region Event Method

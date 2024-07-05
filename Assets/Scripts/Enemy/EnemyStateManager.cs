@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// TODO
 public enum EnemyMoveState // bool parameters in animator
 {
     Idle, // Might show only game ends

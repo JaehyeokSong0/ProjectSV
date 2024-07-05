@@ -3,10 +3,15 @@ using UnityEngine;
 
 public abstract class Base_Skill : MonoBehaviour
 {
+    #region Constant
+    private readonly string _enemyLayer = "Enemy";
+    #endregion
+
     #region Property
-    public int EnemyLayer => _enemyLayer; // Readonly
-    public abstract SkillData Data { get; set; }
-    public abstract GameObject Icon { get; set; }
+    public LayerMask EnemyLayerMask => _enemyLayerMask;
+    public abstract SkillRepository.SkillName Name { get; protected set; }
+    public abstract SkillData Data { get; protected set; }
+    public abstract GameObject Icon { get; protected set; }
     #endregion
 
     #region Field
@@ -14,20 +19,21 @@ public abstract class Base_Skill : MonoBehaviour
     protected Vector2 _direction = Vector2.zero; // Normalized direction
     protected float _elapsedTime = 0f;
     protected Coroutine _checkTimeCoroutine = null;
+    protected SkillRepository.SkillName _skillName;
 
-    private int _enemyLayer;
+    private LayerMask _enemyLayerMask;
     #endregion
 
     #region Event Method
     protected virtual void Awake()
     {
-        _enemyLayer = LayerMask.GetMask("Enemy");
+        _enemyLayerMask = LayerMask.GetMask(_enemyLayer);
     }
     #endregion
 
     #region Method
     public virtual void Initialize() { }
-    public virtual void Initialize(Vector2 position, Vector2 direction) 
+    public virtual void Initialize(Vector2 position, Vector2 direction)
     {
         gameObject.transform.position = position;
         _direction = direction;
@@ -35,7 +41,7 @@ public abstract class Base_Skill : MonoBehaviour
     /// <summary>
     /// Set skill data if needed
     /// </summary>
-    public virtual void CastSkill() 
+    public virtual void CastSkill()
     {
         StartCheckTime();
         StartCoroutine(C_CastSkill());
@@ -43,7 +49,7 @@ public abstract class Base_Skill : MonoBehaviour
     /// <summary>
     /// Implement skill logic
     /// </summary>
-    protected virtual IEnumerator C_CastSkill() { yield return null; } 
+    protected virtual IEnumerator C_CastSkill() { yield return null; }
     protected IEnumerator C_Move(Vector2 direction, float speed)
     {
         Vector3 moveDirection = direction;

@@ -4,19 +4,25 @@ using UnityEngine;
 public class Skill_MoveSpeedUp : Base_Skill
 {
     #region Property
+    public override SkillRepository.SkillName Name
+    {
+        get => _name;
+        protected set => _name = value;
+    }
     public override SkillData Data
     {
         get => _data;
-        set => _data = value;
+        protected set => _data = value;
     }
     public override GameObject Icon
     {
         get => _icon;
-        set => _icon = value;
+        protected set => _icon = value;
     }
     #endregion
 
     #region Field
+    [SerializeField] private SkillRepository.SkillName _name;
     [SerializeField] private SkillData _data;
     [SerializeField] private GameObject _icon;
     [SerializeField] private PlayerData _playerData;

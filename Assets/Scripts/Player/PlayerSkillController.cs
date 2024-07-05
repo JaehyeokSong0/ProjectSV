@@ -11,8 +11,9 @@ public class PlayerSkillController : MonoBehaviour
 
     #region Field
     [SerializeField] private PlayerManager _manager;
-    [SerializeField] private GameObject[] _skillPrefabs = new GameObject[3]; // TODO
-    private Queue<GameObject> _skillQueue = new Queue<GameObject>();
+    [SerializeField] private PlayerDeckManager _deckManager;
+    [SerializeField] private PlayerSkillUI _skillUI;
+    private Queue<GameObject> _skillQueue = new Queue<GameObject>(); // Store prefab resources, not gameObject in scene
 
     private float _elapsedTime = 0f;
     private float _maxTime = 6f; // TODO
@@ -23,80 +24,58 @@ public class PlayerSkillController : MonoBehaviour
     {
         if (_manager == null)
             _manager = transform.parent.GetComponent<PlayerManager>();
-    }
-    private void Start()
-    {
-        StartCoroutine(TestFunc(3));
+        if(_deckManager == null)
+            _deckManager = transform.parent.Find("DeckManager").GetComponent<PlayerDeckManager>();
+        if (_skillUI == null)
+            _skillUI = GameObject.Find("Panel_Skill").GetComponent<PlayerSkillUI>();
     }
     private void Update()
     {
         _elapsedTime += Time.deltaTime;
         if (_elapsedTime > _maxTime)
         {
-            StartCoroutine(TestFunc(3));
             _elapsedTime = 0f;
         }
     }
+    private void Start()
+    {
+        StartCoroutine(TestFunc());
+    }
     #endregion
 
+    private IEnumerator TestFunc()
+    {
+        var skill = _deckManager.GetSkill();
+        yield return new WaitForSeconds(2f);
+        InstantiateSkill(skill);
+    } // TEST CODE
+
     #region Method
-    private IEnumerator TestFunc(int count) // TEST CODE -> Generates 3 skills
+    public void InstantiateSkill(GameObject skillPrefab)
     {
-        WaitForSeconds regenTime = new WaitForSeconds(0.1f);
-
-        foreach (var skills in _skillQueue)
-        {
-            Destroy(skills);
-        }
-
-        _skillQueue.Clear();
-        EventManager.Instance.OnUseSkill?.Invoke();
-
-        yield return regenTime;
-
-        while (true)
-        {
-            if (_skillQueue.Count < _manager.Data.SkillCapacity)
-            {
-                float randomV = UnityEngine.Random.value;
-                if (randomV <= 0.3f)
-                    GetSkill(_skillPrefabs[0]);
-                else if (randomV <= 0.6f)
-                    GetSkill(_skillPrefabs[1]);
-                else
-                    GetSkill(_skillPrefabs[2]);
-            }
-            if (--count <= 0)
-                yield break;
-
-            yield return regenTime;
-        }
-    }
-
-    public void GetSkill(GameObject skillGO) // Prefab in project, not in scene
-    {
-        var skillScript = skillGO.GetComponent<Base_Skill>();
+        GameObject skill = Instantiate(skillPrefab);
+        var skillScript = skillPrefab.GetComponent<Base_Skill>();
         switch (skillScript.Data.Type)
         {
             case SkillData.SkillType.Attack:
-                _skillQueue.Enqueue(Instantiate(skillGO));
+                _skillQueue.Enqueue(Instantiate(skill));
                 break;
             case SkillData.SkillType.Buff:
-                _skillQueue.Enqueue(Instantiate(skillGO, transform.root));
+                _skillQueue.Enqueue(Instantiate(skill, transform.root));
                 break;
         }
 
-        EventManager.Instance.OnGetSkill?.Invoke(skillScript.Icon);
+        _skillUI.OnGetSkill?.Invoke(_skillQueue.Count , skillScript.Icon); // Send skill icon to PlayerSkillUI
     }
-
+    
     public void CastSkill()
     {
         if (_skillQueue.Count <= 0)
             return;
 
-        GameObject skillGO = _skillQueue.Dequeue();
-        skillGO.SetActive(true);
-        var skillScript = skillGO.GetComponent<Base_Skill>();
+        GameObject skillPrefab = _skillQueue.Dequeue();
+        skillPrefab.SetActive(true);
+        var skillScript = skillPrefab.GetComponent<Base_Skill>();
 
         // Initialize skill data
         switch (skillScript.Data.Type)
@@ -110,7 +89,7 @@ public class PlayerSkillController : MonoBehaviour
         }
 
         skillScript.CastSkill();
-        EventManager.Instance.OnUseSkill?.Invoke();
+        _skillUI.OnUseSkill?.Invoke(_skillQueue.Count);
     }
 
     public int GetSkillCount()

@@ -10,19 +10,25 @@ public class Skill_Flame : Base_Skill
     #endregion
 
     #region Property
+    public override SkillRepository.SkillName Name
+    {
+        get => _name;
+        protected set => _name = value;
+    }
     public override SkillData Data
     {
         get => _data;
-        set => _data = value;
+        protected set => _data = value;
     }
     public override GameObject Icon
     {
         get => _icon;
-        set => _icon = value;
+        protected set => _icon = value;
     }
     #endregion
 
     #region Field
+    [SerializeField] private SkillRepository.SkillName _name;
     [SerializeField] private SkillData _data;
     [SerializeField] private GameObject _icon;
     private Coroutine _moveCoroutine;
@@ -34,6 +40,7 @@ public class Skill_Flame : Base_Skill
     {
         base.Awake();
 
+        _name = SkillRepository.SkillName.Flame;
         if (_data == null)
             _data = Resources.Load("Data/Skills/FlameData") as SkillData;
         if (_icon == null)
@@ -61,7 +68,7 @@ public class Skill_Flame : Base_Skill
         while (_elapsedTime < Data.Duration)
         {
             RaycastHit2D[] hits = Physics2D.CircleCastAll(
-                transform.position, _radius, Vector2.zero, 0f, EnemyLayer);
+                transform.position, _radius, Vector2.zero, 0f, EnemyLayerMask);
             if (hits.Length > 0)
             {
                 Explode();
@@ -88,7 +95,7 @@ public class Skill_Flame : Base_Skill
 
         // Detect enemy and damage them
         RaycastHit2D[] hits = Physics2D.CircleCastAll(
-            transform.position, _radius, Vector2.zero, 0f, EnemyLayer);
+            transform.position, _radius, Vector2.zero, 0f, EnemyLayerMask);
         foreach (var hit in hits)
         {
             hit.collider.gameObject.GetComponent<Base_EnemyManager>().OnEnemyDamaged(Data.Damage);
