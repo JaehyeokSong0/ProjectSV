@@ -16,7 +16,7 @@ public class PlayerSkillController : MonoBehaviour
     private Queue<GameObject> _skillQueue = new Queue<GameObject>(); // Store prefab resources, not gameObject in scene
 
     private float _elapsedTime = 0f;
-    private float _maxTime = 6f; // TODO
+    private float _maxTime = 6f; // TODO -> to player data
     #endregion
 
     #region Event Method
@@ -24,7 +24,7 @@ public class PlayerSkillController : MonoBehaviour
     {
         if (_manager == null)
             _manager = transform.parent.GetComponent<PlayerManager>();
-        if(_deckManager == null)
+        if (_deckManager == null)
             _deckManager = transform.parent.Find("DeckManager").GetComponent<PlayerDeckManager>();
         if (_skillUI == null)
             _skillUI = GameObject.Find("Panel_Skill").GetComponent<PlayerSkillUI>();
@@ -34,6 +34,10 @@ public class PlayerSkillController : MonoBehaviour
         _elapsedTime += Time.deltaTime;
         if (_elapsedTime > _maxTime)
         {
+            DiscardSkills();
+            RestoreMp();
+            for (int i = 0; i < 3; i++)
+                InstantiateSkill(_deckManager.GetSkill());
             _elapsedTime = 0f;
         }
     }
@@ -42,40 +46,47 @@ public class PlayerSkillController : MonoBehaviour
         StartCoroutine(TestFunc());
     }
     #endregion
-
+    // TEST CODE
     private IEnumerator TestFunc()
     {
-        var skill = _deckManager.GetSkill();
         yield return new WaitForSeconds(2f);
-        InstantiateSkill(skill);
-    } // TEST CODE
+        for (int i = 0; i < 3; i++)
+        {
+            var skill = _deckManager.GetSkill();
+            InstantiateSkill(skill);
+        }
+    } 
 
     #region Method
     public void InstantiateSkill(GameObject skillPrefab)
     {
-        GameObject skill = Instantiate(skillPrefab);
         var skillScript = skillPrefab.GetComponent<Base_Skill>();
         switch (skillScript.Data.Type)
         {
             case SkillData.SkillType.Attack:
-                _skillQueue.Enqueue(Instantiate(skill));
+                _skillQueue.Enqueue(Instantiate(skillPrefab));
                 break;
             case SkillData.SkillType.Buff:
-                _skillQueue.Enqueue(Instantiate(skill, transform.root));
+                _skillQueue.Enqueue(Instantiate(skillPrefab, transform.root));
                 break;
         }
 
-        _skillUI.OnGetSkill?.Invoke(_skillQueue.Count , skillScript.Icon); // Send skill icon to PlayerSkillUI
+        _skillUI.OnGetSkill?.Invoke(_skillQueue.Count, skillScript.Icon); // Send skill icon to PlayerSkillUI
     }
-    
     public void CastSkill()
     {
         if (_skillQueue.Count <= 0)
             return;
 
-        GameObject skillPrefab = _skillQueue.Dequeue();
-        skillPrefab.SetActive(true);
+        GameObject skillPrefab = _skillQueue.Peek();
         var skillScript = skillPrefab.GetComponent<Base_Skill>();
+
+        // If not enough mp, player cannot cast skill
+        if (skillScript.Data.Cost > _manager.Data.CurrentMp)
+            return;
+
+        _skillQueue.Dequeue();
+        skillPrefab.SetActive(true);
 
         // Initialize skill data
         switch (skillScript.Data.Type)
@@ -89,12 +100,30 @@ public class PlayerSkillController : MonoBehaviour
         }
 
         skillScript.CastSkill();
+        _manager.Data.CurrentMp -= skillScript.Data.Cost;
+        _skillUI.OnMpChanged?.Invoke(_manager.Data.CurrentMp, _manager.Data.MaxMp);
         _skillUI.OnUseSkill?.Invoke(_skillQueue.Count);
     }
 
     public int GetSkillCount()
     {
         return _skillQueue.Count;
+    }
+    private void DiscardSkills()
+    {
+        foreach(var skill in _skillQueue)
+        {
+            Destroy(skill);
+        }
+
+        _skillQueue.Clear();
+        _skillUI.OnUseSkill?.Invoke(0);
+
+    }
+    private void RestoreMp()
+    {
+        _manager.Data.CurrentMp = _manager.Data.MaxMp;
+        _skillUI.OnMpChanged?.Invoke(_manager.Data.CurrentMp, _manager.Data.MaxMp);
     }
     #endregion
 }

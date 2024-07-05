@@ -12,7 +12,7 @@ public class PlayerDeckManager : MonoBehaviour
 
     #region Property
     public int DeckCount { get => _deck.Count; }
-    public int AllCardCount { get => _deck.Count + _discardDeck.Count; }
+    public int AllSkillCount { get => _deck.Count + _discardDeck.Count; }
     #endregion
 
     #region Field
@@ -51,7 +51,9 @@ public class PlayerDeckManager : MonoBehaviour
         for (int i = 0; i < _deck.Count; i++)
             deckList.Add(_deck.Pop());
 
+        _discardDeck.Clear();
         _deck.Clear();
+
         for (int i = 0; i < deckList.Count; i++)
             _deck.Push(deckList[i]);
 
@@ -83,10 +85,7 @@ public class PlayerDeckManager : MonoBehaviour
     public GameObject GetSkill()
     {
         if (_deck.Count <= 0)
-        {
-            Debug.LogError("Cannot get skill");
-            return null;
-        }
+            ReorganizeDeck();
 
         var skill = _deck.Pop();
         _discardDeck.Push(skill);

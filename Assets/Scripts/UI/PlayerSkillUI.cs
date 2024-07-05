@@ -10,6 +10,7 @@ public class PlayerSkillUI : MonoBehaviour
     #region Event
     public UnityEvent<int, GameObject> OnGetSkill; // {skillCount, skillIcon}
     public UnityEvent<int> OnUseSkill; // {skillCount}
+    public UnityEvent<int, int> OnMpChanged; // {currentMp, maxMp}
     #endregion
 
     #region Constant
@@ -26,7 +27,7 @@ public class PlayerSkillUI : MonoBehaviour
     [SerializeField] private List<Transform> _skillGrids = new List<Transform>();
     [SerializeField] private List<GameObject> _skillIcons = new List<GameObject>();
 
-    [SerializeField] private TMP_Text _mpCountText;
+    [SerializeField] private TMP_Text _mpText;
     [SerializeField] private TMP_Text _deckCountText;
     [SerializeField] private Image _timeBar;
     #endregion
@@ -50,8 +51,11 @@ public class PlayerSkillUI : MonoBehaviour
             ResetSkillGrids();
         }
 
+        // Check components availability
         if (_skillController == null)
             _skillController = GameObject.FindFirstObjectByType<PlayerSkillController>();
+        if(_mpText == null)
+            _mpText = transform.Find("Image_MPCount").GetChild(0).GetComponent<TMP_Text>();
 
         SetGridUIAvailability();
     }
@@ -59,6 +63,7 @@ public class PlayerSkillUI : MonoBehaviour
     {
         OnGetSkill?.AddListener(GetSkill);
         OnUseSkill?.AddListener(UseSkill);
+        OnMpChanged?.AddListener(UpdateMPUI);
         EventManager.Instance.OnPlayerDead?.AddListener(this.OnPlayerDead);
     }
     private void LateUpdate()
@@ -197,6 +202,10 @@ public class PlayerSkillUI : MonoBehaviour
         {
             _skillGrids[i].GetComponent<Image>().enabled = false; // Activate grid UI
         }
+    }
+    private void UpdateMPUI(int currentMp, int maxMp)
+    {
+        _mpText.text = $"{currentMp} / {maxMp}";
     }
     #endregion
 }
