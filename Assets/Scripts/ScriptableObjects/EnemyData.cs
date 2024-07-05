@@ -11,4 +11,7 @@ public class EnemyData : ScriptableObject
     public float NormalAttackSpeed;
     public float NormalAttackRange;
     public float NormalAttackDamage;
+
+    public float Exp;
+    public float ExpDropRate; // (0 ~ 1)
 }

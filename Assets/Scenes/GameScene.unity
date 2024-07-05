@@ -831,6 +831,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8dee174cf37b6048afe8a261c498f8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnGetSkill:
+    m_PersistentCalls:
+      m_Calls: []
+  OnUseSkill:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMpChanged:
+    m_PersistentCalls:
+      m_Calls: []
   _skillController: {fileID: 74162552}
   _skillGrids:
   - {fileID: 2051710442}
@@ -842,7 +851,7 @@ MonoBehaviour:
   - {fileID: 473087918}
   - {fileID: 1958639235}
   _skillIcons: []
-  _mpCountText: {fileID: 1528106001}
+  _mpText: {fileID: 1528106001}
   _deckCountText: {fileID: 707229110}
   _timeBar: {fileID: 1892341620}
 --- !u!1 &702204756
@@ -1404,6 +1413,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1138781534 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 921104203476031487, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
+  m_PrefabInstance: {fileID: 1876690416818662481}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85d6cfb6490c4ae4da004862c84a2d39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1201522005
 GameObject:
   m_ObjectHideFlags: 0
@@ -2314,17 +2334,13 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 8577466123949112689, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
-      propertyPath: _skillPrefabs.Array.data[0]
+      propertyPath: _skillUI
       value: 
-      objectReference: {fileID: 3333147273857035084, guid: c46aaedd9278b9c4ca3d3b9ea3eb0140, type: 3}
+      objectReference: {fileID: 700613894}
     - target: {fileID: 8577466123949112689, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
-      propertyPath: _skillPrefabs.Array.data[1]
+      propertyPath: _deckManager
       value: 
-      objectReference: {fileID: 8202472233691591118, guid: 66f1a12765710974ca627fc964304174, type: 3}
-    - target: {fileID: 8577466123949112689, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
-      propertyPath: _skillPrefabs.Array.data[2]
-      value: 
-      objectReference: {fileID: 619776870881187676, guid: 56381ad15048e9a43a928aec5a09183a, type: 3}
+      objectReference: {fileID: 1138781534}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
