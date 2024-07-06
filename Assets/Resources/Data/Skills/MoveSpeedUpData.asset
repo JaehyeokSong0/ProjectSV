@@ -16,7 +16,7 @@ MonoBehaviour:
   Cost: 1
   Damage: 0
   MoveSpeed: 0
-  Duration: 1.8
+  Duration: 0.9
   Tick: 0
   Radius: 0
   Value: 0.03
