@@ -26,6 +26,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private PlayerNormalAttackController _normalAttackController;
     [SerializeField] private PlayerSkillController _skillController;
     [SerializeField] private PlayerAnimationController _animationController;
+    [SerializeField] private PlayerExpContoller _expController;
 
     private Vector2 _playerDirectionBuffer = Vector2.down;
 
@@ -44,6 +45,8 @@ public class PlayerManager : MonoBehaviour
             _skillController = transform.Find("SkillController").GetComponent<PlayerSkillController>();
         if (_animationController == null)
             _animationController = transform.Find("Model").GetComponent<PlayerAnimationController>();
+        if (_expController == null)
+            _expController = transform.Find("ExpController").GetComponent<PlayerExpContoller>();
     }
 
     private void Start()
@@ -83,5 +86,6 @@ public class PlayerManager : MonoBehaviour
     public void Initialize()
     {
         _normalAttackController.StartNormalAttack();
+        _expController.StartCheckDroppedExp();
     }
 }

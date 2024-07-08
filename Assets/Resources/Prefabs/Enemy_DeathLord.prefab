@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4345296431834202498}
   - component: {fileID: 5734785738671160797}
   - component: {fileID: 2719839352838828563}
+  - component: {fileID: -5617072017140502480}
   m_Layer: 7
   m_Name: Enemy_DeathLord
   m_TagString: Enemy
@@ -70,6 +71,8 @@ MonoBehaviour:
   NormalAttackSpeed: 0
   NormalAttackRange: 0
   NormalAttackDamage: 0
+  Exp: 0
+  ExpDropRate: 0
 --- !u!114 &4345296431834202498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,6 +134,19 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.8, y: 1.2}
   m_Direction: 0
+--- !u!114 &-5617072017140502480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5015749245414901926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04022a5dc8bb3664684f69bb58e0121f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _expPrefab: {fileID: 7183929897315292737, guid: 645fde71f6cc6ff4fa60b9b37d16d852, type: 3}
 --- !u!1 &8682523697307425035
 GameObject:
   m_ObjectHideFlags: 0
@@ -204,7 +220,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -10711003
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

@@ -19,4 +19,5 @@ public class PlayerData : ScriptableObject
     [HideInInspector] public float NormalAttackDamage = 50f;
 
     [HideInInspector] public int SkillCapacity = 8; // Must change Panel_Skill of GameScene if changed
+    [HideInInspector] public int Level = 1;
 }

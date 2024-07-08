@@ -173,7 +173,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _manager: {fileID: 1868679089362906964}
-  _deckManager: {fileID: 0}
+  _deckManager: {fileID: 921104203476031487}
+  _skillUI: {fileID: 0}
 --- !u!1 &433181878559404863
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,7 +388,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1370791503
-  m_SortingLayer: 5
+  m_SortingLayer: 6
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -436,6 +437,52 @@ MonoBehaviour:
   _manager: {fileID: 1868679089362906964}
   _animator: {fileID: 8410469474467808668}
   _spriteRenderer: {fileID: 3672128317819342846}
+--- !u!1 &3926942552647605212
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 634694314714043375}
+  - component: {fileID: 2136184445535882236}
+  m_Layer: 0
+  m_Name: ExpController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &634694314714043375
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3926942552647605212}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2406716936175581588}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2136184445535882236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3926942552647605212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7afd1cf5ea306c649bf5af6f3b40110d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _manager: {fileID: 1868679089362906964}
+  test: 0
 --- !u!1 &4140274996680484669
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,6 +521,7 @@ Transform:
   - {fileID: 732872297543825707}
   - {fileID: 846410885114052857}
   - {fileID: 2249395461993830355}
+  - {fileID: 634694314714043375}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1868679089362906964
@@ -587,6 +635,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85d6cfb6490c4ae4da004862c84a2d39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deckCount: 0
+  discardDeckCount: 0
   _skillRepository: {fileID: 3888618493143549576}
 --- !u!114 &3888618493143549576
 MonoBehaviour:
@@ -676,7 +726,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1181896529
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
