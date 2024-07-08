@@ -46,7 +46,10 @@ public abstract class Base_EnemyManager : MonoBehaviour
 
     public void OnEnemyDead()
     {
-        Pool.Release(gameObject);
+        if (Pool != null)
+            Pool.Release(gameObject);
+        else 
+            Destroy(gameObject); // Test mode in editor
         _dropExpController.DropExp(_dataManager.ExpDropRate, _dataManager.Exp);
     }
     #endregion
