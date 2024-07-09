@@ -5,10 +5,13 @@ using UnityEngine.UI;
 // Manages UI about player's status
 public class PlayerStatusUI : MonoBehaviour
 {
+    #region Field
     [SerializeField] private PlayerManager _manager;
     [SerializeField] private Image _hpGauge;
     [SerializeField] private TMP_Text _hpText;
+    #endregion
 
+    #region Event Method
     private void Awake()
     {
         if (_manager == null)
@@ -23,10 +26,13 @@ public class PlayerStatusUI : MonoBehaviour
     {
         EventManager.Instance.OnPlayerDamaged?.AddListener(UpdateHPUI);
     }
-    
-    private void UpdateHPUI(float dummy)
+    #endregion
+
+    #region Method
+    private void UpdateHPUI(float dummy) // attached to UnityEvent<float> so use dummy parameter
     {
         _hpGauge.fillAmount = _manager.Data.CurrentHp / _manager.Data.MaxHp;
         _hpText.text = $"{_manager.Data.CurrentHp} / {_manager.Data.MaxHp}";
     }
+    #endregion
 }

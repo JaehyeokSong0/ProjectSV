@@ -25,7 +25,8 @@ public class Skill_MoveSpeedUp : Base_Skill
     [SerializeField] private SkillRepository.SkillName _name;
     [SerializeField] private SkillData _data;
     [SerializeField] private GameObject _icon;
-    [SerializeField] private PlayerData _playerData;
+    [SerializeField] private PlayerManager _manager;
+    [SerializeField] private PlayerAnimationController _animationController;
     #endregion
 
     #region Event Method
@@ -36,26 +37,27 @@ public class Skill_MoveSpeedUp : Base_Skill
         if (_data == null)
             _data = Resources.Load("Data/Skills/MoveSpeedUpData") as SkillData;
         if (_icon == null)
-            _icon = Resources.Load("Prefabs/Skills/Icons/Skill_MoveSpeedUp_Icon") as GameObject;        
+            _icon = Resources.Load("Prefabs/Skills/Icons/Skill_MoveSpeedUp_Icon") as GameObject;       
     }
     #endregion
 
     #region Method
     public override void Initialize()
     {
-        _playerData = transform.root.GetComponent<PlayerManager>().Data;
-        if (_playerData == null)
-            Debug.LogError("Cannot find player data");
+        _manager = transform.root.GetComponent<PlayerManager>();
+        _animationController = transform.root.Find("Model").GetComponent<PlayerAnimationController>();
     }
     protected override IEnumerator C_CastSkill()
     {
-        _playerData.WalkSpeed += Data.Value;
-        _playerData.RunSpeed += Data.Value;
+        _animationController.Run(_manager.PlayerDirectionBuffer);
+
+        _manager.Data.WalkSpeed += Data.Value;
+        _manager.Data.RunSpeed += Data.Value;
 
         yield return new WaitForSeconds(Data.Duration);
 
-        _playerData.WalkSpeed -= Data.Value;
-        _playerData.RunSpeed -= Data.Value;
+        _manager.Data.WalkSpeed -= Data.Value;
+        _manager.Data.RunSpeed -= Data.Value;
 
         StopCheckTime();
         Destroy(gameObject);
