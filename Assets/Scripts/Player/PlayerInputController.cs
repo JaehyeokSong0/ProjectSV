@@ -11,7 +11,6 @@ public class PlayerInputController : MonoBehaviour
 
     private Vector2 _arrowInput;
     private Vector2 _playerDirection;
-    private bool _isLeftShiftPressed = false;
 
     private void Awake()
     {

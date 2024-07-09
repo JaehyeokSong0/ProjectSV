@@ -13,23 +13,26 @@ public abstract class Base_EnemyActionController : MonoBehaviour
     #endregion
 
     #region Field
-    protected GameObject _player;
+    protected Transform _playerTransform;
     // AnimationContoller class should be downcasted in derived class
     [SerializeField] protected Base_EnemyAnimationController _animationController; 
     protected Coroutine _walkCoroutine;
+    protected Coroutine _directionUpdateCoroutine;
     // Should be initialized in derived class
     // Used to synchronize with attack animation of each enemy classes
     protected float _preAttackTime = 0f;
     protected WaitForSeconds _preAttackTimeWait;
+    protected Vector3 _direction;
+    protected WaitForSeconds _directionUpdateWait = new WaitForSeconds(0.5f);
     #endregion
 
     #region Event Function
     protected void OnEnable()
     {
-        if (_player == null)
+        if (_playerTransform == null)
         {
-            _player = GameObject.FindGameObjectWithTag("Player");
-            if (_player == null)
+            _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+            if (_playerTransform == null)
                 Debug.Log("Cannot find Player");
         }
     }
@@ -75,25 +78,34 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         Manager.State.MoveState = EnemyMoveState.Walk;
         _animationController.Walk();
 
-        if (_player == null)
+        if (_playerTransform == null)
         {
-            _player = GameObject.FindGameObjectWithTag("Player");
-            if (_player == null)
+            _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+            if (_playerTransform == null)
                 Debug.Log("Cannot find Player");
         }
+        _directionUpdateCoroutine = StartCoroutine(C_UpdatePlayerDirectionWithDelay());
         while (true)
         {
-            Vector3 direction = _player.transform.position - transform.position;
-            if (direction.magnitude < Manager.Data.NormalAttackRange)
+            if (_direction.magnitude < Manager.Data.NormalAttackRange)
             {
                 yield return C_NormalAttack();
             }
 
-            transform.position += direction.normalized * moveSpeed * Time.deltaTime;
+            transform.position += _direction.normalized * moveSpeed * Time.deltaTime;
             yield return null;
         }
     }
 
+    protected IEnumerator C_UpdatePlayerDirectionWithDelay()
+    {
+        while(true)
+        {
+            _direction = _playerTransform.position - transform.position;
+            yield return _directionUpdateWait;
+        }
+
+    }
     public void NormalAttack()
     {
         StartCoroutine(C_NormalAttack());
@@ -109,7 +121,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         // Synchronize attack event with attack animation
         yield return _preAttackTimeWait;
 
-        Vector3 direction = _player.transform.position - transform.position;
+        Vector3 direction = _playerTransform.position - transform.position;
 
         if (direction.magnitude < Manager.Data.NormalAttackRange)
             EventManager.Instance.OnPlayerDamaged?.Invoke(Manager.Data.NormalAttackDamage);
@@ -117,7 +129,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         yield return new WaitForSeconds(Manager.Data.NormalAttackSpeed);
 
         // Reset Move Animation
-        direction = _player.transform.position - transform.position;
+        direction = _playerTransform.position - transform.position;
         if (direction.magnitude < Manager.Data.NormalAttackRange)
             Manager.State.MoveState = EnemyMoveState.Idle;
         else
@@ -147,6 +159,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         Manager.State.IsDead = true;
 
         StopCoroutine(_walkCoroutine);
+        StopCoroutine(_directionUpdateCoroutine);
         StartCoroutine(C_Die());
     }
 

@@ -7,7 +7,7 @@ public class PlayerExpContoller : MonoBehaviour
     [SerializeField] private PlayerManager _manager;
     private int _expLayerMask;
     private Coroutine _expCheckCoroutine = null;
-    private Vector2 _checkSize = new Vector2(4f, 4f);
+    private Vector2 _checkSize = new Vector2(2f, 2f);
     public float test; // TEST CODE
     #endregion
 
