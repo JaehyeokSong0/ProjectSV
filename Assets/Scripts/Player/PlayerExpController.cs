@@ -1,15 +1,20 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Manages exp and level of the player
+/// </summary>
 public class PlayerExpContoller : MonoBehaviour
 {
+    #region Constant
+    private const float EXP_INCREASE_FACTOR = 1.5f;
+    #endregion
+
     #region Field
     [SerializeField] private PlayerManager _manager;
     private int _expLayerMask;
     private Coroutine _expCheckCoroutine = null;
-    private float _checkSize = 2f;
-    public float test; // TEST CODE
+    private float _checkSize = 1f;
     #endregion
 
     #region Event Method
@@ -21,11 +26,13 @@ public class PlayerExpContoller : MonoBehaviour
         _expLayerMask = LayerMask.GetMask("Exp");
         // _expLayerMask = 1 << LayerMask.NameToLayer("Exp");
     }
-    private void Update()
+
+    private void Start()
     {
-        test = _manager.Data.CurrentExp;
+        
     }
     #endregion
+
     #region Method
     public void StartCheckDroppedExp()
     {
@@ -37,7 +44,6 @@ public class PlayerExpContoller : MonoBehaviour
         StopCoroutine(_expCheckCoroutine);
     }
 
-
     private IEnumerator C_StartCheckDroppedExp()
     {
         while (true)
@@ -47,6 +53,7 @@ public class PlayerExpContoller : MonoBehaviour
             {
                 _manager.Data.CurrentExp += hit.gameObject.GetComponent<Exp>().OnGet(transform);
                 CheckLevelUp();
+                EventManager.Instance.OnPlayerExpUpdate?.Invoke();
             }
             yield return null;
         }
@@ -56,10 +63,11 @@ public class PlayerExpContoller : MonoBehaviour
     {
         if (_manager.Data.CurrentExp >= _manager.Data.MaxExp)
         {
+            EventManager.Instance.OnPlayerLevelUp?.Invoke();
             _manager.Data.Level += 1;
-            _manager.Data.MaxExp *= 2f;
+            _manager.Data.MaxExp *= EXP_INCREASE_FACTOR;
+            Debug.Log(_manager.Data.MaxExp);
             _manager.Data.CurrentExp = 0f;
-            Debug.Log($"LV UP : {_manager.Data.Level} , next EXP : {_manager.Data.MaxExp}");
         }
     }
     #endregion

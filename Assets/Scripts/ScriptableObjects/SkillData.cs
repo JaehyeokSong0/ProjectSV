@@ -5,8 +5,10 @@ public class SkillData : ScriptableObject
 {
     public enum SkillType
     { 
-        Attack,
-        Buff
+        Projectile,
+        Area,
+        Orbit,
+        Buff,
     }
 
     public SkillType Type;

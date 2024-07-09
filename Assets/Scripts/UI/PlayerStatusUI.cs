@@ -9,6 +9,8 @@ public class PlayerStatusUI : MonoBehaviour
     [SerializeField] private PlayerManager _manager;
     [SerializeField] private Image _hpGauge;
     [SerializeField] private TMP_Text _hpText;
+    [SerializeField] private Image _expGauge;
+    [SerializeField] private TMP_Text _expText;
     #endregion
 
     #region Event Method
@@ -20,11 +22,17 @@ public class PlayerStatusUI : MonoBehaviour
             _hpGauge = transform.Find("Image_HP").GetComponent<Image>();
         if (_hpText == null)
             _hpText = transform.Find("Image_HP").GetChild(0).GetComponent<TMP_Text>();
+        if (_expGauge == null)
+            _expGauge = transform.Find("Panel_Exp").GetChild(0).GetComponent<Image>();
+        if (_expText == null)
+            _expText = transform.Find("Panel_Exp").GetChild(1).GetComponent<TMP_Text>();
     }
 
     private void Start()
     {
         EventManager.Instance.OnPlayerDamaged?.AddListener(UpdateHPUI);
+        EventManager.Instance.OnPlayerExpUpdate?.AddListener(UpdateEXPUI);
+        UpdateHPUI(0f);
     }
     #endregion
 
@@ -33,6 +41,12 @@ public class PlayerStatusUI : MonoBehaviour
     {
         _hpGauge.fillAmount = _manager.Data.CurrentHp / _manager.Data.MaxHp;
         _hpText.text = $"{_manager.Data.CurrentHp} / {_manager.Data.MaxHp}";
+    }
+
+    private void UpdateEXPUI()
+    {
+        _expGauge.fillAmount = _manager.Data.CurrentExp / _manager.Data.MaxExp;
+        _expText.text = _manager.Data.Level.ToString();
     }
     #endregion
 }

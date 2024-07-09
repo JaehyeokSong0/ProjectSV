@@ -16,7 +16,7 @@ public class PlayerSkillController : MonoBehaviour
     private Queue<GameObject> _skillQueue = new Queue<GameObject>(); // Store prefab resources, not gameObject in scene
 
     private float _elapsedTime = 0f;
-    private float _maxTime = 6f; // TODO -> to player data
+    private float _maxTime; // TODO -> to player data
     #endregion
 
     #region Event Method
@@ -44,12 +44,13 @@ public class PlayerSkillController : MonoBehaviour
     private void Start()
     {
         StartCoroutine(TestFunc());
+        _maxTime = _manager.Data.SkillRegenTime;
     }
     #endregion
     // TEST CODE
     private IEnumerator TestFunc()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         for (int i = 0; i < 3; i++)
         {
             var skill = _deckManager.GetSkill();
@@ -63,9 +64,11 @@ public class PlayerSkillController : MonoBehaviour
         var skillScript = skillPrefab.GetComponent<Base_Skill>();
         switch (skillScript.Data.Type)
         {
-            case SkillData.SkillType.Attack:
+            case SkillData.SkillType.Projectile:
+            case SkillData.SkillType.Area:
                 _skillQueue.Enqueue(Instantiate(skillPrefab));
                 break;
+            case SkillData.SkillType.Orbit:
             case SkillData.SkillType.Buff:
                 _skillQueue.Enqueue(Instantiate(skillPrefab, transform.root));
                 break;
@@ -91,9 +94,11 @@ public class PlayerSkillController : MonoBehaviour
         // Initialize skill data
         switch (skillScript.Data.Type)
         {
-            case SkillData.SkillType.Attack:
+            case SkillData.SkillType.Projectile:
+            case SkillData.SkillType.Area:
                 skillScript.Initialize(transform.parent.position, _manager.PlayerDirectionBuffer);
                 break;
+            case SkillData.SkillType.Orbit:
             case SkillData.SkillType.Buff:
                 skillScript.Initialize();
                 break;

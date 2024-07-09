@@ -97,13 +97,16 @@ public class PlayerDeckManager : MonoBehaviour
     /// </summary>
     private void InitializeDeck()
     {
-        // TEST CODE
-        for (int i = 0; i < 2; i++)
-            _deck.Push(SkillName.Gravity);
-        for (int i = 0; i < 3; i++)
-            _deck.Push(SkillName.Flame);
-        for (int i = 0; i < 5; i++)
-            _deck.Push(SkillName.MoveSpeedUp);
+        for (int i = 0; i < 10; i++)
+            _deck.Push(SkillName.Stone);
+        //for (int i = 0; i < 2; i++)
+        //    _deck.Push(SkillName.Gravity);
+        //for (int i = 0; i < 3; i++)
+        //    _deck.Push(SkillName.Flame);
+        //for (int i = 0; i < 3; i++)
+        //    _deck.Push(SkillName.MoveSpeedUp);
+        //for (int i = 0; i < 2; i++)
+        //    _deck.Push(SkillName.Stone);
         ShuffleDeck();
     }
     #endregion

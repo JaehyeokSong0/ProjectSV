@@ -8,12 +8,13 @@ public class SkillRepository : MonoBehaviour
     {
         Gravity,
         Flame,
-        MoveSpeedUp
+        MoveSpeedUp,
+        Stone
     }
     #endregion
 
     #region Constant
-    private const int SKILL_NUMBERS = 3;
+    private const int SKILL_NUMBERS = 4;
     #endregion
 
     #region Indexer

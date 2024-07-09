@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ad0ec05bc27b04d831ea1186dde789, type: 3}
   m_Name: MoveSpeedUpData
   m_EditorClassIdentifier: 
-  Type: 1
+  Type: 3
   Cost: 1
   Damage: 0
   MoveSpeed: 0
   Duration: 0.9
   Tick: 0
   Radius: 0
-  Value: 0.03
+  Value: 0.04

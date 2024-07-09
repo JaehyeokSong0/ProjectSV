@@ -100,11 +100,10 @@ public class PlayerAnimationController : MonoBehaviour
     }
     private IEnumerator C_ChangeSpriteColor(Color color)
     {
-        Color colorBuffer = _spriteRenderer.color;
         _spriteRenderer.color = color;
 
         yield return _colorChangeTimeWait;
 
-        _spriteRenderer.color = colorBuffer;
+        _spriteRenderer.color = Color.white;
     }
 }

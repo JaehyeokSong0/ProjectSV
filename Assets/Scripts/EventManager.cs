@@ -11,6 +11,11 @@ public class EventManager : MonoBehaviour
     public UnityEvent OnPlayerDead;
     public UnityEvent<GameObject> OnGetSkill; // {IconResource}
     public UnityEvent OnUseSkill;
+    public UnityEvent OnPlayerLevelUp;
+    public UnityEvent OnPlayerExpUpdate;
+
+    public UnityEvent OnGameLevelUp;
+
 
     private void Awake()
     {

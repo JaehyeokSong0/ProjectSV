@@ -10,6 +10,7 @@ public class Timer : MonoBehaviour
     private void Start()
     {
         StartCheckTime();
+        EventManager.Instance.OnPlayerDead?.AddListener(StopCheckTime);
     }
     #region Property
     public float ElapsedTime => _elapsedTime;

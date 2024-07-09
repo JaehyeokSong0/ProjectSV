@@ -65,6 +65,8 @@ public class PlayerSkillUI : MonoBehaviour
         OnUseSkill?.AddListener(UseSkill);
         OnMpChanged?.AddListener(UpdateMPUI);
         EventManager.Instance.OnPlayerDead?.AddListener(this.OnPlayerDead);
+
+        UpdateMPUI(3, 3);
     }
     private void LateUpdate()
     {

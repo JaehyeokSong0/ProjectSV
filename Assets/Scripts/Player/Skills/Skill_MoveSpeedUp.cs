@@ -52,12 +52,10 @@ public class Skill_MoveSpeedUp : Base_Skill
         _animationController.Run(_manager.PlayerDirectionBuffer);
 
         _manager.Data.WalkSpeed += Data.Value;
-        _manager.Data.RunSpeed += Data.Value;
 
         yield return new WaitForSeconds(Data.Duration);
 
         _manager.Data.WalkSpeed -= Data.Value;
-        _manager.Data.RunSpeed -= Data.Value;
 
         StopCheckTime();
         Destroy(gameObject);

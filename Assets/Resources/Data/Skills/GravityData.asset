@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ad0ec05bc27b04d831ea1186dde789, type: 3}
   m_Name: GravityData
   m_EditorClassIdentifier: 
-  Type: 0
+  Type: 1
   Cost: 2
-  Damage: 15
+  Damage: 20
   MoveSpeed: 0
-  Duration: 1.6
-  Tick: 0.5
+  Duration: 1.7
+  Tick: 0.35
   Radius: 0.7
   Value: 0
