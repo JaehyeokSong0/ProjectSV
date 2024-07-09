@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerExpContoller : MonoBehaviour
@@ -7,7 +8,7 @@ public class PlayerExpContoller : MonoBehaviour
     [SerializeField] private PlayerManager _manager;
     private int _expLayerMask;
     private Coroutine _expCheckCoroutine = null;
-    private Vector2 _checkSize = new Vector2(2f, 2f);
+    private float _checkSize = 2f;
     public float test; // TEST CODE
     #endregion
 
@@ -36,14 +37,15 @@ public class PlayerExpContoller : MonoBehaviour
         StopCoroutine(_expCheckCoroutine);
     }
 
+
     private IEnumerator C_StartCheckDroppedExp()
     {
         while (true)
         {
-            RaycastHit2D[] hits = Physics2D.BoxCastAll(transform.position, _checkSize, 0f, Vector2.zero, 0f, _expLayerMask);
+            var hits = Physics2D.OverlapCircleAll(transform.position, _checkSize, _expLayerMask);
             foreach (var hit in hits)
             {
-                _manager.Data.CurrentExp += hit.collider.gameObject.GetComponent<Exp>().OnGet(transform);
+                _manager.Data.CurrentExp += hit.gameObject.GetComponent<Exp>().OnGet(transform);
                 CheckLevelUp();
             }
             yield return null;

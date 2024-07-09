@@ -35,6 +35,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
             if (_playerTransform == null)
                 Debug.Log("Cannot find Player");
         }
+        GetComponent<CircleCollider2D>().enabled = true;
     }
 
     protected virtual void Start()
@@ -158,6 +159,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         Manager.State.MoveState = EnemyMoveState.Idle;
         Manager.State.IsDead = true;
 
+        GetComponent<CircleCollider2D>().enabled = false;
         StopCoroutine(_walkCoroutine);
         StopCoroutine(_directionUpdateCoroutine);
         StartCoroutine(C_Die());

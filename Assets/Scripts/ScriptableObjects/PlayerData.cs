@@ -10,7 +10,7 @@ public class PlayerData : ScriptableObject
     [HideInInspector] public float CurrentExp = 0f;
     [HideInInspector] public float MaxExp = 50f;
 
-    [HideInInspector] public float InvincibleTime = 2f; // Invincible time after attacked
+    [HideInInspector] public float InvincibleTime = 0.5f; // Invincible time after attacked
     [HideInInspector] public float WalkSpeed = 0.03f;
     [HideInInspector] public float RunSpeed = 0.05f;
     [HideInInspector] public float NormalAttackSpeed = 2.5f;

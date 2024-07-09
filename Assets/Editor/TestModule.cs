@@ -20,6 +20,7 @@ public class TestModule : EditorWindow
     private void OnGUI()
     {
         DrawEnemyModulePanel();
+        GUILayout.Space(20);
         DrawExpModulePanel();
         AssignDependencies();
     }
@@ -53,7 +54,7 @@ public class TestModule : EditorWindow
         EditorGUILayout.EndHorizontal();
 
         // Buttons
-        GUILayout.BeginVertical();
+        GUILayout.BeginHorizontal();
         if (GUILayout.Button("Set", GUILayout.Width(50f), GUILayout.Height(50f)) == true)
         {
             OnEnemySpawnButtonPressed(int.Parse(_enemyCountText));
@@ -62,7 +63,7 @@ public class TestModule : EditorWindow
         {
             OnEnemyResetButtonPressed();
         }
-        GUILayout.EndVertical();
+        GUILayout.EndHorizontal();
     }
 
     private void DrawExpModulePanel()
@@ -76,7 +77,7 @@ public class TestModule : EditorWindow
         EditorGUILayout.EndHorizontal();
 
         // Buttons
-        GUILayout.BeginVertical();
+        GUILayout.BeginHorizontal();
         if (GUILayout.Button("Set", GUILayout.Width(50f), GUILayout.Height(50f)) == true)
         {
             OnExpCreateButtonPressed(int.Parse(_expCountText));
@@ -85,7 +86,7 @@ public class TestModule : EditorWindow
         {
             OnExpResetButtonPressed();
         }
-        GUILayout.EndVertical();
+        GUILayout.EndHorizontal();
     }
 
     private void OnEnemySpawnButtonPressed(int size)

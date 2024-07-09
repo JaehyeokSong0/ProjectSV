@@ -16,7 +16,7 @@ public class PlayerNormalAttackController : MonoBehaviour
     private WaitForSeconds _attackSpeedWait = null;
     private WaitForSeconds _preAttackDelayWait = new WaitForSeconds(0.2f); // Before attack delay.
 
-    private int _enemyLayer;
+    private int _enemyLayerMask;
 
     private WaitForSeconds _preAttackTimeWait;
     private Vector3 _gizmoDirection;
@@ -31,7 +31,7 @@ public class PlayerNormalAttackController : MonoBehaviour
             _effectGO = transform.Find("Effect").gameObject;
 
         _preAttackTimeWait = new WaitForSeconds(PRE_ATTACK_TIME);
-        _enemyLayer = LayerMask.GetMask("Enemy");
+        _enemyLayerMask = LayerMask.GetMask("Enemy");
     }
 
     private void Start()
@@ -60,10 +60,16 @@ public class PlayerNormalAttackController : MonoBehaviour
             _gizmoDirection = direction;
             yield return _preAttackTimeWait;
 
+            /*
             RaycastHit2D[] hits = Physics2D.BoxCastAll(transform.position + direction, HITBOX_SIZE, rotationValue, Vector2.zero, 0f, _enemyLayer);
             foreach (var hit in hits)
             {
                 hit.collider.gameObject.GetComponent<Base_EnemyManager>().OnEnemyDamaged(_manager.Data.NormalAttackDamage);
+            }*/
+            var hits = Physics2D.OverlapBoxAll(transform.position + direction, HITBOX_SIZE, rotationValue, _enemyLayerMask);
+            foreach (var hit in hits)
+            {
+                hit.gameObject.GetComponent<Base_EnemyManager>().OnEnemyDamaged(_manager.Data.NormalAttackDamage);
             }
             yield return _attackSpeedWait;
             _effectGO.SetActive(false);
