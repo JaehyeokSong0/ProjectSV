@@ -9,7 +9,7 @@ public class PlayerAnimationController : MonoBehaviour
     [SerializeField] private SpriteRenderer _spriteRenderer;
 
     private bool _isDirectionLocked = false; // Used to lock direction of attack animation
-    private WaitForSeconds _colorChangeTimeWait = new WaitForSeconds(2f);
+    private WaitForSeconds _colorChangeTimeWait;
 
     private void Awake()
     {
@@ -18,6 +18,8 @@ public class PlayerAnimationController : MonoBehaviour
             _manager = transform.parent.GetComponent<PlayerManager>();
         if (_spriteRenderer == null)
             _spriteRenderer = GetComponent<SpriteRenderer>();
+
+        _colorChangeTimeWait = new WaitForSeconds(_manager.Data.InvincibleTime);
     }
 
     public void Idle()

@@ -8,11 +8,12 @@ public class EventManager : MonoBehaviour
     public static EventManager Instance = null;
 
     public UnityEvent<float> OnPlayerDamaged; // {Damage}
+    public UnityEvent OnPlayerHPUpdated;
     public UnityEvent OnPlayerDead;
     public UnityEvent<GameObject> OnGetSkill; // {IconResource}
     public UnityEvent OnUseSkill;
     public UnityEvent OnPlayerLevelUp;
-    public UnityEvent OnPlayerExpUpdate;
+    public UnityEvent OnPlayerExpUpdated;
 
     public UnityEvent OnGameLevelUp;
 

@@ -16,6 +16,7 @@ public class PlayerData : ScriptableObject
     [HideInInspector] public float NormalAttackDamage = 50f;
 
     [HideInInspector] public int SkillCapacity = 8; // Must change Panel_Skill of GameScene if changed
+    [HideInInspector] public int SkillCount = 3; // Draw card count
     [HideInInspector] public float SkillRegenTime = 20f;
     [HideInInspector] public int Level = 1;
 }

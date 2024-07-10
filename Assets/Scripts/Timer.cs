@@ -6,7 +6,6 @@ using UnityEngine;
 /// </summary>
 public class Timer : MonoBehaviour
 {
-    // TEST CODE
     private void Start()
     {
         StartCheckTime();
@@ -46,6 +45,16 @@ public class Timer : MonoBehaviour
             StopCoroutine(_checkTimeCoroutine);
         else
             Debug.LogError("Cannot stop checkTimeCoroutine");
+    }
+
+    public void PauseTime()
+    {
+        Time.timeScale = 0f;
+    }
+
+    public void ResumeTime()
+    {
+        Time.timeScale = 1f;
     }
 
     #endregion

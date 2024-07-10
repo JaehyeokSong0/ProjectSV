@@ -15,7 +15,7 @@ MonoBehaviour:
   Type: 2
   Cost: 1
   Damage: 120
-  MoveSpeed: 0.5
+  MoveSpeed: 1.8
   Duration: 25
   Tick: 0
   Radius: 2

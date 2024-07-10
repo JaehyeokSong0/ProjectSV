@@ -53,7 +53,7 @@ public class PlayerExpContoller : MonoBehaviour
             {
                 _manager.Data.CurrentExp += hit.gameObject.GetComponent<Exp>().OnGet(transform);
                 CheckLevelUp();
-                EventManager.Instance.OnPlayerExpUpdate?.Invoke();
+                EventManager.Instance.OnPlayerExpUpdated?.Invoke();
             }
             yield return null;
         }
@@ -69,5 +69,6 @@ public class PlayerExpContoller : MonoBehaviour
             _manager.Data.CurrentExp = 0f;
         }
     }
+
     #endregion
 }

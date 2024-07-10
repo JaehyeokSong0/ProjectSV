@@ -20,6 +20,7 @@ public abstract class Base_Skill : MonoBehaviour
     protected float _elapsedTime = 0f;
     protected Coroutine _checkTimeCoroutine = null;
     protected SkillRepository.SkillName _skillName;
+    protected WaitForFixedUpdate _fixedWait = new WaitForFixedUpdate();
 
     private LayerMask _enemyLayerMask;
     #endregion
@@ -56,7 +57,7 @@ public abstract class Base_Skill : MonoBehaviour
         while (_elapsedTime < Data.Duration)
         {
             transform.position += moveDirection * speed * Time.deltaTime;
-            yield return null;
+            yield return _fixedWait;
         }
     }
     protected void StartCheckTime()

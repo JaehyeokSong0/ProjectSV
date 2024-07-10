@@ -18,4 +18,4 @@ MonoBehaviour:
   NormalAttackRange: 1
   NormalAttackDamage: 20
   Exp: 10
-  ExpDropRate: 0.9
+  ExpDropRate: 0.25

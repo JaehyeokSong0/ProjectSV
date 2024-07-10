@@ -16,10 +16,6 @@ public class PlayerDeckManager : MonoBehaviour
     #endregion
 
     #region Field
-    // TEST CODE
-    public int deckCount;
-    public int discardDeckCount;
-
     [SerializeField] private SkillRepository _skillRepository;
     private Stack<SkillName> _deck = new Stack<SkillName>(); // Current deck, not initial deck
     private Stack<SkillName> _discardDeck = new Stack<SkillName>();
@@ -32,11 +28,6 @@ public class PlayerDeckManager : MonoBehaviour
             _skillRepository = GetComponent<SkillRepository>();
         // TEST CODE
         InitializeDeck();
-    }
-    private void Update() // TEST CODE
-    {
-        deckCount = DeckCount;
-        discardDeckCount = _discardDeck.Count;
     }
     #endregion
 
@@ -97,16 +88,14 @@ public class PlayerDeckManager : MonoBehaviour
     /// </summary>
     private void InitializeDeck()
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 2; i++)
+            _deck.Push(SkillName.Gravity);
+        for (int i = 0; i < 3; i++)
+            _deck.Push(SkillName.Flame);
+        for (int i = 0; i < 3; i++)
+            _deck.Push(SkillName.MoveSpeedUp);
+        for (int i = 0; i < 2; i++)
             _deck.Push(SkillName.Stone);
-        //for (int i = 0; i < 2; i++)
-        //    _deck.Push(SkillName.Gravity);
-        //for (int i = 0; i < 3; i++)
-        //    _deck.Push(SkillName.Flame);
-        //for (int i = 0; i < 3; i++)
-        //    _deck.Push(SkillName.MoveSpeedUp);
-        //for (int i = 0; i < 2; i++)
-        //    _deck.Push(SkillName.Stone);
         ShuffleDeck();
     }
     #endregion

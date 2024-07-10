@@ -68,6 +68,7 @@ public class PlayerManager : MonoBehaviour
         else
             Data.CurrentHp = 0f;
 
+        EventManager.Instance.OnPlayerHPUpdated?.Invoke();
         _animationController.ChangeSpriteColor(Color.red);
 
         if (Data.CurrentHp <= 0f)

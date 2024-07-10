@@ -30,14 +30,14 @@ public class PlayerStatusUI : MonoBehaviour
 
     private void Start()
     {
-        EventManager.Instance.OnPlayerDamaged?.AddListener(UpdateHPUI);
-        EventManager.Instance.OnPlayerExpUpdate?.AddListener(UpdateEXPUI);
-        UpdateHPUI(0f);
+        EventManager.Instance.OnPlayerHPUpdated?.AddListener(UpdateHPUI);
+        EventManager.Instance.OnPlayerExpUpdated?.AddListener(UpdateEXPUI);
+        UpdateHPUI();
     }
     #endregion
 
     #region Method
-    private void UpdateHPUI(float dummy) // attached to UnityEvent<float> so use dummy parameter
+    private void UpdateHPUI() // attached to UnityEvent<float> so use dummy parameter
     {
         _hpGauge.fillAmount = _manager.Data.CurrentHp / _manager.Data.MaxHp;
         _hpText.text = $"{_manager.Data.CurrentHp} / {_manager.Data.MaxHp}";

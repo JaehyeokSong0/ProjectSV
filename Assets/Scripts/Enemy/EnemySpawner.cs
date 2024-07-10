@@ -10,8 +10,8 @@ public class EnemySpawner : MonoBehaviour
     public static EnemySpawner Instance = null;
     public float SpawnTime => _spawnTime;
 
-    private const int DEFAULT_CAPACITY = 5;
-    private const int MAX_SIZE = 5;
+    private const int DEFAULT_CAPACITY = 100;
+    private const int MAX_SIZE = 300;
     private const int SPAWN_GRID_ROW = 10;
     private const int SPAWN_GRID_COL = 18;
     private float _spawnTime = 1.5f;

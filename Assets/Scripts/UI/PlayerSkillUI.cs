@@ -119,6 +119,11 @@ public class PlayerSkillUI : MonoBehaviour
     #endregion
 
     #region Method
+    public void IncreaseSkillCount()
+    {
+        _availableGridCount++;
+        SetGridUIAvailability();
+    }
     private void ResetSkillGrids()
     {
         _skillGrids.Clear();

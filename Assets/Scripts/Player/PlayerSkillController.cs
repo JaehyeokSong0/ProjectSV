@@ -36,7 +36,7 @@ public class PlayerSkillController : MonoBehaviour
         {
             DiscardSkills();
             RestoreMp();
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < _manager.Data.SkillCount; i++)
                 InstantiateSkill(_deckManager.GetSkill());
             _elapsedTime = 0f;
         }
@@ -51,7 +51,7 @@ public class PlayerSkillController : MonoBehaviour
     private IEnumerator TestFunc()
     {
         yield return new WaitForSeconds(1f);
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < _manager.Data.SkillCount; i++)
         {
             var skill = _deckManager.GetSkill();
             InstantiateSkill(skill);

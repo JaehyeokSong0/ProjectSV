@@ -12,9 +12,9 @@ public class TimerUI : MonoBehaviour
     #region Event Method
     private void Awake()
     {
-        if ( _timer == null )
+        if (_timer == null)
             _timer = GameObject.FindFirstObjectByType<Timer>();
-        if(_timeText == null )
+        if (_timeText == null)
             _timeText = transform.GetChild(0).GetComponent<TMP_Text>();
     }
     private void LateUpdate()

@@ -97,6 +97,7 @@ public class Skill_Stone : Base_Skill
             foreach (var hit in hits)
             {
                 hit.gameObject.GetComponent<Base_EnemyManager>().OnEnemyDamaged(Data.Damage);
+                break;
             }
             if (hits.Length > 0)
             {
@@ -104,7 +105,7 @@ public class Skill_Stone : Base_Skill
                 Destroy(stone);
                 yield break;
             }
-            yield return null;
+            yield return _fixedWait;
         }
 
         _stoneCount--;       
@@ -119,7 +120,7 @@ public class Skill_Stone : Base_Skill
                 yield break;
 
             stone.transform.RotateAround(_playerTransform.position, Vector3.forward, Data.MoveSpeed);
-            yield return null;
+            yield return _fixedWait;
         }
     }
     #endregion
