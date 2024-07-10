@@ -30,7 +30,8 @@ public class Skill_Stone : Base_Skill
     [SerializeField] private SkillRepository.SkillName _name;
     [SerializeField] private SkillData _data;
     [SerializeField] private GameObject _icon;
-    private Coroutine _rotateCoroutine;
+    [SerializeField] private GameObject _effect;
+    private int _stoneCount = 0;
     #endregion
 
     #region Event Method
@@ -44,73 +45,84 @@ public class Skill_Stone : Base_Skill
             _data = Resources.Load("Data/Skills/StoneData") as SkillData;
         if (_icon == null)
             _icon = Resources.Load("Prefabs/Skills/Icons/Skill_Stone_Icon") as GameObject;
+        if (_effect == null)
+            _effect = transform.Find("Effect").gameObject;
+    }
 
-        transform.Translate(new Vector3(Data.Radius, 0f, 0f));
+    private void Update()
+    {
+        if (_stoneCount <= 0)
+        {
+            StopCheckTime();
+            Destroy(gameObject);
+        }
+            
     }
     #endregion
 
     #region Method
     protected override IEnumerator C_CastSkill()
     {
-        yield return null;
-        _rotateCoroutine = StartCoroutine(C_Rotate());
-        StartCoroutine(C_RotateStone(transform));
+        _stoneCount = (int)(Data.Value);
+        _effect.gameObject.SetActive(false);
+        for (int i = 0; i < Data.Value; i++)
+        {
+            GameObject newStone = CreateNewStone();
+            
+            StartCoroutine(C_Rotate(newStone));
+            StartCoroutine(C_CheckHitbox(newStone));
+        }
 
-        GameObject newStone = CreateNewStone();
-
-        StartCoroutine(C_RotateStone(newStone.transform));
+        yield return new WaitForSeconds(Data.Duration);
+        StopCheckTime();
+        Destroy(gameObject);
     }
 
     private GameObject CreateNewStone()
     {
         // Create new stone
-        GameObject stone2 = Instantiate(new GameObject(), transform);
-        Vector3 stone2Position = transform.position;
-        stone2Position.x -= Data.Radius * 2;
-        stone2.transform.position = stone2Position;
+        GameObject stone = Instantiate(_effect, transform.position, Quaternion.identity, transform);
+        var randomPosition = Random.insideUnitCircle.normalized * Mathf.Sqrt(Data.Radius);
+        stone.transform.Translate(randomPosition);
+        stone.SetActive(true);
 
-        return stone2;
+        return stone;
     }
-    private IEnumerator C_RotateStone(Transform stoneTransform)
+    private IEnumerator C_CheckHitbox(GameObject stone)
     {
         while (_elapsedTime < Data.Duration)
         {
             var hits = Physics2D.OverlapCircleAll(
-                stoneTransform.position, STONE_SIZE, EnemyLayerMask);
+                stone.transform.position, STONE_SIZE, EnemyLayerMask);
             foreach (var hit in hits)
             {
                 hit.gameObject.GetComponent<Base_EnemyManager>().OnEnemyDamaged(Data.Damage);
             }
             if (hits.Length > 0)
             {
+                _stoneCount--;
                 StopCheckTime();
-                StopCoroutine(_rotateCoroutine);
-                Destroy(gameObject);
+                Destroy(stone);
                 yield break;
             }
             yield return null;
         }
 
-        StopCheckTime();
-        StopCoroutine(_rotateCoroutine);
-        Destroy(gameObject);
+        _stoneCount--;
+        Destroy(stone);
     }
 
-    private IEnumerator C_Rotate()
+    private IEnumerator C_Rotate(GameObject stone)
     {
         while (_elapsedTime < Data.Duration)
         {
-            transform.RotateAround(_playerTransform.position, Vector3.forward, Data.MoveSpeed);
+            if(stone == null)
+                yield break;
+
+            stone.transform.RotateAround(_playerTransform.position, Vector3.forward, Data.MoveSpeed);
             yield return null;
         }
     }
-#if UNITY_EDITOR
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.gray;
-        Gizmos.DrawSphere(transform.position, STONE_SIZE);
-    }
-#endif
     #endregion
 }
 // rotate coroutine multiple

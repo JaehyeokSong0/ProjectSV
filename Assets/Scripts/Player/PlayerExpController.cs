@@ -66,7 +66,6 @@ public class PlayerExpContoller : MonoBehaviour
             EventManager.Instance.OnPlayerLevelUp?.Invoke();
             _manager.Data.Level += 1;
             _manager.Data.MaxExp *= EXP_INCREASE_FACTOR;
-            Debug.Log(_manager.Data.MaxExp);
             _manager.Data.CurrentExp = 0f;
         }
     }
