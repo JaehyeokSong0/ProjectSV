@@ -101,14 +101,13 @@ public class Skill_Stone : Base_Skill
             if (hits.Length > 0)
             {
                 _stoneCount--;
-                StopCheckTime();
                 Destroy(stone);
                 yield break;
             }
             yield return null;
         }
 
-        _stoneCount--;
+        _stoneCount--;       
         Destroy(stone);
     }
 
