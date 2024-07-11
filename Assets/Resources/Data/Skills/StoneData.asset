@@ -18,5 +18,5 @@ MonoBehaviour:
   MoveSpeed: 1.8
   Duration: 25
   Tick: 0
-  Radius: 2
-  Value: 2
+  Radius: 1.8
+  Value: 3

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 0
   Cost: 1
-  Damage: 60
-  MoveSpeed: 4
+  Damage: 50
+  MoveSpeed: 3.5
   Duration: 5
   Tick: 0
   Radius: 0.1

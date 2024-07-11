@@ -19,7 +19,7 @@ public class PlayerInputController : MonoBehaviour
     private Vector2 _playerDirection;
 
     private void Awake()
-    {
+    { 
         if (_player == null)
             _player = transform.root.gameObject;
         if(_manager == null)
@@ -28,6 +28,8 @@ public class PlayerInputController : MonoBehaviour
             _animationController = FindObjectOfType<PlayerAnimationController>();
         if(_normalAttackController == null)
             _normalAttackController = FindObjectOfType<PlayerNormalAttackController>();
+        if (_skillController == null)
+            _skillController = FindObjectOfType<PlayerSkillController>();
     }
 
     private void FixedUpdate()
@@ -45,6 +47,9 @@ public class PlayerInputController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Temporary method used to limit player's position
+    /// </summary>
     private void ClampRange()
     {
         var position = _player.transform.position;
@@ -75,6 +80,7 @@ public class PlayerInputController : MonoBehaviour
             _skillController.CastSkill();
     }
 
+    
     private void Idle()
     {
         _manager.State.MoveState = PlayerMoveState.Idle;

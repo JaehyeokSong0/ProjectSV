@@ -112,6 +112,74 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "UIAction",
+            "id": "8c101b4d-cddb-45b1-8dd0-3b56dccce352",
+            "actions": [
+                {
+                    "name": "SelectCard1",
+                    "type": "Button",
+                    "id": "e51fdde9-3482-4d28-b4ba-d8cc50c6d69b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SelectCard2",
+                    "type": "Button",
+                    "id": "f5b8af72-8e0e-4859-a6a2-f122670e8db9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SelectCard3",
+                    "type": "Button",
+                    "id": "2bcf1a48-4a79-4a2e-ae1a-d4ac14e0a106",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "2106a86f-d8f5-471c-9ed3-e199e316a77b",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "SelectCard1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "528fa72f-7566-48e6-9532-3b3ff62c92d7",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "SelectCard3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3db1a886-20b2-4c31-9877-dcf71dfe0db2",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "SelectCard2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelUpUI : MonoBehaviour
 {
@@ -55,8 +56,9 @@ public class LevelUpUI : MonoBehaviour
     #region Method
     public void ShowLevelUpUI()
     {
+        InputManager.Instance.SwitchActionMap(InputManager.ActionMapType.UIAction);
         gameObject.SetActive(true);
-        var indices = GetRandomInts(CARD_COUNT, 0, _cards.Count);
+        var indices = Utility.GetRandomInts(CARD_COUNT, 0, _cards.Count);
         for (int i = 0; i < CARD_COUNT; i++)
         {
             _cards[indices[i]].transform.position = _cardPositions[i];
@@ -68,6 +70,7 @@ public class LevelUpUI : MonoBehaviour
     private void HideLevelUpUI()
     {
         gameObject.SetActive(false);
+        InputManager.Instance.SwitchActionMap(InputManager.ActionMapType.PlayerAction);
         _timer.ResumeTime();
     }
     private void InitializeCardList()
@@ -76,18 +79,17 @@ public class LevelUpUI : MonoBehaviour
         foreach (Transform card in cards)
             _cards.Add(card.gameObject);
     }
-
-    private List<int> GetRandomInts(int length, int minValue, int maxValue)
+    /// <summary>
+    /// Select card by index
+    /// Called in PlayerInputController to select card by keyboard event
+    /// </summary>
+    /// <param name="index">card index</param>
+    public void SelectCard(int index)
     {
-        List<int> result = new List<int>(length);
-        while (result.Count < length)
-        {
-            int value = Random.Range(minValue, maxValue);
-            if (result.Contains(value) == false)
-                result.Add(value);
-        }
-        return result;
-    }
+        if ((index < 0) || (index >= CARD_COUNT))
+            return;
 
+        _cards[index].GetComponent<Button>().onClick.Invoke();
+    }
     #endregion
 }

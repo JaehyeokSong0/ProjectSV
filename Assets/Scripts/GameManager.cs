@@ -1,11 +1,10 @@
-using UnityEditor;
 using UnityEngine;
 
 // Manages game flow
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private PlayerManager _playerManager;
-
+    
     private void Awake()
     {
         Application.targetFrameRate = 180;
@@ -17,5 +16,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _playerManager.Initialize();
+        InputManager.Instance.SwitchActionMap(InputManager.ActionMapType.PlayerAction);
     }
 }

@@ -30,8 +30,11 @@ public class CardManager : MonoBehaviour
     }
     public void SkillCountIncrease()
     {
-        _skillUI.IncreaseSkillCount();
-        _playerManager.Data.SkillCount += 1;
+        if(_playerManager.Data.SkillCount < _playerManager.Data.SkillCapacity)
+        {
+            _skillUI.IncreaseSkillCount();
+            _playerManager.Data.SkillCount += 1;
+        }
     }
     #endregion
 }

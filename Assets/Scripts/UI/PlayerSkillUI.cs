@@ -54,7 +54,7 @@ public class PlayerSkillUI : MonoBehaviour
         // Check components availability
         if (_skillController == null)
             _skillController = GameObject.FindFirstObjectByType<PlayerSkillController>();
-        if(_mpText == null)
+        if (_mpText == null)
             _mpText = transform.Find("Image_MPCount").GetChild(0).GetComponent<TMP_Text>();
 
         SetGridUIAvailability();
@@ -159,7 +159,10 @@ public class PlayerSkillUI : MonoBehaviour
 
         }
     }
-    // Called after destroy GameObject in list[index]
+    /// <summary>
+    /// Rearrange skill icons in ui
+    /// Called after destroy GameObject in list[index] 
+    /// </summary>
     private void RearrangeIcons()
     {
         int maxSkillCount = _skillIcons.Count;
