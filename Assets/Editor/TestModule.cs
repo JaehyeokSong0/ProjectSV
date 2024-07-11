@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
+[InitializeOnLoad]
 public class TestModule : EditorWindow
 {
     #region Field
@@ -25,7 +26,7 @@ public class TestModule : EditorWindow
         AssignDependencies();
     }
 
-    [MenuItem("TestModule/Run")]
+    [MenuItem("CustomTools/TestModule/Run TestModule")]
     public static void Run()
     {
         EditorWindow.GetWindow<TestModule>();
