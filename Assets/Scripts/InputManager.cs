@@ -34,7 +34,6 @@ public class InputManager : MonoBehaviour
             return;
 
         _input.SwitchCurrentActionMap(actionMap.ToString());
-        Debug.Log($"Switch action map to {actionMap.ToString()}");
     }
     #endregion
 }

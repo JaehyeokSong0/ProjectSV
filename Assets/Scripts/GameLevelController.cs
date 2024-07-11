@@ -35,19 +35,16 @@ public class GameLevelController : MonoBehaviour
     public void OnGameLevelUp()
     {
         _enemySpawner.SetSpawnTime(_enemySpawner.SpawnTime / 1.1f);
-        Debug.Log($"GAME LEVEL UP : Set spawn time to {_enemySpawner.SpawnTime}");
     }
     #endregion
 
     #region Method
     public void StartLevelControl()
     {
-        Debug.Log($"Start Level Control : {_enemySpawner.SpawnTime}");
         _levelControlCoroutine = StartCoroutine(C_StartLevelControl());
     }
     public void StopLevelControl()
     {
-        Debug.Log($"Stop Level Control : {_enemySpawner.SpawnTime}");
         if (_levelControlCoroutine != null)
             StopCoroutine(_levelControlCoroutine);
     }

@@ -35,7 +35,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         {
             _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
             if (_playerTransform == null)
-                Debug.Log("Cannot find Player");
+                Debug.LogError("Cannot find Player");
         }
         GetComponent<CircleCollider2D>().enabled = true;
         _rigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;
@@ -88,7 +88,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         {
             _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
             if (_playerTransform == null)
-                Debug.Log("Cannot find Player");
+                Debug.LogError("Cannot find Player");
         }
         _directionUpdateCoroutine = StartCoroutine(C_UpdatePlayerDirectionWithDelay());
         while (true)
