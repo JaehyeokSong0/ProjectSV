@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Hp: 100
   WalkSpeed: 0.7
-  NormalAttackSpeed: 3
+  NormalAttackSpeed: 2
   NormalAttackRange: 1
   NormalAttackDamage: 20
   Exp: 10

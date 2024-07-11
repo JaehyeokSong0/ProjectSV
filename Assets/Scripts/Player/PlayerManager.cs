@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 // Manages Player status and events
@@ -55,6 +56,8 @@ public class PlayerManager : MonoBehaviour
     {
         EventManager.Instance.OnPlayerDamaged?.AddListener(this.OnPlayerDamaged);
         EventManager.Instance.OnPlayerDead?.AddListener(this.OnPlayerDead);
+
+        StartCoroutine(C_ZoomOutCamera());
     }
     #endregion
 
@@ -86,9 +89,26 @@ public class PlayerManager : MonoBehaviour
     }
     #endregion
 
+    #region Method
     public void Initialize()
     {
         _normalAttackController.StartNormalAttack();
         _expController.StartCheckDroppedExp();
     }
+    private IEnumerator C_ZoomOutCamera()
+    {
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        Camera playerCamera = Camera.main;
+        float sizeBuffer = playerCamera.orthographicSize;
+
+        const float zoomSpeed = 0.05f;
+        const float objectiveSize = 5f;
+        while(playerCamera.orthographicSize < objectiveSize)
+        {
+            playerCamera.orthographicSize += zoomSpeed;
+            yield return null;
+        }
+    }
+    #endregion
 }
