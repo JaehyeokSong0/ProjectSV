@@ -31,6 +31,9 @@ public class PlayerSkillController : MonoBehaviour
     }
     private void Update()
     {
+        if (GameManager.Instance.IsExitPanelActivated == true)
+            return;
+
         _elapsedTime += Time.deltaTime;
         if (_elapsedTime > _maxTime)
         {

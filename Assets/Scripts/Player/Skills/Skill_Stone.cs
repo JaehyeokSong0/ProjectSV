@@ -51,6 +51,9 @@ public class Skill_Stone : Base_Skill
 
     private void Update()
     {
+        if (GameManager.Instance.IsExitPanelActivated == true)
+            return;
+
         if (_stoneCount <= 0)
         {
             StopCheckTime();

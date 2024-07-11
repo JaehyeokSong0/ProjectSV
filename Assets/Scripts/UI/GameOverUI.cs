@@ -14,6 +14,9 @@ public class GameOverUI : MonoBehaviour
     }
     private void Update()
     {
+        if (GameManager.Instance.IsExitPanelActivated == true)
+            return;
+
         if (Input.GetKeyDown(KeyCode.Return)) // Enter
         {
             HideGameOverUI();

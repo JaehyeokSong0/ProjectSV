@@ -10,6 +10,7 @@ public class Timer : MonoBehaviour
     {
         StartCheckTime();
         EventManager.Instance.OnPlayerDead?.AddListener(StopCheckTime);
+        EventManager.Instance.OnPlayerDead?.AddListener(CheckTimeRecord);
     }
     #region Property
     public float ElapsedTime => _elapsedTime;
@@ -47,6 +48,10 @@ public class Timer : MonoBehaviour
             Debug.LogError("Cannot stop checkTimeCoroutine");
     }
 
+    public void CheckTimeRecord()
+    {
+        GameManager.Instance.BestRecord = _elapsedTime;
+    }
     public void PauseTime()
     {
         Time.timeScale = 0f;

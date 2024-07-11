@@ -39,6 +39,9 @@ public abstract class Base_EnemyAnimationController : MonoBehaviour
 
     protected void Update()
     {
+        if (GameManager.Instance.IsExitPanelActivated == true)
+            return;
+
         Vector2 direction = _player.transform.position - transform.position;
         direction.Normalize();
 
