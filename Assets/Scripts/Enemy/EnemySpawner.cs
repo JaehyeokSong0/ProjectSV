@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
-// Singleton Pattern
 // Manages Enemy spawn events using object pooling
 public class EnemySpawner : MonoBehaviour
 {
-    public static EnemySpawner Instance = null;
     public float SpawnTime => _spawnTime;
 
     private const int DEFAULT_CAPACITY = 100;
@@ -25,18 +23,6 @@ public class EnemySpawner : MonoBehaviour
 
     private void Awake()
     {
-        // Set class singleton
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            if (Instance != this)
-                Destroy(this.gameObject);
-        }
-
         // Initialize
         _spawnTimeWait = new WaitForSeconds(_spawnTime);
 
@@ -61,7 +47,6 @@ public class EnemySpawner : MonoBehaviour
 
     private void Start()
     {
-        StartCreateEnemy();
         EventManager.Instance.OnPlayerDead?.AddListener(this.StopCreateEnemy);
     }
 

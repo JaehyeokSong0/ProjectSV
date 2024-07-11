@@ -2,8 +2,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Singleton Pattern
 /// Manages input action map
+/// Set script execution order if needed
 /// </summary>
 public class InputManager : MonoBehaviour
 {
@@ -16,23 +16,12 @@ public class InputManager : MonoBehaviour
     #endregion
 
     #region Field
-    public static InputManager Instance = null;
     [SerializeField] private PlayerInput _input;
     #endregion
 
     #region Event Method
-    private void Awake()
+    private void OnEnable()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            if (Instance != this)
-                Destroy(this.gameObject);
-        }
         if (_input == null) 
             _input = GetComponent<PlayerInput>();
     }
@@ -41,6 +30,9 @@ public class InputManager : MonoBehaviour
     #region Method
     public void SwitchActionMap(ActionMapType actionMap)
     {
+        if (_input.currentActionMap.ToString() == actionMap.ToString())
+            return;
+
         _input.SwitchCurrentActionMap(actionMap.ToString());
         Debug.Log($"Switch action map to {actionMap.ToString()}");
     }

@@ -9,6 +9,7 @@ public class LevelUpUI : MonoBehaviour
     #endregion
 
     #region Field
+    [SerializeField] private InputManager _inputManager;
     [SerializeField] private Timer _timer;
     [SerializeField] private PlayerExpContoller _expController;
     [SerializeField] private List<GameObject> _cards;
@@ -21,7 +22,9 @@ public class LevelUpUI : MonoBehaviour
         if (_timer == null)
             _timer = GameObject.FindFirstObjectByType<Timer>();
         if (_expController == null)
-            _expController = GameObject.FindFirstObjectByType<PlayerExpContoller>();
+            _expController = GameObject.FindFirstObjectByType<PlayerExpContoller>(); 
+        if (_inputManager == null)
+            _inputManager = GameObject.FindFirstObjectByType<InputManager>();
 
         if (_cardPositions[0] == Vector3.zero) // Not set
         {
@@ -56,7 +59,7 @@ public class LevelUpUI : MonoBehaviour
     #region Method
     public void ShowLevelUpUI()
     {
-        InputManager.Instance.SwitchActionMap(InputManager.ActionMapType.UIAction);
+        _inputManager.SwitchActionMap(InputManager.ActionMapType.UIAction);
         gameObject.SetActive(true);
         var indices = Utility.GetRandomInts(CARD_COUNT, 0, _cards.Count);
         for (int i = 0; i < CARD_COUNT; i++)
@@ -70,7 +73,7 @@ public class LevelUpUI : MonoBehaviour
     private void HideLevelUpUI()
     {
         gameObject.SetActive(false);
-        InputManager.Instance.SwitchActionMap(InputManager.ActionMapType.PlayerAction);
+        _inputManager.SwitchActionMap(InputManager.ActionMapType.PlayerAction);
         _timer.ResumeTime();
     }
     private void InitializeCardList()

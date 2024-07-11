@@ -59,6 +59,9 @@ public class PlayerInputController : MonoBehaviour
     }
     public void OnMove(InputAction.CallbackContext context)
     {
+        if (gameObject.activeSelf == false)
+            return;
+
         if (context.started == true)
             return;
 
@@ -69,13 +72,16 @@ public class PlayerInputController : MonoBehaviour
         _manager.PlayerDirectionBuffer = _playerDirection;
  
         Walk();
-
+        
         if (context.canceled == true)
             Idle();
     }
 
     public void OnKeyQPressed(InputAction.CallbackContext context)
     {
+        if (gameObject.activeSelf == false)
+            return;
+
         if (context.performed == true)
             _skillController.CastSkill();
     }
