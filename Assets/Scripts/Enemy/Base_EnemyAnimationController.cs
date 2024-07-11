@@ -6,7 +6,7 @@ using UnityEngine;
 public abstract class Base_EnemyAnimationController : MonoBehaviour
 {
     // Constants
-    private const float POST_ACTION_DELAY = 0.5f; // after action(canTransition) delay
+    private const float POST_ACTION_DELAY = 0.3f; // after action(canTransition) delay
 
     // Fields
     [SerializeField] protected Base_EnemyManager _manager;

@@ -14,6 +14,7 @@ public class LevelUpUI : MonoBehaviour
     [SerializeField] private PlayerExpContoller _expController;
     [SerializeField] private List<GameObject> _cards;
     [SerializeField] private Vector3[] _cardPositions = new Vector3[CARD_COUNT];
+    private List<int> _indices = new List<int>();
     #endregion
 
     #region Event Method
@@ -61,11 +62,11 @@ public class LevelUpUI : MonoBehaviour
     {
         _inputManager.SwitchActionMap(InputManager.ActionMapType.UIAction);
         gameObject.SetActive(true);
-        var indices = Utility.GetRandomInts(CARD_COUNT, 0, _cards.Count);
+        _indices = Utility.GetRandomInts(CARD_COUNT, 0, _cards.Count);
         for (int i = 0; i < CARD_COUNT; i++)
         {
-            _cards[indices[i]].transform.position = _cardPositions[i];
-            _cards[indices[i]].SetActive(true);
+            _cards[_indices[i]].transform.position = _cardPositions[i];
+            _cards[_indices[i]].SetActive(true);
         }
         _timer.PauseTime();
     }
@@ -92,7 +93,7 @@ public class LevelUpUI : MonoBehaviour
         if ((index < 0) || (index >= CARD_COUNT))
             return;
 
-        _cards[index].GetComponent<Button>().onClick.Invoke();
+        _cards[_indices[index]].GetComponent<Button>().onClick.Invoke();
     }
     #endregion
 }

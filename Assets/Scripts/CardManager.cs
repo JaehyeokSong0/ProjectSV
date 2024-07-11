@@ -26,6 +26,7 @@ public class CardManager : MonoBehaviour
     public void MpIncrease()
     {
         _playerManager.Data.MaxMp += 1;
+        Debug.Log(_playerManager.Data.MaxMp);
         _skillUI.OnMpChanged?.Invoke(_playerManager.Data.CurrentMp, _playerManager.Data.MaxMp);
     }
     public void SkillCountIncrease()

@@ -33,8 +33,6 @@ public class PlayerManager : MonoBehaviour
     #region Event Functions
     private void Awake()
     {
-        _data = ScriptableObject.CreateInstance<PlayerData>();
-
         if (_inputController == null )
             _inputController = transform.Find("InputController").GetComponent<PlayerInputController>();
         if (_stateManager == null)
@@ -47,6 +45,10 @@ public class PlayerManager : MonoBehaviour
             _animationController = transform.Find("Model").GetComponent<PlayerAnimationController>();
         if (_expController == null)
             _expController = transform.Find("ExpController").GetComponent<PlayerExpContoller>();
+    }
+    private void OnEnable()
+    {
+        _data = ScriptableObject.CreateInstance<PlayerData>();
     }
 
     private void Start()

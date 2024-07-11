@@ -26,7 +26,7 @@ public class TestModule : EditorWindow
         AssignDependencies();
     }
 
-    [MenuItem("CustomTools/TestModule/Run TestModule")]
+    [MenuItem("CustomTools/TestModule/Run TestModule %t")]
     public static void Run()
     {
         EditorWindow.GetWindow<TestModule>();

@@ -12,7 +12,7 @@ public class PlayerData : ScriptableObject
 
     [HideInInspector] public float InvincibleTime = 0.5f; // Invincible time after attacked
     [HideInInspector] public float WalkSpeed = 0.04f;
-    [HideInInspector] public float NormalAttackSpeed = 2f;
+    [HideInInspector] public float NormalAttackSpeed = 2.4f;
     [HideInInspector] public float NormalAttackDamage = 50f;
 
     [HideInInspector] public int SkillCapacity = 8; // Must change Panel_Skill of GameScene if changed
