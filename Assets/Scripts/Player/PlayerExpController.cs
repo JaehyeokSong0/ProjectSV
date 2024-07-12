@@ -7,7 +7,7 @@ using UnityEngine;
 public class PlayerExpContoller : MonoBehaviour
 {
     #region Constant
-    private const float EXP_INCREASE_FACTOR = 1.5f;
+    private const float EXP_INCREASE_MULTIPLIER = 1.2f;
     #endregion
 
     #region Field
@@ -25,11 +25,6 @@ public class PlayerExpContoller : MonoBehaviour
 
         _expLayerMask = LayerMask.GetMask("Exp");
         // _expLayerMask = 1 << LayerMask.NameToLayer("Exp");
-    }
-
-    private void Start()
-    {
-        
     }
     #endregion
 
@@ -65,7 +60,7 @@ public class PlayerExpContoller : MonoBehaviour
         {
             EventManager.Instance.OnPlayerLevelUp?.Invoke();
             _manager.Data.Level += 1;
-            _manager.Data.MaxExp *= EXP_INCREASE_FACTOR;
+            _manager.Data.MaxExp *= EXP_INCREASE_MULTIPLIER;
             _manager.Data.CurrentExp = 0f;
         }
     }

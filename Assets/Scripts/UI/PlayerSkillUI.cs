@@ -14,6 +14,7 @@ public class PlayerSkillUI : MonoBehaviour
     #endregion
 
     #region Constant
+    private const int DEFAULT_MP = 3;
     private const int SKILL_CAPACITY = 8;
     private const float ICON_MOVE_SPEED = 3f;
     #endregion
@@ -28,7 +29,6 @@ public class PlayerSkillUI : MonoBehaviour
     [SerializeField] private List<GameObject> _skillIcons = new List<GameObject>();
 
     [SerializeField] private TMP_Text _mpText;
-    [SerializeField] private TMP_Text _deckCountText;
     [SerializeField] private Image _timeBar;
     #endregion
 
@@ -66,7 +66,7 @@ public class PlayerSkillUI : MonoBehaviour
         OnMpChanged?.AddListener(UpdateMPUI);
         EventManager.Instance.OnPlayerDead?.AddListener(this.OnPlayerDead);
 
-        UpdateMPUI(3, 3);
+        UpdateMPUI(DEFAULT_MP, DEFAULT_MP);
     }
     private void LateUpdate()
     {

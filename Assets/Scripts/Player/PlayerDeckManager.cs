@@ -1,18 +1,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using SkillName = SkillRepository.SkillName;
 
 [RequireComponent(typeof(SkillRepository))]
 public class PlayerDeckManager : MonoBehaviour
 {
+    #region Event
+    public UnityEvent OnDeckCountUpdated;
+    #endregion
+
     #region Constant
     private const int DEFAULT_DECK_SIZE = 10;
     #endregion
 
     #region Property
     public int DeckCount { get => _deck.Count; }
-    public int AllSkillCount { get => _deck.Count + _discardDeck.Count; }
+    public int AllDeckCount { get => _deck.Count + _discardDeck.Count; }
     #endregion
 
     #region Field
@@ -49,6 +54,7 @@ public class PlayerDeckManager : MonoBehaviour
             _deck.Push(deckList[i]);
 
         ShuffleDeck();
+        OnDeckCountUpdated?.Invoke();
     }
     /// <summary>
     /// Shuffle current deck (Exclude used skill)
@@ -81,6 +87,7 @@ public class PlayerDeckManager : MonoBehaviour
         var skill = _deck.Pop();
         _discardDeck.Push(skill);
 
+        OnDeckCountUpdated?.Invoke();
         return _skillRepository[skill];
     }
     /// <summary>
@@ -88,6 +95,7 @@ public class PlayerDeckManager : MonoBehaviour
     /// </summary>
     private void InitializeDeck()
     {
+        // TEST CODE
         for (int i = 0; i < 2; i++)
             _deck.Push(SkillName.Gravity);
         for (int i = 0; i < 3; i++)
@@ -97,6 +105,7 @@ public class PlayerDeckManager : MonoBehaviour
         for (int i = 0; i < 2; i++)
             _deck.Push(SkillName.Stone);
         ShuffleDeck();
+        OnDeckCountUpdated?.Invoke();
     }
     #endregion
 }
