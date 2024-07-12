@@ -57,6 +57,7 @@ public abstract class Base_EnemyManager : MonoBehaviour
     #region Method
     protected virtual void Initialize()
     {
+        Data.LoadEnemyData();
         _actionController.Initialize();
     }
     #endregion

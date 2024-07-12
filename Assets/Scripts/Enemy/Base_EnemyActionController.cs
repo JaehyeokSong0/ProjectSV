@@ -26,6 +26,8 @@ public abstract class Base_EnemyActionController : MonoBehaviour
     protected WaitForSeconds _directionUpdateWait = new WaitForSeconds(0.5f);
     protected WaitForFixedUpdate _fixedWait = new WaitForFixedUpdate();
     [SerializeField] protected Rigidbody2D _rigidbody;  // TEST CODE
+    protected WaitForSeconds _normalAttackWait;
+
     #endregion
 
     #region Event Function
@@ -45,6 +47,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
     protected virtual void Start()
     {
         _preAttackTimeWait = new WaitForSeconds(_preAttackTime);
+        _normalAttackWait = new WaitForSeconds(Manager.Data.NormalAttackSpeed);
 
         EventManager.Instance.OnPlayerDead?.AddListener(this.OnPlayerDead);
     }
@@ -93,7 +96,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         _directionUpdateCoroutine = StartCoroutine(C_UpdatePlayerDirectionWithDelay());
         while (true)
         {
-            if (_direction.magnitude < Manager.Data.NormalAttackRange)
+            if (_direction.magnitude <= Manager.Data.NormalAttackRange)
             {
                 yield return C_NormalAttack();
             }
@@ -118,7 +121,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         StartCoroutine(C_NormalAttack());
     }
 
-    protected IEnumerator C_NormalAttack()
+    protected virtual IEnumerator C_NormalAttack()
     {
         _rigidbody.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
         Manager.State.MoveState = EnemyMoveState.Idle;
@@ -134,7 +137,7 @@ public abstract class Base_EnemyActionController : MonoBehaviour
         if (direction.magnitude < Manager.Data.NormalAttackRange)
             EventManager.Instance.OnPlayerDamaged?.Invoke(Manager.Data.NormalAttackDamage);
 
-        yield return new WaitForSeconds(Manager.Data.NormalAttackSpeed);
+        yield return _normalAttackWait;
         _rigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;
 
         // Reset Move Animation

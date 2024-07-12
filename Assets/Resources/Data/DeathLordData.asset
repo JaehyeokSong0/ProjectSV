@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64d70ac0bafaa924196efe1f5735fef7, type: 3}
   m_Name: DeathLordData
   m_EditorClassIdentifier: 
-  Hp: 100
+  EnemyName: 1
+  Hp: 150
   WalkSpeed: 0.7
   NormalAttackSpeed: 2
   NormalAttackRange: 1
   NormalAttackDamage: 20
-  Exp: 10
-  ExpDropRate: 0.25
+  Exp: 15
+  ExpDropRate: 0.3

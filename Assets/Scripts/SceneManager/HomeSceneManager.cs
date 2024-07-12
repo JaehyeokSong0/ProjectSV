@@ -30,6 +30,8 @@ public class HomeSceneManager : MonoBehaviour
         {
             if (Keyboard.current.escapeKey.wasPressedThisFrame == true)
                 return;
+
+            GameManager.Instance.GameLevel = 1;
             SceneManager.LoadSceneAsync((int)SceneRepository.SceneName.GameScene, LoadSceneMode.Single);
         }
     }

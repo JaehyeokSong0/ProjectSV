@@ -11,13 +11,13 @@ GameObject:
   - component: {fileID: 4399067219307610265}
   - component: {fileID: 1199603433414236016}
   - component: {fileID: 8756936298146715425}
-  - component: {fileID: 4345296431834202498}
-  - component: {fileID: 5734785738671160797}
+  - component: {fileID: 1438561299562528993}
+  - component: {fileID: 2845110392372744919}
   - component: {fileID: -5617072017140502480}
   - component: {fileID: 3612013244649992093}
   - component: {fileID: 7344822381937038840}
   m_Layer: 7
-  m_Name: Enemy_DeathLord
+  m_Name: Enemy_Skull
   m_TagString: Enemy
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -66,6 +66,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f2113aa2b1977c4d9bcba3b0b8cf8d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _data: {fileID: 11400000, guid: 3abb730f45764f0499a4dd92440375dc, type: 2}
+  EnemyName: 0
   Hp: 0
   WalkSpeed: 0
   NormalAttackSpeed: 0
@@ -73,7 +75,7 @@ MonoBehaviour:
   NormalAttackDamage: 0
   Exp: 0
   ExpDropRate: 0
---- !u!114 &4345296431834202498
+--- !u!114 &1438561299562528993
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -82,10 +84,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5015749245414901926}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e8e1db6fa1cad340b62099b676f1057, type: 3}
+  m_Script: {fileID: 11500000, guid: d4469c000d18628449ccdeb1cdf38d87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5734785738671160797
+--- !u!114 &2845110392372744919
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,12 +96,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 5015749245414901926}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fe599292fd6e7449971043aab7d5a96, type: 3}
+  m_Script: {fileID: 11500000, guid: 55281d4fd72f7024fb91c902963c52b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animationController: {fileID: 3251062995762313782}
+  _animationController: {fileID: 6323557210809882958}
   _rigidbody: {fileID: 7344822381937038840}
-  _manager: {fileID: 4345296431834202498}
+  _manager: {fileID: 1438561299562528993}
 --- !u!114 &-5617072017140502480
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,7 +149,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.3
+  m_Radius: 0.2
 --- !u!50 &7344822381937038840
 Rigidbody2D:
   serializedVersion: 4
@@ -186,7 +188,7 @@ GameObject:
   - component: {fileID: 4987601215144713760}
   - component: {fileID: 4204507492029140168}
   - component: {fileID: 7220399531525677414}
-  - component: {fileID: 3251062995762313782}
+  - component: {fileID: 6323557210809882958}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -250,7 +252,7 @@ SpriteRenderer:
   m_SortingLayerID: -10711003
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 9591068862a667242a4ba9ba63b2decc, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -258,7 +260,7 @@ SpriteRenderer:
   m_Size: {x: 1.28, y: 1.28}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &7220399531525677414
@@ -271,7 +273,7 @@ Animator:
   m_GameObject: {fileID: 8682523697307425035}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 7820b63b229573847be2d5c62aafd410, type: 2}
+  m_Controller: {fileID: 9100000, guid: 55e88dfe57e37d44b9966f18713d6b1f, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -282,7 +284,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3251062995762313782
+--- !u!114 &6323557210809882958
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -291,10 +293,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8682523697307425035}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1d01b6d31d6a364b8e15c5c1cff991f, type: 3}
+  m_Script: {fileID: 11500000, guid: 5e77cc5c2e92fbe43a5698ab4372b95f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _manager: {fileID: 4345296431834202498}
+  _manager: {fileID: 1438561299562528993}
   _animator: {fileID: 7220399531525677414}
   _spriteRenderer: {fileID: 4204507492029140168}
   _isDirectionLocked: 0

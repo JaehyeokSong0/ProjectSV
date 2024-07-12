@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "EnemyData", menuName = "Data/Create EnemyData")]
 public class EnemyData : ScriptableObject
 {
+    public EnemyRepository.EnemyType EnemyName;
+
     public float Hp;
     public float WalkSpeed;
     public float NormalAttackSpeed;

@@ -21,6 +21,16 @@ public class GameManager : MonoBehaviour
             _bestRecord = value;
         }
     }
+    public int GameLevel
+    {
+        get { return _gameLevel; }
+        set
+        {
+            if (value <= 0)
+                return;
+            _gameLevel = value;
+        }
+    }
     #endregion
 
     #region Field
@@ -28,6 +38,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _exitPanel;
     private bool _isExitPanelActivated = false;
     private float _bestRecord = 0f;
+    private int _gameLevel = 1;
     #endregion
 
     #region Event Method

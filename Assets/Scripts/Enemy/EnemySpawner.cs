@@ -2,14 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using EnemyType = EnemyRepository.EnemyType;
 
+[RequireComponent(typeof(EnemyRepository))]
 // Manages Enemy spawn events using object pooling
 public class EnemySpawner : MonoBehaviour
 {
     public float SpawnTime => _spawnTime;
 
     private const int DEFAULT_CAPACITY = 100;
-    private const int MAX_SIZE = 300;
+    private const int MAX_SIZE = 200;
     private const int SPAWN_GRID_ROW = 10;
     private const int SPAWN_GRID_COL = 18;
     private float _spawnTime = 1.5f;
@@ -17,14 +19,19 @@ public class EnemySpawner : MonoBehaviour
     private Coroutine _spawnCoroutine = null;
     [SerializeField] private Transform[] _spawnPositionAnchor = new Transform[4];
     [SerializeField] private List<Vector3> _spawnPosition = new List<Vector3>();
-    [SerializeField] private GameObject _deathLordGO; // TODO
-    public IObjectPool<GameObject> Pool
+    [SerializeField] private EnemyRepository _repository;
+    [SerializeField] private Dictionary<EnemyType, bool> _isEnemyOnSpawn = new();
+    [SerializeField] private EnemyType _enemyToCreate;
+
+    public Dictionary<EnemyType, IObjectPool<GameObject>> Pool
     { get; private set; }
 
     private void Awake()
     {
         // Initialize
         _spawnTimeWait = new WaitForSeconds(_spawnTime);
+        if (_repository == null)
+            _repository = GetComponent<EnemyRepository>();
 
         if (_spawnPositionAnchor[0] == null)
         {
@@ -35,12 +42,6 @@ public class EnemySpawner : MonoBehaviour
             }
         }
 
-        if (_deathLordGO == null)
-        {
-            _deathLordGO = Resources.Load("Prefabs/Enemy_DeathLord") as GameObject;
-            if (_deathLordGO == null)
-                Debug.LogError("Cannot find Enemy_DeathLord.");
-        }
         InitializeSpawnPosition();
         InitializePool();
     }
@@ -107,7 +108,14 @@ public class EnemySpawner : MonoBehaviour
     {
         while (true)
         {
-            Pool.Get();
+            foreach (var enemy in _isEnemyOnSpawn)
+            {
+                if (enemy.Value == true)
+                {
+                    _enemyToCreate = enemy.Key;
+                    Pool[enemy.Key].Get();
+                }
+            }
             yield return _spawnTimeWait;
         }
     }
@@ -120,24 +128,31 @@ public class EnemySpawner : MonoBehaviour
 
     private void InitializePool()
     {
-        Pool = new ObjectPool<GameObject>(
-            CreateEnemy, OnGetEnemy, OnReleaseEnemy, OnDestroyEnemy,
-            defaultCapacity: DEFAULT_CAPACITY, maxSize: MAX_SIZE);
-
-        for (int i = 0; i < DEFAULT_CAPACITY; i++)
+        Pool = new();
+        foreach (EnemyType enemyType in System.Enum.GetValues(typeof(EnemyType)))
         {
-            var enemy = CreateEnemy().GetComponent<Base_EnemyManager>();
-            enemy.Pool.Release(enemy.gameObject);
+            _enemyToCreate = enemyType;
+            var pool = new ObjectPool<GameObject>(
+                CreateEnemy, OnGetEnemy, OnReleaseEnemy, OnDestroyEnemy,
+                defaultCapacity: DEFAULT_CAPACITY, maxSize: MAX_SIZE);
+            Pool.Add(enemyType, pool);
+
+            for (int i = 0; i < DEFAULT_CAPACITY; i++)
+            {
+                var enemy = CreateEnemy().GetComponent<Base_EnemyManager>();
+                enemy.Pool.Release(enemy.gameObject);
+            }
         }
     }
 
     private GameObject CreateEnemy()
     {
         Vector3 spawnPosition = _spawnPosition[Random.Range(0, _spawnPosition.Count)];
-        GameObject enemy = Instantiate(_deathLordGO, spawnPosition, Quaternion.identity);
-        //GameObject enemy = Instantiate(_deathLordGO, Random.insideUnitCircle * 10f, Quaternion.identity);
-        enemy.GetComponent<Base_EnemyManager>().Pool = this.Pool;
-        return enemy;
+
+        var createdEnemy = Instantiate(_repository[_enemyToCreate], spawnPosition, Quaternion.identity, transform);
+        createdEnemy.GetComponent<Base_EnemyManager>().Pool = this.Pool[_enemyToCreate];
+
+        return createdEnemy;
     }
 
     private void OnGetEnemy(GameObject enemy)
@@ -155,5 +170,14 @@ public class EnemySpawner : MonoBehaviour
     private void OnDestroyEnemy(GameObject enemy)
     {
         Destroy(enemy);
+    }
+
+    public bool GetEnemyToCreate(EnemyType key)
+    {
+        return _isEnemyOnSpawn[key];
+    }
+    public void SetEnemyToCreate(EnemyType key, bool value)
+    {
+        _isEnemyOnSpawn[key] = value;
     }
 }

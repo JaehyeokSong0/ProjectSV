@@ -28,13 +28,16 @@ public class GameLevelController : MonoBehaviour
     {
         EventManager.Instance.OnGameLevelUp?.AddListener(this.OnGameLevelUp);
         EventManager.Instance.OnPlayerDead?.AddListener(StopLevelControl);
+
+        _enemySpawner.SetEnemyToCreate(EnemyRepository.EnemyType.Skull, true);
     }
     #endregion
 
     #region Event Callback
     public void OnGameLevelUp()
     {
-        _enemySpawner.SetSpawnTime(_enemySpawner.SpawnTime / 1.1f);
+        GameManager.Instance.GameLevel += 1;
+        ChangeStatusWithLevel();
     }
     #endregion
 
@@ -55,6 +58,16 @@ public class GameLevelController : MonoBehaviour
             yield return _levelUpWait;
             EventManager.Instance.OnGameLevelUp?.Invoke();
         }
+    }
+
+    /// <summary>
+    /// Change game logic or status
+    /// </summary>
+    public void ChangeStatusWithLevel()
+    {
+        _enemySpawner.SetSpawnTime(_enemySpawner.SpawnTime / 1.1f);
+        if (GameManager.Instance.GameLevel > 1)
+            _enemySpawner.SetEnemyToCreate(EnemyRepository.EnemyType.DeathLord, true);
     }
     #endregion
 }

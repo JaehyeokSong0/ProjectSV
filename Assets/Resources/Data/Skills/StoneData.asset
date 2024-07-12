@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 2
   Cost: 1
-  Damage: 120
+  Damage: 150
   MoveSpeed: 1.8
   Duration: 25
   Tick: 0

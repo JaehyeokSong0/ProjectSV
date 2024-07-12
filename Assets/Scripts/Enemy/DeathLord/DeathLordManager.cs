@@ -12,7 +12,6 @@ public class DeathLordManager : Base_EnemyManager
         if (_actionController == null)
             _actionController = GetComponent<DeathLordActionController>();
 
-        Data.LoadEnemyData((Resources.Load("Data/DeathLordData") as EnemyData));
         base.Initialize();
     }
 }
