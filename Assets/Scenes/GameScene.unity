@@ -14885,6 +14885,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6962149838577017795, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
+      propertyPath: orthographic size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8577466123949112689, guid: ab6cef362e3ab764796a16177ec4a692, type: 3}
       propertyPath: _skillUI
       value: 
@@ -15240,8 +15244,8 @@ SceneRoots:
   - {fileID: 2078807383}
   - {fileID: 228259707}
   - {fileID: 641653438}
-  - {fileID: 368141396}
-  - {fileID: 1503114968}
   - {fileID: 5007128434760822781}
   - {fileID: 1581629041}
+  - {fileID: 368141396}
+  - {fileID: 1503114968}
   - {fileID: 551666319}

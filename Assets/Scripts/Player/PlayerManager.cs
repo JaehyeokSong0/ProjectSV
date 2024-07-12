@@ -102,11 +102,13 @@ public class PlayerManager : MonoBehaviour
         Camera playerCamera = Camera.main;
         float sizeBuffer = playerCamera.orthographicSize;
 
-        const float zoomSpeed = 0.05f;
+        const float zoomSpeed = 0.5f;
         const float objectiveSize = 5f;
+        float elapsedTime = 0f;
         while(playerCamera.orthographicSize < objectiveSize)
         {
-            playerCamera.orthographicSize += zoomSpeed;
+            playerCamera.orthographicSize = Mathf.SmoothStep(sizeBuffer, objectiveSize, elapsedTime * zoomSpeed);
+            elapsedTime += Time.deltaTime;
             yield return null;
         }
     }
