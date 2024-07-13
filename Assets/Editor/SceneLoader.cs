@@ -2,8 +2,8 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
+#if UNITY_EDITOR
 [InitializeOnLoad]
-
 public class SceneLoader : MonoBehaviour
 {
     [MenuItem("CustomTools/SceneLoader/Start from Scene 0 %h")]
@@ -22,3 +22,4 @@ public class SceneLoader : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = true;
     }
 }
+#endif

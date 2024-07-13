@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 [InitializeOnLoad]
 public class TestModule : EditorWindow
 {
@@ -124,3 +125,4 @@ public class TestModule : EditorWindow
             DestroyImmediate(_testExpModule.transform.GetChild(0).gameObject);
     }
 }
+#endif
