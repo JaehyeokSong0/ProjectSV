@@ -14,7 +14,6 @@ public class PlayerSkillUI : MonoBehaviour
     #endregion
 
     #region Constant
-    private const int DEFAULT_MP = 3;
     private const int SKILL_CAPACITY = 8;
     private const float ICON_MOVE_SPEED = 3f;
     #endregion
@@ -28,7 +27,6 @@ public class PlayerSkillUI : MonoBehaviour
     [SerializeField] private List<Transform> _skillGrids = new List<Transform>();
     [SerializeField] private List<GameObject> _skillIcons = new List<GameObject>();
 
-    [SerializeField] private TMP_Text _mpText;
     [SerializeField] private Image _timeBar;
     #endregion
 
@@ -54,19 +52,15 @@ public class PlayerSkillUI : MonoBehaviour
         // Check components availability
         if (_skillController == null)
             _skillController = GameObject.FindFirstObjectByType<PlayerSkillController>();
-        if (_mpText == null)
-            _mpText = transform.Find("Image_MPCount").GetChild(0).GetComponent<TMP_Text>();
 
         SetGridUIAvailability();
     }
     private void Start()
     {
         OnGetSkill?.AddListener(GetSkill);
-        OnUseSkill?.AddListener(UseSkill);
-        OnMpChanged?.AddListener(UpdateMPUI);
+        OnUseSkill?.AddListener(UseSkill);        
         EventManager.Instance.OnPlayerDead?.AddListener(this.OnPlayerDead);
 
-        UpdateMPUI(DEFAULT_MP, DEFAULT_MP);
     }
     private void LateUpdate()
     {
@@ -212,10 +206,6 @@ public class PlayerSkillUI : MonoBehaviour
         {
             _skillGrids[i].GetComponent<Image>().enabled = false; // Activate grid UI
         }
-    }
-    private void UpdateMPUI(int currentMp, int maxMp)
-    {
-        _mpText.text = $"{currentMp} / {maxMp}";
     }
     #endregion
 }
