@@ -142,8 +142,13 @@ public class TestModule : EditorWindow
 
     private void OnEnemySelectToggle(EnemyType enemyType, bool isActivated)
     {
-        Debug.Log(enemyType + " " + isActivated);
-        _enemySpawner.SetEnemyToCreate(enemyType, isActivated);
+        if (_enemySpawner.EnemyInfo[enemyType].IsInitialized == true)
+            _enemySpawner.SetEnemyToCreate(enemyType, isActivated);
+        else
+        {
+            _enemySpawner.EnemyInfo[enemyType].Initialize(1f);
+            _enemySpawner.SetEnemyToCreate(enemyType, isActivated);
+        }
     }
 
     private void OnEnemySpawnButtonPressed(int size)

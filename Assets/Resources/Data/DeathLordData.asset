@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: DeathLordData
   m_EditorClassIdentifier: 
   EnemyName: 1
-  Hp: 150
+  Hp: 180
   WalkSpeed: 0.7
   NormalAttackSpeed: 2
   NormalAttackRange: 1
   NormalAttackDamage: 20
-  Exp: 15
-  ExpDropRate: 0.3
+  Exp: 30
+  ExpDropRate: 0.25

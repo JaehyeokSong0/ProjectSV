@@ -36,5 +36,10 @@ public class EnemyRepository : MonoBehaviour
             _enemyDictionary.Add(enemy.GetComponent<EnemyDataManager>().GetEnemyName(), enemy);
         }
     }
+
+    public EnemyType[] GetAllEnemyType()
+    {
+        return System.Enum.GetValues(typeof(EnemyType)) as EnemyType[];
+    }
     #endregion
 }

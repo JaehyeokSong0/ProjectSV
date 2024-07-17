@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64d70ac0bafaa924196efe1f5735fef7, type: 3}
   m_Name: SkullData
   m_EditorClassIdentifier: 
+  EnemyName: 0
   Hp: 90
   WalkSpeed: 0.8
   NormalAttackSpeed: 0.7
   NormalAttackRange: 0.48
   NormalAttackDamage: 10
   Exp: 10
-  ExpDropRate: 0.25
+  ExpDropRate: 0.6

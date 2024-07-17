@@ -1,27 +1,81 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using EnemyType = EnemyRepository.EnemyType;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(EnemyRepository))]
 // Manages Enemy spawn events using object pooling
 public class EnemySpawner : MonoBehaviour
 {
-    public float SpawnTime => _spawnTime;
-
     private const int DEFAULT_CAPACITY = 100;
     private const int MAX_SIZE = 200;
     private const int SPAWN_GRID_ROW = 10;
     private const int SPAWN_GRID_COL = 18;
-    private float _spawnTime = 1.5f;
-    private WaitForSeconds _spawnTimeWait;
-    private Coroutine _spawnCoroutine = null;
+
+    public Dictionary<EnemyType, EnemySpawnInfo> EnemyInfo => _enemyInfo;
+
     [SerializeField] private Transform[] _spawnPositionAnchor = new Transform[4];
     [SerializeField] private List<Vector3> _spawnPosition = new List<Vector3>();
+
     [SerializeField] private EnemyRepository _repository;
-    [SerializeField] private Dictionary<EnemyType, bool> _isEnemyOnSpawn = new();
-    [SerializeField] private EnemyType _enemyToCreate;
+    private EnemyType _enemyToCreate;
+
+    private Dictionary<EnemyType, EnemySpawnInfo> _enemyInfo = new();
+
+    [System.Serializable]
+    public class EnemySpawnInfo
+    {
+        public bool IsInitialized => _isInitialized;
+        public bool IsOnSpawn
+        {
+            get => _isOnSpawn;
+            set => _isOnSpawn = value;
+        }
+
+        public float SpawnTime => _spawnTime;
+        public WaitForSeconds SpawnTimeWait => _spawnTimeWait;
+        public Coroutine SpawnCoroutine = null; // Spawn coroutine for each enemy
+
+        public EnemySpawnInfo this[EnemyType type]
+        {
+            get => this;
+        }
+
+        private bool _isInitialized = false;
+        private bool _isOnSpawn = false; // Turned on when the enemySpawner is activated
+        private float _spawnTime = 0f; // EnemySpawner coroutine wait time for each enemy
+        private WaitForSeconds _spawnTimeWait = null; // EnemySpawner coroutine wait object for each enemy
+
+        public void Initialize(float spawnTime)
+        {
+            _isInitialized = true;
+            _spawnTime = spawnTime;
+            _spawnTimeWait = new WaitForSeconds(_spawnTime);
+        }
+
+        public enum UpdateMode
+        {
+            Set,
+            Multiply,
+            Subtract
+        }
+        public void UpdateSpawnTime(UpdateMode mode, float value)
+        {
+            if (mode == UpdateMode.Set)
+                _spawnTime = value;
+            else if (mode == UpdateMode.Multiply)
+                _spawnTime *= value;
+            else if (mode == UpdateMode.Subtract)
+                _spawnTime -= value;
+            else
+                throw new ArgumentException();
+
+            _spawnTimeWait = new WaitForSeconds(_spawnTime);
+        }
+    }
 
     public Dictionary<EnemyType, IObjectPool<GameObject>> Pool
     { get; private set; }
@@ -29,7 +83,6 @@ public class EnemySpawner : MonoBehaviour
     private void Awake()
     {
         // Initialize
-        _spawnTimeWait = new WaitForSeconds(_spawnTime);
         if (_repository == null)
             _repository = GetComponent<EnemyRepository>();
 
@@ -43,19 +96,15 @@ public class EnemySpawner : MonoBehaviour
         }
 
         InitializeSpawnPosition();
+        InitializeEnemyInfo();
         InitializePool();
     }
 
     private void Start()
     {
-        EventManager.Instance.OnPlayerDead?.AddListener(this.StopCreateEnemy);
+        EventManager.Instance.OnPlayerDead?.AddListener(this.StopCreateAllEnemy);
     }
 
-    public void SetSpawnTime(float newSpawnTime)
-    {
-        _spawnTime = newSpawnTime;
-        _spawnTimeWait = new WaitForSeconds(newSpawnTime);
-    }
     private void InitializeSpawnPosition()
     {
         // Top
@@ -99,37 +148,47 @@ public class EnemySpawner : MonoBehaviour
             _spawnPosition.Add(spawnPosition);
         }
     }
-    public void StartCreateEnemy()
+    private void InitializeEnemyInfo()
     {
-        _spawnCoroutine = StartCoroutine(C_StartCreateEnemy());
-    }
-
-    private IEnumerator C_StartCreateEnemy()
-    {
-        while (true)
+        foreach (var enemyType in _repository.GetAllEnemyType())
         {
-            foreach (var enemy in _isEnemyOnSpawn)
-            {
-                if (enemy.Value == true)
-                {
-                    _enemyToCreate = enemy.Key;
-                    Pool[enemy.Key].Get();
-                }
-            }
-            yield return _spawnTimeWait;
+            _enemyInfo.Add(enemyType, new EnemySpawnInfo());
         }
     }
 
-    public void StopCreateEnemy()
+    private void StartCreateEnemy(EnemyType enemyType)
     {
-        if (_spawnCoroutine != null)
-            StopCoroutine(_spawnCoroutine);
+        if ((_enemyInfo[enemyType].IsInitialized == true) && (_enemyInfo[enemyType].IsOnSpawn == true))
+            _enemyInfo[enemyType].SpawnCoroutine = StartCoroutine(C_StartCreateEnemy(enemyType));
+    }
+
+    private IEnumerator C_StartCreateEnemy(EnemyType enemyType)
+    {
+        while (_enemyInfo[enemyType].IsOnSpawn == true)
+        {
+            _enemyToCreate = enemyType;
+            Pool[enemyType].Get();
+            yield return _enemyInfo[enemyType].SpawnTimeWait;
+        }
+    }
+
+    public void StopCreateAllEnemy()
+    {
+        foreach(var enemyType in _repository.GetAllEnemyType())
+        {
+            StopCreateEnemy(enemyType);
+        }
+    }
+    public void StopCreateEnemy(EnemyType enemyType)
+    {
+        if ((_enemyInfo[enemyType].IsOnSpawn == true) && (_enemyInfo[enemyType].SpawnCoroutine != null))
+            StopCoroutine(_enemyInfo[enemyType].SpawnCoroutine);
     }
 
     private void InitializePool()
     {
         Pool = new();
-        foreach (EnemyType enemyType in System.Enum.GetValues(typeof(EnemyType)))
+        foreach (var enemyType in _repository.GetAllEnemyType())
         {
             _enemyToCreate = enemyType;
             var pool = new ObjectPool<GameObject>(
@@ -172,12 +231,15 @@ public class EnemySpawner : MonoBehaviour
         Destroy(enemy);
     }
 
-    public bool GetEnemyToCreate(EnemyType key)
-    {
-        return _isEnemyOnSpawn[key];
-    }
     public void SetEnemyToCreate(EnemyType key, bool value)
     {
-        _isEnemyOnSpawn[key] = value;
+        if (EnemyInfo[key].IsOnSpawn != value)
+        {
+            EnemyInfo[key].IsOnSpawn = value;
+            if (value == true)
+                StartCreateEnemy(key);
+            else
+                StopCreateEnemy(key);
+        }
     }
 }

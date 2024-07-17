@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
+using EnemyType = EnemyRepository.EnemyType;
 
 /// <summary>
 /// Manages game level (Not player level)
@@ -20,16 +20,10 @@ public class GameLevelController : MonoBehaviour
             _enemySpawner = GameObject.Find("Enemy Spawner").GetComponent<EnemySpawner>();
 
     }
-    private void OnEnable()
-    {
-        StartLevelControl();
-    }
     private void Start()
     {
         EventManager.Instance.OnGameLevelUp?.AddListener(this.OnGameLevelUp);
         EventManager.Instance.OnPlayerDead?.AddListener(StopLevelControl);
-
-        _enemySpawner.SetEnemyToCreate(EnemyRepository.EnemyType.Skull, true);
     }
     #endregion
 
@@ -45,6 +39,7 @@ public class GameLevelController : MonoBehaviour
     public void StartLevelControl()
     {
         _levelControlCoroutine = StartCoroutine(C_StartLevelControl());
+        ChangeStatusWithLevel();
     }
     public void StopLevelControl()
     {
@@ -65,9 +60,41 @@ public class GameLevelController : MonoBehaviour
     /// </summary>
     public void ChangeStatusWithLevel()
     {
-        _enemySpawner.SetSpawnTime(_enemySpawner.SpawnTime / 1.1f);
-        if (GameManager.Instance.GameLevel > 1)
-            _enemySpawner.SetEnemyToCreate(EnemyRepository.EnemyType.DeathLord, true);
+        switch (GameManager.Instance.GameLevel)
+        {
+            case 1:
+                {
+                    _enemySpawner.EnemyInfo[EnemyType.Skull].Initialize(1.5f);
+                    _enemySpawner.SetEnemyToCreate(EnemyType.Skull, true);
+                    break;
+                }
+            case 2:
+                {
+                    _enemySpawner.EnemyInfo[EnemyType.Skull].UpdateSpawnTime(EnemySpawner.EnemySpawnInfo.UpdateMode.Multiply, 0.95f);
+                    break;
+                }
+            case 3:
+                {
+                    _enemySpawner.SetEnemyToCreate(EnemyType.Skull, false);
+                    _enemySpawner.EnemyInfo[EnemyType.DeathLord].Initialize(5f);
+                    _enemySpawner.SetEnemyToCreate(EnemyType.DeathLord, true);
+                    break;
+                }
+            case 4:
+                {
+                    _enemySpawner.EnemyInfo[EnemyType.DeathLord].UpdateSpawnTime(EnemySpawner.EnemySpawnInfo.UpdateMode.Set, 8.5f);
+                    _enemySpawner.SetEnemyToCreate(EnemyType.Skull, true);
+                    break;
+                }
+            default:
+                {
+                    _enemySpawner.EnemyInfo[EnemyType.DeathLord].UpdateSpawnTime(EnemySpawner.EnemySpawnInfo.UpdateMode.Multiply, 0.95f);
+                    _enemySpawner.EnemyInfo[EnemyType.Skull].UpdateSpawnTime(EnemySpawner.EnemySpawnInfo.UpdateMode.Multiply, 0.98f);
+                    break;
+                }
+        }
+        //Debug.Log("Current spawnTime of Skull : " + _enemySpawner.EnemyInfo[EnemyType.Skull].SpawnTime);
+        //Debug.Log("Current spawnTime of DeathLord : " + _enemySpawner.EnemyInfo[EnemyType.DeathLord].SpawnTime);
     }
     #endregion
 }

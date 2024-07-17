@@ -1,7 +1,6 @@
 using UnityEngine;
 
 // Example of each enemy's data
-// Not used 
 [CreateAssetMenu(fileName = "EnemyData", menuName = "Data/Create EnemyData")]
 public class EnemyData : ScriptableObject
 {
