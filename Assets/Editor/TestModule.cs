@@ -1,17 +1,52 @@
+using System;
 using UnityEditor;
 using UnityEngine;
+using Random = UnityEngine.Random;
+using EnemyType = EnemyRepository.EnemyType;
+using System.Runtime.InteropServices;
 
 #if UNITY_EDITOR
 [InitializeOnLoad]
 public class TestModule : EditorWindow
 {
+    #region Property
+    public bool IsDeathLordActivated
+    {
+        get => _isDeathLordActivated;
+        set
+        {
+            if (_isDeathLordActivated != value)
+            {
+                _isDeathLordActivated = value;
+                OnEnemySelectToggle(EnemyType.DeathLord, _isDeathLordActivated);
+            }
+        }
+    }
+
+    public bool IsSkullActivated
+    {
+        get => _isSkullActivated;
+        set
+        {
+            if (_isSkullActivated != value)
+            {
+                _isSkullActivated = value;
+                OnEnemySelectToggle(EnemyType.Skull, _isSkullActivated);
+            }
+        }
+    }
+    #endregion
+
     #region Field
     private string _enemyCountText;
     private string _expCountText;
+    private bool _isDeathLordActivated;
+    private bool _isSkullActivated;
 
     // In Hierarchy
     [SerializeField] private GameObject _testEnemyModule;
     [SerializeField] private GameObject _testExpModule;
+    [SerializeField] private EnemySpawner _enemySpawner;
 
     // In Project
     [SerializeField] private GameObject _enemyPrefab;
@@ -21,6 +56,8 @@ public class TestModule : EditorWindow
 
     private void OnGUI()
     {
+        DrawEnemySpawnerPanel();
+        GUILayout.Space(20);
         DrawEnemyModulePanel();
         GUILayout.Space(20);
         DrawExpModulePanel();
@@ -35,7 +72,7 @@ public class TestModule : EditorWindow
 
     private void AssignDependencies()
     {
-        if(_enemyPrefab == null)
+        if (_enemyPrefab == null)
             _enemyPrefab = Resources.Load("Prefabs/Enemy_DeathLord") as GameObject;
         if (_expPrefab == null)
             _expPrefab = Resources.Load("Prefabs/Exp_1") as GameObject;
@@ -43,6 +80,18 @@ public class TestModule : EditorWindow
             _testEnemyModule = GameObject.Find("EnemyModule");
         if (_testExpModule == null)
             _testExpModule = GameObject.Find("ExpModule");
+        if (_enemySpawner == null)
+            _enemySpawner = FindFirstObjectByType<EnemySpawner>();
+    }
+
+    private void DrawEnemySpawnerPanel()
+    {
+        _enemySpawner = EditorGUILayout.ObjectField("EnemySpawner", _enemySpawner, typeof(GameObject), true) as EnemySpawner;
+
+        EditorGUILayout.BeginVertical();
+        IsDeathLordActivated = EditorGUILayout.Toggle("DeathLord", IsDeathLordActivated);
+        IsSkullActivated = EditorGUILayout.Toggle("Skull", IsSkullActivated);
+        EditorGUILayout.EndVertical();
     }
 
     private void DrawEnemyModulePanel()
@@ -91,12 +140,18 @@ public class TestModule : EditorWindow
         GUILayout.EndHorizontal();
     }
 
+    private void OnEnemySelectToggle(EnemyType enemyType, bool isActivated)
+    {
+        Debug.Log(enemyType + " " + isActivated);
+        _enemySpawner.SetEnemyToCreate(enemyType, isActivated);
+    }
+
     private void OnEnemySpawnButtonPressed(int size)
     {
         if ((size <= 0) || (size >= 1000))
             Debug.LogWarning("EnemySpawn size should be in range of 1 ~ 999");
 
-        for(int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++)
         {
             Instantiate(_enemyPrefab, Random.insideUnitCircle * 10f, Quaternion.identity, _testEnemyModule.transform);
         }
@@ -104,7 +159,7 @@ public class TestModule : EditorWindow
 
     private void OnEnemyResetButtonPressed()
     {
-        while(_testEnemyModule.transform.childCount > 0)
+        while (_testEnemyModule.transform.childCount > 0)
             DestroyImmediate(_testEnemyModule.transform.GetChild(0).gameObject);
     }
 
