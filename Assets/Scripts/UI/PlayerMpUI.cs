@@ -15,7 +15,7 @@ public class PlayerMpUI : MonoBehaviour
     [SerializeField] private PlayerManager _manager;
     [SerializeField] private List<Image> _mpImages = new(DEFAULT_MAX_MP);
     [SerializeField] private PlayerSkillUI _skillUI;
-    private int _currentMp;
+    private int _currentMaxMp = 0;
     #endregion
 
     private void Awake()
@@ -36,11 +36,20 @@ public class PlayerMpUI : MonoBehaviour
     private void Start()
     {
         _skillUI.OnMpChanged?.AddListener(UpdateMpUI);
-        UpdateMpUI(_manager.Data.CurrentMp, DEFAULT_MAX_MP);
+        UpdateMpUI(_manager.Data.CurrentMp, _manager.Data.MaxMp);
     }
 
     private void UpdateMpUI(int currentMp, int maxMp)
     {
+        if(maxMp > _currentMaxMp)
+        {
+            _currentMaxMp = maxMp;
+            for (int i = 0; i < maxMp; i++)
+                _mpImages[i].gameObject.SetActive(true);
+            for (int i = maxMp; i < DEFAULT_MAX_MP; i++)
+                _mpImages[i].gameObject.SetActive(false);
+        }
+
         for (int i = 0; i < currentMp; i++)
             _mpImages[i].color = Color.white;
         for (int i = currentMp; i < maxMp; i++)
