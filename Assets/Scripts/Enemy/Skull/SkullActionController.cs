@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 public class SkullActionController : Base_EnemyActionController
 {
-    
     public override Base_EnemyManager Manager
     {
         get => _manager;

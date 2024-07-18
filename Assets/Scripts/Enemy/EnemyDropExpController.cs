@@ -10,7 +10,7 @@ public class EnemyDropExpController : MonoBehaviour
     private void Awake()
     {
         if(_expPrefab == null)
-            _expPrefab = Resources.Load("Prefabs/Exp_1") as GameObject;
+            _expPrefab = Resources.Load("Prefabs/Exp_1") as GameObject; // Default Exp
     }
     #endregion
 

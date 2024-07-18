@@ -64,6 +64,9 @@ public class GameLevelController : MonoBehaviour
         {
             case 1:
                 {
+                    _enemySpawner.EnemyInfo[EnemyType.Lich].Initialize(10f);
+                    _enemySpawner.SetEnemyToCreate(EnemyType.Lich, true);
+
                     _enemySpawner.EnemyInfo[EnemyType.Skull].Initialize(1.5f);
                     _enemySpawner.SetEnemyToCreate(EnemyType.Skull, true);
                     break;
@@ -76,6 +79,7 @@ public class GameLevelController : MonoBehaviour
             case 3:
                 {
                     _enemySpawner.SetEnemyToCreate(EnemyType.Skull, false);
+
                     _enemySpawner.EnemyInfo[EnemyType.DeathLord].Initialize(5f);
                     _enemySpawner.SetEnemyToCreate(EnemyType.DeathLord, true);
                     break;
@@ -83,12 +87,14 @@ public class GameLevelController : MonoBehaviour
             case 4:
                 {
                     _enemySpawner.EnemyInfo[EnemyType.DeathLord].UpdateSpawnTime(EnemySpawner.EnemySpawnInfo.UpdateMode.Set, 8.5f);
+
                     _enemySpawner.SetEnemyToCreate(EnemyType.Skull, true);
                     break;
                 }
             default:
                 {
                     _enemySpawner.EnemyInfo[EnemyType.DeathLord].UpdateSpawnTime(EnemySpawner.EnemySpawnInfo.UpdateMode.Multiply, 0.95f);
+
                     _enemySpawner.EnemyInfo[EnemyType.Skull].UpdateSpawnTime(EnemySpawner.EnemySpawnInfo.UpdateMode.Multiply, 0.98f);
                     break;
                 }

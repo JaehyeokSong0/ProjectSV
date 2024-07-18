@@ -7,7 +7,8 @@ public class EnemyRepository : MonoBehaviour
     public enum EnemyType
     {
         Skull,
-        DeathLord
+        DeathLord,
+        Lich
     }
     #endregion
 
