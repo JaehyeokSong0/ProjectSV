@@ -10,6 +10,7 @@ public class LichActionController : Base_EnemyActionController
     }
 
     [SerializeField] private LichManager _manager;
+    [SerializeField] private LichSpellController _spell;
 
     public override void Initialize()
     {
@@ -17,6 +18,8 @@ public class LichActionController : Base_EnemyActionController
             Manager = GetComponent<LichManager>();
         if (_animationController == null)
             _animationController = transform.Find("Model").GetComponent<LichAnimationController>();
+        if (_spell == null)
+            _spell = transform.Find("Spell").GetComponent<LichSpellController>();
 
         base.Initialize();
     }
@@ -34,10 +37,11 @@ public class LichActionController : Base_EnemyActionController
         Manager.State.MoveState = EnemyMoveState.Idle;
         _animationController.Idle();
 
-        // NormalAttackRange should be bigger than sum of collider radius of the player and the skull
         while (_direction.magnitude <= Manager.Data.NormalAttackRange)
         {
-            EventManager.Instance.OnPlayerDamaged?.Invoke(Manager.Data.NormalAttackDamage);
+            //EventManager.Instance.OnPlayerDamaged?.Invoke(Manager.Data.NormalAttackDamage);
+            _spell.gameObject.SetActive(true);
+            _spell.CastSpell(_direction);
             yield return _normalAttackWait;
         }
 
