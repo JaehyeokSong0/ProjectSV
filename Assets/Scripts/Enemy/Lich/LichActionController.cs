@@ -12,6 +12,11 @@ public class LichActionController : Base_EnemyActionController
     [SerializeField] private LichManager _manager;
     [SerializeField] private LichSpellController _spell;
 
+    private void Awake()
+    {
+        _preAttackTime = 0.8f;    
+    }
+
     public override void Initialize()
     {
         if (Manager == null)
@@ -36,6 +41,9 @@ public class LichActionController : Base_EnemyActionController
         _rigidbody.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
         Manager.State.MoveState = EnemyMoveState.Idle;
         _animationController.Idle();
+        _animationController.NormalAttack();
+
+        yield return _preAttackTimeWait;
 
         while (_direction.magnitude <= Manager.Data.NormalAttackRange)
         {

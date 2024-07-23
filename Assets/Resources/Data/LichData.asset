@@ -15,7 +15,7 @@ MonoBehaviour:
   EnemyName: 2
   Hp: 110
   WalkSpeed: 0.5
-  NormalAttackSpeed: 5
+  NormalAttackSpeed: 4.5
   NormalAttackRange: 2.5
   NormalAttackDamage: 25
   Exp: 80

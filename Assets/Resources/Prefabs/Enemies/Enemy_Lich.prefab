@@ -237,7 +237,7 @@ MonoBehaviour:
   _animationController: {fileID: 8411331683754193483}
   _rigidbody: {fileID: 6914310345347872932}
   _manager: {fileID: 2388875696062743943}
-  _spell: {fileID: 0}
+  _spell: {fileID: 5634494667153448123}
 --- !u!58 &-1262213692091492772
 CircleCollider2D:
   m_ObjectHideFlags: 0

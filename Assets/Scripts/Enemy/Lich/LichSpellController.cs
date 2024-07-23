@@ -30,7 +30,7 @@ public class LichSpellController : MonoBehaviour
         if(_animator == null)
             _animator = GetComponent<Animator>();
 
-        _lightningDescription = new SpellDescription { Speed = 0.8f, Duration = 4f, Tick = 0.7f, Radius = 0.1f };
+        _lightningDescription = new SpellDescription { Speed = 0.8f, Duration = 4f, Tick = 0.7f, Radius = 0.2f };
 
         // Always need to be shorter than normal attack delay
         if (_manager.Data.NormalAttackSpeed <= _lightningDescription.Duration)
@@ -45,12 +45,12 @@ public class LichSpellController : MonoBehaviour
         transform.position = _manager.transform.position;
         _direction = direction.normalized;
         StartCoroutine(C_CastSpell());
+        StartCoroutine(C_DisableOnTime(_lightningDescription.Duration));
     }
 
     private IEnumerator C_CastSpell()
     {
-        float time = 0f;
-        while(time < _lightningDescription.Duration)
+        while(true)
         {
             transform.position += _direction * _lightningDescription.Speed;
             _animator.SetTrigger("activated");
@@ -62,5 +62,18 @@ public class LichSpellController : MonoBehaviour
 
             yield return _tickWait;
         }
+    }
+
+    private IEnumerator C_DisableOnTime(float time)
+    {
+        yield return new WaitForSecondsRealtime(time);
+        gameObject.SetActive(false);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Color gizmoColor = new Color(1, 0, 1);
+        Gizmos.color = gizmoColor;
+        Gizmos.DrawSphere(transform.position, _lightningDescription.Radius);
     }
 }

@@ -64,7 +64,7 @@ public class GameLevelController : MonoBehaviour
         {
             case 1:
                 {
-                    _enemySpawner.EnemyInfo[EnemyType.Lich].Initialize(10f);
+                    _enemySpawner.EnemyInfo[EnemyType.Lich].Initialize(20f);
                     _enemySpawner.SetEnemyToCreate(EnemyType.Lich, true);
 
                     _enemySpawner.EnemyInfo[EnemyType.Skull].Initialize(1.5f);

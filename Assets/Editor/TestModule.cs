@@ -4,6 +4,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 using EnemyType = EnemyRepository.EnemyType;
 using System.Runtime.InteropServices;
+using Unity.VisualScripting;
 
 #if UNITY_EDITOR
 [InitializeOnLoad]
@@ -35,6 +36,18 @@ public class TestModule : EditorWindow
             }
         }
     }
+    public bool IsLichActivated
+    {
+        get => _isLichActivated;
+        set
+        {
+            if (_isLichActivated != value)
+            {
+                _isLichActivated = value;
+                OnEnemySelectToggle(EnemyType.Lich, _isLichActivated);
+            }
+        }
+    }
     #endregion
 
     #region Field
@@ -42,6 +55,7 @@ public class TestModule : EditorWindow
     private string _expCountText;
     private bool _isDeathLordActivated;
     private bool _isSkullActivated;
+    private bool _isLichActivated;
 
     // In Hierarchy
     [SerializeField] private GameObject _testEnemyModule;
@@ -91,6 +105,7 @@ public class TestModule : EditorWindow
         EditorGUILayout.BeginVertical();
         IsDeathLordActivated = EditorGUILayout.Toggle("DeathLord", IsDeathLordActivated);
         IsSkullActivated = EditorGUILayout.Toggle("Skull", IsSkullActivated);
+        IsLichActivated = EditorGUILayout.Toggle("Lich", IsLichActivated);
         EditorGUILayout.EndVertical();
     }
 
